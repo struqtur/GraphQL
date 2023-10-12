@@ -1,6 +1,6 @@
 {
   "name": "youshido/graphql",
-  "description": "Pure PHP GraphQL",
+  "description": "Pure PHP 8.1+ GraphQL",
   "license": "MIT",
   "authors": [
     {
@@ -10,15 +10,19 @@
     {
       "name": "Portey Vasil",
       "email": "portey@gmail.com"
+    },
+    {
+      "name": "Tom Atom",
+      "email": "tom@tomatom.com"
     }
   ],
   "require": {
-    "php": ">=5.5",
+    "php": ">=8.1",
     "ext-mbstring": "*",
-    "symfony/property-access": "^2.8 || ^3.4 || ^4.4"
+    "symfony/property-access": "6.*"
   },
   "require-dev": {
-    "phpunit/phpunit": "^4.8"
+    "phpunit/phpunit": "10.*"
   },
   "autoload": {
     "psr-4": {
