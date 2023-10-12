@@ -59,9 +59,7 @@ abstract class AbstractQueryVisitor
     /**
      * Visit a query node.  See class docstring.
      *
-     * @param array       $args
-     * @param FieldConfig $fieldConfig
-     * @param int         $childScore
+     * @param int $childScore
      *
      * @return int|null
      */

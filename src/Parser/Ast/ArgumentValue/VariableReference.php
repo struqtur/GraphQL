@@ -18,22 +18,20 @@ class VariableReference extends AbstractAst implements ValueInterface
     /** @var  string */
     private $name;
 
-    /** @var  Variable */
-    private $variable;
+    private readonly ?Variable $variable;
 
     /** @var  mixed */
     private $value;
 
     /**
-     * @param string        $name
+     * @param string $name
      * @param Variable|null $variable
-     * @param Location      $location
      */
-    public function __construct($name, Variable $variable = null, Location $location)
+    public function __construct($name, Location $location, Variable $variable = null)
     {
         parent::__construct($location);
 
-        $this->name     = $name;
+        $this->name = $name;
         $this->variable = $variable;
     }
 
@@ -47,7 +45,7 @@ class VariableReference extends AbstractAst implements ValueInterface
         return $this->value;
     }
 
-    public function setValue($value)
+    public function setValue($value): void
     {
         $this->value = $value;
     }

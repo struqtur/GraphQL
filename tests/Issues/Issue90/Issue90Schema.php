@@ -9,7 +9,7 @@ use Youshido\GraphQL\Type\Scalar\DateTimeType;
 class Issue90Schema extends AbstractSchema
 {
 
-    public function build(SchemaConfig $config)
+    public function build(SchemaConfig $config): void
     {
         $config->setQuery(
             new ObjectType([
@@ -20,12 +20,10 @@ class Issue90Schema extends AbstractSchema
                         'args'    => [
                             'date' => new DateTimeType('Y-m-d H:ia')
                         ],
-                        'resolve' => function ($value, $args, $info) {
-
+                        'resolve' => static function ($value, array $args, $info) {
                             if (isset($args['date'])) {
                                 return $args['date'];
                             }
-
                             return null;
                         }
                     ]
@@ -42,12 +40,10 @@ class Issue90Schema extends AbstractSchema
                         'args'    => [
                             'date' => new DateTimeType('Y-m-d H:ia')
                         ],
-                        'resolve' => function ($value, $args, $info) {
-
+                        'resolve' => static function ($value, array $args, $info) {
                             if (isset($args['date'])) {
                                 return $args['date'];
                             }
-
                             return null;
                         }
                     ]

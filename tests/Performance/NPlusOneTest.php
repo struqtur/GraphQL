@@ -32,7 +32,7 @@ class NPlusOneTest extends \PHPUnit_Framework_TestCase
             ['id' => 3, 'name' => 'Mike'],
         ];
         $posts   = [];
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 10; ++$i) {
             $posts[] = [
                 'id'     => $i + 1,
                 'title'  => sprintf('Post title $%s', $i),
@@ -43,7 +43,7 @@ class NPlusOneTest extends \PHPUnit_Framework_TestCase
         return $posts;
     }
 
-    public function testHigherResolver()
+    public function testHigherResolver(): void
     {
         $authorType = new ObjectType([
             'name'   => 'Author',

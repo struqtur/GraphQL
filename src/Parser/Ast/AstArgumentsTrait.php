@@ -15,15 +15,15 @@ trait AstArgumentsTrait
     /** @var Argument[] */
     protected $arguments;
 
-    private $argumentsCache = null;
+    private $argumentsCache;
 
 
-    public function hasArguments()
+    public function hasArguments(): bool
     {
         return (bool)count($this->arguments);
     }
 
-    public function hasArgument($name)
+    public function hasArgument($name): bool
     {
         return array_key_exists($name, $this->arguments);
     }
@@ -61,7 +61,7 @@ trait AstArgumentsTrait
     /**
      * @param $arguments Argument[]
      */
-    public function setArguments(array $arguments)
+    public function setArguments(array $arguments): void
     {
         $this->arguments = [];
         $this->argumentsCache = null;
@@ -71,7 +71,7 @@ trait AstArgumentsTrait
         }
     }
 
-    public function addArgument(Argument $argument)
+    public function addArgument(Argument $argument): void
     {
         $this->arguments[$argument->getName()] = $argument;
     }

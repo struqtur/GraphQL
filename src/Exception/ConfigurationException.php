@@ -9,7 +9,9 @@
 namespace Youshido\GraphQL\Exception;
 
 
-class ConfigurationException extends \Exception
+use Exception;
+
+class ConfigurationException extends Exception
 {
 
 }

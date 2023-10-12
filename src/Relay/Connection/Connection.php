@@ -19,12 +19,12 @@ use Youshido\GraphQL\Type\TypeMap;
 class Connection
 {
 
-    public static function connectionArgs()
+    public static function connectionArgs(): array
     {
         return array_merge(self::forwardArgs(), self::backwardArgs());
     }
 
-    public static function forwardArgs()
+    public static function forwardArgs(): array
     {
         return [
             'after' => ['type' => TypeMap::TYPE_STRING],
@@ -32,100 +32,90 @@ class Connection
         ];
     }
 
-    public static function backwardArgs()
+    public static function backwardArgs(): array
     {
         return [
             'before' => ['type' => TypeMap::TYPE_STRING],
-            'last'   => ['type' => TypeMap::TYPE_INT]
+            'last' => ['type' => TypeMap::TYPE_INT]
         ];
     }
 
     /**
-     * @param AbstractType $type
-     * @param null|string  $name
-     * @param array        $config
+     * @param null|string $name
      * @option string  edgeFields
      *
-     * @return ObjectType
      */
-    public static function edgeDefinition(AbstractType $type, $name = null, $config = [])
+    public static function edgeDefinition(AbstractType $type, $name = null, array $config = []): ObjectType
     {
-        $name       = $name ?: $type->getName();
-        $edgeFields = !empty($config['edgeFields']) ? $config['edgeFields'] : [];
+        $name = $name ?: $type->getName();
+        $edgeFields = empty($config['edgeFields']) ? [] : $config['edgeFields'];
 
-        $edgeType = new ObjectType([
-            'name'        => $name . 'Edge',
+        return new ObjectType([
+            'name' => $name . 'Edge',
             'description' => 'An edge in a connection.',
-            'fields'      => array_merge([
-                'node'   => [
-                    'type'        => $type,
+            'fields' => array_merge([
+                'node' => [
+                    'type' => $type,
                     'description' => 'The item at the end of the edge',
-                    'resolve'     => [__CLASS__, 'getNode'],
+                    'resolve' => [__CLASS__, 'getNode'],
                 ],
                 'cursor' => [
-                    'type'        => TypeMap::TYPE_STRING,
+                    'type' => TypeMap::TYPE_STRING,
                     'description' => 'A cursor for use in pagination'
                 ]
             ], $edgeFields)
         ]);
-
-        return $edgeType;
     }
 
     /**
-     * @param AbstractType $type
-     * @param null|string  $name
-     * @param array        $config
+     * @param null|string $name
      * @option string  connectionFields
      *
-     * @return ObjectType
      */
-    public static function connectionDefinition(AbstractType $type, $name = null, $config = [])
+    public static function connectionDefinition(AbstractType $type, $name = null, array $config = []): ObjectType
     {
-        $name             = $name ?: $type->getName();
-        $connectionFields = !empty($config['connectionFields']) ? $config['connectionFields'] : [];
+        $name = $name ?: $type->getName();
+        $connectionFields = empty($config['connectionFields']) ? [] : $config['connectionFields'];
 
-        $connectionType = new ObjectType([
-            'name'        => $name . 'Connection',
+        return new ObjectType([
+            'name' => $name . 'Connection',
             'description' => 'A connection to a list of items.',
-            'fields'      => array_merge([
+            'fields' => array_merge([
                 'totalCount' => [
-                    'type'        => new NonNullType(new IntType()),
+                    'type' => new NonNullType(new IntType()),
                     'description' => 'How many nodes.',
-                    'resolve'     => [__CLASS__, 'getTotalCount'],
+                    'resolve' => [__CLASS__, 'getTotalCount'],
                 ],
                 'pageInfo' => [
-                    'type'        => new NonNullType(new PageInfoType()),
+                    'type' => new NonNullType(new PageInfoType()),
                     'description' => 'Information to aid in pagination.',
-                    'resolve'     => [__CLASS__, 'getPageInfo'],
+                    'resolve' => [__CLASS__, 'getPageInfo'],
                 ],
-                'edges'    => [
-                    'type'        => new ListType(self::edgeDefinition($type, $name, $config)),
+                'edges' => [
+                    'type' => new ListType(self::edgeDefinition($type, $name, $config)),
                     'description' => 'A list of edges.',
-                    'resolve'     => [__CLASS__, 'getEdges'],
+                    'resolve' => [__CLASS__, 'getEdges'],
                 ]
             ], $connectionFields)
         ]);
-
-        return $connectionType;
     }
 
-    public static function getTotalCount($value)
+    public static function getTotalCount(array $value)
     {
         return isset($value['totalCount']) ? $value['totalCount'] : -1;
     }
 
-    public static function getEdges($value)
+    public static function getEdges(array $value)
     {
         return isset($value['edges']) ? $value['edges'] : null;
     }
 
-    public static function getPageInfo($value)
+    public static function getPageInfo(array $value)
     {
         return isset($value['pageInfo']) ? $value['pageInfo'] : null;
     }
 
-    public static function getNode($value)
+    public static function getNode(array $value)
     {
         return isset($value['node']) ? $value['node'] : null;
     }

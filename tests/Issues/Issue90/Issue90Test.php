@@ -13,11 +13,12 @@ use Youshido\Tests\Issues\Issue90\Issue90Schema;
 class Issue90Test extends \PHPUnit_Framework_TestCase
 {
 
-    public function testQueryDateTimeTypeWithDateParameter()
+    public function testQueryDateTimeTypeWithDateParameter(): void
     {
         $schema = new Issue90Schema();
         $processor = new Processor($schema);
-        $processor->processPayload("query{ echo(date: \"2016-11-25 09:53am\") }");
+        $processor->processPayload('query{ echo(date: "2016-11-25 09:53am") }');
+        
         $res = $processor->getResponseData();
 
         self::assertCount(1, $res, "Invalid response array received"); //only data expected
@@ -27,10 +28,11 @@ class Issue90Test extends \PHPUnit_Framework_TestCase
         self::assertEquals("2016-11-25 09:53am", $res['data']['echo']);
     }
 
-    public function testQueryDateTimeTypeWithoutParameter()
+    public function testQueryDateTimeTypeWithoutParameter(): void
     {
         $processor = new Processor(new Issue90Schema());
         $processor->processPayload("query{ echo }");
+        
         $res = $processor->getResponseData();
 
         self::assertCount(1, $res, "Invalid response array received"); //only data expected
@@ -38,10 +40,11 @@ class Issue90Test extends \PHPUnit_Framework_TestCase
         self::assertNull($res['data']['echo']);
     }
 
-    public function testQueryDateTimeTypeWithNullParameter()
+    public function testQueryDateTimeTypeWithNullParameter(): void
     {
         $processor = new Processor(new Issue90Schema());
         $processor->processPayload("query{ echo(date: null) }");
+        
         $res = $processor->getResponseData();
 
         self::assertCount(1, $res, "Invalid response array received"); //only data expected
@@ -49,11 +52,12 @@ class Issue90Test extends \PHPUnit_Framework_TestCase
         self::assertNull($res['data']['echo'], "Error Quering with explicit date null parameter ");
     }
 
-    public function testMutatingDateTimeWithParameter()
+    public function testMutatingDateTimeWithParameter(): void
     {
         $schema = new Issue90Schema();
         $processor = new Processor($schema);
-        $processor->processPayload("mutation{ echo(date: \"2016-11-25 09:53am\") }");
+        $processor->processPayload('mutation{ echo(date: "2016-11-25 09:53am") }');
+        
         $res = $processor->getResponseData();
 
         self::assertCount(1, $res, "Invalid response array received"); //only data expected
@@ -63,11 +67,12 @@ class Issue90Test extends \PHPUnit_Framework_TestCase
         self::assertEquals("2016-11-25 09:53am", $res['data']['echo']);
     }
 
-    public function testMutatingDateTimeWithExplicitNullParameter()
+    public function testMutatingDateTimeWithExplicitNullParameter(): void
     {
         $schema = new Issue90Schema();
         $processor = new Processor($schema);
         $processor->processPayload("mutation{ echo(date: null) }");
+        
         $res = $processor->getResponseData();
 
         self::assertCount(1, $res, "Invalid response array received"); //only data expected

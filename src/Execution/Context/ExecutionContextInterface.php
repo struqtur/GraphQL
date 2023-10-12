@@ -22,8 +22,6 @@ interface ExecutionContextInterface extends ErrorContainerInterface
     public function getSchema();
 
     /**
-     * @param AbstractSchema $schema
-     *
      * @return $this
      */
     public function setSchema(AbstractSchema $schema);
@@ -34,8 +32,6 @@ interface ExecutionContextInterface extends ErrorContainerInterface
     public function getRequest();
 
     /**
-     * @param Request $request
-     *
      * @return $this
      */
     public function setRequest(Request $request);
@@ -46,7 +42,6 @@ interface ExecutionContextInterface extends ErrorContainerInterface
     public function getContainer();
 
     /**
-     * @param ContainerInterface $container
      * @return mixed
      */
     public function setContainer(ContainerInterface $container);

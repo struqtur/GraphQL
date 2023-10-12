@@ -15,9 +15,11 @@ use Youshido\GraphQL\Relay\Field\NodeField;
 class NodeFieldTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function testMethods()
+    public function testMethods(): void
     {
-        $fetcher = new CallableFetcher(function () { }, function () { });
+        $fetcher = new CallableFetcher(static function () : void {
+        }, static function () : void {
+        });
         $field   = new NodeField($fetcher);
 
         $this->assertEquals('Fetches an object given its ID', $field->getDescription());

@@ -17,16 +17,17 @@ use Youshido\GraphQL\Type\TypeMap;
 abstract class AbstractEnumType extends AbstractType
 {
 
-    use AutoNameTrait, ConfigAwareTrait;
+    use AutoNameTrait;
+    use ConfigAwareTrait;
 
     /**
      * ObjectType constructor.
      * @param $config
      */
-    public function __construct($config = [])
+    public function __construct(array $config = [])
     {
-        if (empty($config)) {
-            $config['name']   = $this->getName();
+        if ($config === []) {
+            $config['name'] = $this->getName();
             $config['values'] = $this->getValues();
         }
 
@@ -43,12 +44,11 @@ abstract class AbstractEnumType extends AbstractType
 
     /**
      * @param $value mixed
-     *
-     * @return bool
      */
-    public function isValidValue($value)
+    public function isValidValue($value): bool
     {
         if (is_null($value)) return true;
+
         foreach ($this->getConfig()->get('values') as $item) {
             if ($value === $item['name'] || $value === $item['value']) {
                 return true;
@@ -60,7 +60,7 @@ abstract class AbstractEnumType extends AbstractType
 
     public function getValidationError($value = null)
     {
-        $allowedValues             = array_map(function (array $value) {
+        $allowedValues = array_map(static function (array $value): string {
             return sprintf('%s (%s)', $value['name'], $value['value']);
         }, $this->getConfig()->get('values'));
         return sprintf('Value must be one of the allowed ones: %s', implode(', ', $allowedValues));

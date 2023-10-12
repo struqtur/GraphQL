@@ -8,6 +8,8 @@
 namespace Youshido\GraphQL\Execution;
 
 
+use Exception;
+use InvalidArgumentException;
 use Youshido\GraphQL\Exception\ResolveException;
 use Youshido\GraphQL\Execution\Container\Container;
 use Youshido\GraphQL\Execution\Context\ExecutionContext;
@@ -20,6 +22,7 @@ use Youshido\GraphQL\Parser\Ast\ArgumentValue\InputObject as AstInputObject;
 use Youshido\GraphQL\Parser\Ast\ArgumentValue\Literal as AstLiteral;
 use Youshido\GraphQL\Parser\Ast\ArgumentValue\VariableReference;
 use Youshido\GraphQL\Parser\Ast\Field as AstField;
+use Youshido\GraphQL\Parser\Ast\Fragment;
 use Youshido\GraphQL\Parser\Ast\FragmentReference;
 use Youshido\GraphQL\Parser\Ast\Interfaces\FieldInterface as AstFieldInterface;
 use Youshido\GraphQL\Parser\Ast\Mutation as AstMutation;
@@ -43,16 +46,16 @@ use Youshido\GraphQL\Validator\ResolveValidator\ResolveValidatorInterface;
 class Processor
 {
 
-    const TYPE_NAME_QUERY = '__typename';
+    final const TYPE_NAME_QUERY = '__typename';
 
     /** @var ExecutionContext */
     protected $executionContext;
 
     /** @var ResolveValidatorInterface */
-    protected $resolveValidator;
+    protected ResolveValidator $resolveValidator;
 
     /** @var  array */
-    protected $data;
+    protected $data = [];
 
     /** @var int */
     protected $maxComplexity;
@@ -73,22 +76,22 @@ class Processor
         $this->resolveValidator = new ResolveValidator($this->executionContext);
     }
 
-    public function processPayload($payload, $variables = [], $reducers = [])
+    public function processPayload($payload, $variables = [], array $reducers = []): static
     {
         $this->data = [];
 
         try {
             $this->parseAndCreateRequest($payload, $variables);
 
-            if ($this->maxComplexity) {
+            if ($this->maxComplexity !== 0) {
                 $reducers[] = new MaxComplexityQueryVisitor($this->maxComplexity);
             }
 
-            if ($reducers) {
+            if ($reducers !== []) {
                 $reducer = new Reducer();
                 $reducer->reduceQuery($this->executionContext, $reducers);
             }
-            
+
             // Resolve all queries/operations and merge their data at the end
             $operationResults = [];
 
@@ -97,30 +100,30 @@ class Processor
                     $operationResults[] = $operationResult;
                 }
             }
-            
+
             $this->data = $this->combineResults($operationResults);
 
             // If the processor found any deferred results, resolve them now.
-            if (!empty($this->data) && (!empty($this->deferredResultsLeaf) || !empty($this->deferredResultsComplex))) {
-              try {
-                  while ($deferredResolver = array_shift($this->deferredResultsComplex)) {
-                      $deferredResolver->resolve();
-                  }
+            if (!empty($this->data) && ($this->deferredResultsLeaf !== [] || $this->deferredResultsComplex !== [])) {
+                try {
+                    while ($deferredResolver = array_shift($this->deferredResultsComplex)) {
+                        $deferredResolver->resolve();
+                    }
 
-                  // Deferred scalar and enum fields should be resolved last to
-                  // pick up as many as possible for a single batch.
-                  while ($deferredResolver = array_shift($this->deferredResultsLeaf)) {
-                      $deferredResolver->resolve();
-                  }
-              } catch (\Exception $e) {
-                  $this->executionContext->addError($e);
-              } finally {
-                  $this->data = static::unpackDeferredResults($this->data);
-              }
+                    // Deferred scalar and enum fields should be resolved last to
+                    // pick up as many as possible for a single batch.
+                    while ($deferredResolver = array_shift($this->deferredResultsLeaf)) {
+                        $deferredResolver->resolve();
+                    }
+                } catch (Exception $e) {
+                    $this->executionContext->addError($e);
+                } finally {
+                    $this->data = static::unpackDeferredResults($this->data);
+                }
             }
 
-        } catch (\Exception $e) {
-            $this->executionContext->addError($e);
+        } catch (Exception $exception) {
+            $this->executionContext->addError($exception);
         }
 
         return $this;
@@ -150,11 +153,11 @@ class Processor
         return $result;
     }
 
-    protected function resolveQuery(AstQuery $query)
+    protected function resolveQuery(AstQuery $query): array
     {
         $schema = $this->executionContext->getSchema();
-        $type   = $query instanceof AstMutation ? $schema->getMutationType() : $schema->getQueryType();
-        $field  = new Field([
+        $type = $query instanceof AstMutation ? $schema->getMutationType() : $schema->getQueryType();
+        $field = new Field([
             'name' => $query instanceof AstMutation ? 'mutation' : 'query',
             'type' => $type
         ]);
@@ -173,7 +176,7 @@ class Processor
     {
         try {
             /** @var AbstractObjectType $type */
-            $type        = $field->getType();
+            $type = $field->getType();
             $nonNullType = $type->getNullableType();
 
             if (self::TYPE_NAME_QUERY == $ast->getName()) {
@@ -218,18 +221,18 @@ class Processor
                 default:
                     throw new ResolveException(sprintf('Resolving type with kind "%s" not supported', $kind));
             }
-        } catch (\Exception $e) {
-            $this->executionContext->addError($e);
+        } catch (Exception $exception) {
+            $this->executionContext->addError($exception);
 
             if ($fromObject) {
-                throw $e;
+                throw $exception;
             }
 
             return null;
         }
     }
 
-    private function prepareAstArguments(FieldInterface $field, AstFieldInterface $query, Request $request)
+    private function prepareAstArguments(FieldInterface $field, AstFieldInterface $query, Request $request): void
     {
         foreach ($query->getArguments() as $astArgument) {
             if ($field->hasArgument($astArgument->getName())) {
@@ -251,10 +254,8 @@ class Processor
                     foreach ($list as $item) {
                         $result[] = $this->prepareArgumentValue($item, $argumentType->getItemType()->getNullableType(), $request);
                     }
-                } else {
-                    if ($argumentValue instanceof VariableReference) {
-                        return $this->getVariableReferenceArgumentValue($argumentValue, $argumentType, $request);
-                    }
+                } elseif ($argumentValue instanceof VariableReference) {
+                    return $this->getVariableReferenceArgumentValue($argumentValue, $argumentType, $request);
                 }
 
                 return $result;
@@ -269,6 +270,7 @@ class Processor
                             $result[$field->getName()] = $field->getType()->getNullableType()->parseInputValue($field->getConfig()->get('defaultValue'));
                         }
                     }
+
                     foreach ($argumentValue->getValue() as $key => $item) {
                         if ($argumentType->hasField($key)) {
                             $result[$key] = $this->prepareArgumentValue($item, $argumentType->getField($key)->getType()->getNullableType(), $request);
@@ -276,14 +278,10 @@ class Processor
                             $result[$key] = $item;
                         }
                     }
-                } else {
-                    if ($argumentValue instanceof VariableReference) {
-                        return $this->getVariableReferenceArgumentValue($argumentValue, $argumentType, $request);
-                    } else {
-                        if (is_array($argumentValue)) {
-                            return $argumentValue;
-                        }
-                    }
+                } elseif ($argumentValue instanceof VariableReference) {
+                    return $this->getVariableReferenceArgumentValue($argumentValue, $argumentType, $request);
+                } elseif (is_array($argumentValue)) {
+                    return $argumentValue;
                 }
 
                 return $result;
@@ -293,12 +291,10 @@ class Processor
                 /** @var $argumentValue AstLiteral|VariableReference */
                 if ($argumentValue instanceof VariableReference) {
                     return $this->getVariableReferenceArgumentValue($argumentValue, $argumentType, $request);
+                } elseif ($argumentValue instanceof AstLiteral) {
+                    return $argumentValue->getValue();
                 } else {
-                    if ($argumentValue instanceof AstLiteral) {
-                        return $argumentValue->getValue();
-                    } else {
-                        return $argumentValue;
-                    }
+                    return $argumentValue;
                 }
         }
 
@@ -316,10 +312,8 @@ class Processor
             ) {
                 throw new ResolveException(sprintf('Invalid variable "%s" type, allowed type is "%s"', $variable->getName(), $argumentType->getNamedType()->getNullableType()->getName()), $variable->getLocation());
             }
-        } else {
-            if ($variable->getTypeName() !== $argumentType->getName()) {
-                throw new ResolveException(sprintf('Invalid variable "%s" type, allowed type is "%s"', $variable->getName(), $argumentType->getName()), $variable->getLocation());
-            }
+        } elseif ($variable->getTypeName() !== $argumentType->getName()) {
+            throw new ResolveException(sprintf('Invalid variable "%s" type, allowed type is "%s"', $variable->getName(), $argumentType->getName()), $variable->getLocation());
         }
 
         $requestValue = $request->getVariable($variable->getName());
@@ -332,20 +326,20 @@ class Processor
 
 
     /**
-     * @param FieldInterface     $field
+     * @param FieldInterface $field
      * @param AbstractObjectType $type
-     * @param AstFieldInterface  $ast
      * @param                    $resolvedValue
      * @return array
+     * @throws ResolveException
      */
-    private function collectResult(FieldInterface $field, AbstractObjectType $type, $ast, $resolvedValue)
+    private function collectResult(FieldInterface $field, AbstractObjectType $type, Fragment|AstFieldInterface|TypedFragmentReference $ast, $resolvedValue): array
     {
         $results = [];
 
         foreach ($ast->getFields() as $astField) {
             switch (true) {
                 case $astField instanceof TypedFragmentReference:
-                    $astName  = $astField->getTypeName();
+                    $astName = $astField->getTypeName();
                     $typeName = $type->getName();
 
                     if ($typeName !== $astName) {
@@ -365,9 +359,9 @@ class Processor
                     break;
 
                 case $astField instanceof FragmentReference:
-                    $astFragment      = $this->executionContext->getRequest()->getFragment($astField->getName());
+                    $astFragment = $this->executionContext->getRequest()->getFragment($astField->getName());
                     $astFragmentModel = $astFragment->getModel();
-                    $typeName         = $type->getName();
+                    $typeName = $type->getName();
 
                     if ($typeName !== $astFragmentModel) {
                         foreach ($type->getInterfaces() as $interface) {
@@ -396,7 +390,8 @@ class Processor
     /**
      * Apply post-process callbacks to all deferred resolvers.
      */
-    protected function deferredResolve($resolvedValue, FieldInterface $field, callable $callback) {
+    protected function deferredResolve($resolvedValue, FieldInterface $field, callable $callback)
+    {
         if ($resolvedValue instanceof DeferredResolverInterface) {
             $deferredResult = new DeferredResult($resolvedValue, function ($resolvedValue) use ($field, $callback) {
                 // Allow nested deferred resolvers.
@@ -414,6 +409,7 @@ class Processor
 
             return $deferredResult;
         }
+
         // For simple values, invoke the callback immediately.
         return $callback($resolvedValue);
     }
@@ -421,7 +417,7 @@ class Processor
     protected function resolveScalar(FieldInterface $field, AstFieldInterface $ast, $parentValue)
     {
         $resolvedValue = $this->doResolve($field, $ast, $parentValue);
-        return $this->deferredResolve($resolvedValue, $field, function($resolvedValue) use ($field) {
+        return $this->deferredResolve($resolvedValue, $field, function ($resolvedValue) use ($field) {
             $this->resolveValidator->assertValidResolvedValueForField($field, $resolvedValue);
 
             /** @var AbstractScalarType $type */
@@ -436,7 +432,7 @@ class Processor
         /** @var AstQuery $ast */
         $resolvedValue = $this->doResolve($field, $ast, $parentValue);
 
-        return $this->deferredResolve($resolvedValue, $field, function ($resolvedValue) use ($field, $ast) {
+        return $this->deferredResolve($resolvedValue, $field, function ($resolvedValue) use ($field, $ast): ?array {
             $this->resolveValidator->assertValidResolvedValueForField($field, $resolvedValue);
 
             if (null === $resolvedValue) {
@@ -444,24 +440,22 @@ class Processor
             }
 
             /** @var AbstractListType $type */
-            $type     = $field->getType()->getNullableType();
+            $type = $field->getType()->getNullableType();
             $itemType = $type->getNamedType();
 
             $fakeAst = clone $ast;
-            if ($fakeAst instanceof AstQuery) {
-                $fakeAst->setArguments([]);
-            }
+            $fakeAst->setArguments([]);
 
             $fakeField = new Field([
-              'name' => $field->getName(),
-              'type' => $itemType,
-              'args' => $field->getArguments(),
+                'name' => $field->getName(),
+                'type' => $itemType,
+                'args' => $field->getArguments(),
             ]);
 
             $result = [];
             foreach ($resolvedValue as $resolvedValueItem) {
                 try {
-                    $fakeField->getConfig()->set('resolve', function () use ($resolvedValueItem) {
+                    $fakeField->getConfig()->set('resolve', static function () use ($resolvedValueItem) {
                         return $resolvedValueItem;
                     });
 
@@ -487,7 +481,7 @@ class Processor
                         default:
                             $value = null;
                     }
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     $this->executionContext->addError($e);
 
                     $value = null;
@@ -513,12 +507,13 @@ class Processor
             if (null === $resolvedValue) {
                 return null;
             }
+
             /** @var AbstractObjectType $type */
             $type = $field->getType()->getNullableType();
 
             try {
                 return $this->collectResult($field, $type, $ast, $resolvedValue);
-            } catch (\Exception $e) {
+            } catch (Exception $exception) {
                 return null;
             }
         });
@@ -536,7 +531,7 @@ class Processor
             }
 
             /** @var AbstractUnionType $type */
-            $type         = $field->getType()->getNullableType();
+            $type = $field->getType()->getNullableType();
             $resolveInfo = new ResolveInfo(
                 $field,
                 $ast instanceof AstQuery ? $ast->getFields() : [],
@@ -555,9 +550,9 @@ class Processor
             }
 
             $fakeField = new Field([
-              'name' => $field->getName(),
-              'type' => $resolvedType,
-              'args' => $field->getArguments(),
+                'name' => $field->getName(),
+                'type' => $resolvedType,
+                'args' => $field->getArguments(),
             ]);
 
             return $this->resolveObject($fakeField, $ast, $resolvedValue, true);
@@ -567,10 +562,10 @@ class Processor
     protected function parseAndCreateRequest($payload, $variables = [])
     {
         if (empty($payload)) {
-            throw new \InvalidArgumentException('Must provide an operation.');
+            throw new InvalidArgumentException('Must provide an operation.');
         }
 
-        $parser  = new Parser();
+        $parser = new Parser();
         $request = new Request($parser->parse($payload), $variables);
 
         (new RequestValidator())->validate($request);
@@ -587,9 +582,9 @@ class Processor
         return $field->resolve($parentValue, $arguments, $this->createResolveInfo($field, $astFields));
     }
 
-    protected function parseArgumentsValues(FieldInterface $field, AstFieldInterface $ast)
+    protected function parseArgumentsValues(FieldInterface $field, AstFieldInterface $ast): array
     {
-        $values   = [];
+        $values = [];
         $defaults = [];
 
         foreach ($field->getArguments() as $argument) {
@@ -600,7 +595,7 @@ class Processor
         }
 
         foreach ($ast->getArguments() as $astArgument) {
-            $argument     = $field->getArgument($astArgument->getName());
+            $argument = $field->getArgument($astArgument->getName());
             $argumentType = $argument->getType()->getNullableType();
 
             $values[$argument->getName()] = $argumentType->parseValue($astArgument->getValue());
@@ -618,7 +613,7 @@ class Processor
         return $ast->getAlias() ?: $ast->getName();
     }
 
-    protected function createResolveInfo(FieldInterface $field, array $astFields)
+    protected function createResolveInfo(FieldInterface $field, array $astFields): ResolveInfo
     {
         return new ResolveInfo($field, $astFields, $this->executionContext);
     }
@@ -626,14 +621,12 @@ class Processor
     /**
      * Combines the specified results using array_replace_recursive, including graceful handling for empty arrays
      *
-     * @param array $results
      *
-     * @return array
      */
-    protected function combineResults(array $results)
+    protected function combineResults(array $results): array
     {
-        if (count($results) > 0) {
-            return call_user_func_array('array_replace_recursive', $results);
+        if ($results !== []) {
+            return array_replace_recursive(...$results);
         }
 
         return [];
@@ -649,7 +642,7 @@ class Processor
         return $this->executionContext;
     }
 
-    public function getResponseData()
+    public function getResponseData(): array
     {
         $result = [];
 
@@ -675,7 +668,7 @@ class Processor
     /**
      * @param int $maxComplexity
      */
-    public function setMaxComplexity($maxComplexity)
+    public function setMaxComplexity($maxComplexity): void
     {
         $this->maxComplexity = $maxComplexity;
     }

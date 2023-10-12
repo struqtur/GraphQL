@@ -29,19 +29,15 @@ class Query extends AbstractAst implements FieldInterface
     /**
      * Query constructor.
      *
-     * @param string   $name
-     * @param string   $alias
-     * @param array    $arguments
-     * @param array    $fields
-     * @param array    $directives
-     * @param Location $location
+     * @param string $name
+     * @param string $alias
      */
     public function __construct($name, $alias, array $arguments, array $fields, array $directives, Location $location)
     {
         parent::__construct($location);
 
-        $this->name      = $name;
-        $this->alias     = $alias;
+        $this->name = $name;
+        $this->alias = $alias;
         $this->setFields($fields);
         $this->setArguments($arguments);
         $this->setDirectives($directives);
@@ -71,30 +67,28 @@ class Query extends AbstractAst implements FieldInterface
     /**
      * @param Field[]|Query[] $fields
      */
-    public function setFields($fields)
+    public function setFields($fields): void
     {
         /**
          * we cannot store fields by name because of TypedFragments
          */
         $this->fields = $fields;
-        }
+    }
 
     public function getAlias()
     {
         return $this->alias;
     }
 
-    public function hasField($name, $deep = false)
+    public function hasField($name, $deep = false): bool
     {
         foreach ($this->getFields() as $field) {
             if ($field->getName() == $name) {
                 return true;
             }
 
-            if ($deep && $field instanceof Query) {
-                if ($field->hasField($name)) {
-                    return true;
-                }
+            if ($deep && $field instanceof Query && $field->hasField($name)) {
+                return true;
             }
         }
 

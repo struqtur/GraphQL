@@ -10,25 +10,26 @@ namespace Youshido\GraphQL\Schema;
 
 
 use Youshido\GraphQL\Config\Schema\SchemaConfig;
-use Youshido\GraphQL\Type\SchemaTypesList;
 use Youshido\GraphQL\Type\SchemaDirectivesList;
+use Youshido\GraphQL\Type\SchemaTypesList;
 
 abstract class AbstractSchema
 {
 
-    /** @var SchemaConfig */
-    protected $config;
+    protected SchemaConfig $config;
 
-    public function __construct($config = [])
+    public function __construct(array $config = [])
     {
         if (!array_key_exists('query', $config)) {
             $config['query'] = new InternalSchemaQueryObject(['name' => $this->getName($config) . 'Query']);
         }
+
         if (!array_key_exists('mutation', $config)) {
             $config['mutation'] = new InternalSchemaMutationObject(['name' => $this->getName($config) . 'Mutation']);
         }
+
         if (!array_key_exists('types', $config)) {
-          $config['types'] = [];
+            $config['types'] = [];
         }
 
         $this->config = new SchemaConfig($config, $this);
@@ -38,12 +39,12 @@ abstract class AbstractSchema
 
     abstract public function build(SchemaConfig $config);
 
-    public function addQueryField($field, $fieldInfo = null)
+    public function addQueryField($field, $fieldInfo = null): void
     {
         $this->getQueryType()->addField($field, $fieldInfo);
     }
 
-    public function addMutationField($field, $fieldInfo = null)
+    public function addMutationField($field, $fieldInfo = null): void
     {
         $this->getMutationType()->addField($field, $fieldInfo);
     }
@@ -74,10 +75,10 @@ abstract class AbstractSchema
         return $this->config->getDirectiveList();
     }
 
-    public function getName($config)
+    public function getName(array $config)
     {
         $defaultName = 'RootSchema';
 
-        return isset($config["name"])? $config["name"] : $defaultName;
+        return isset($config["name"]) ? $config["name"] : $defaultName;
     }
 }

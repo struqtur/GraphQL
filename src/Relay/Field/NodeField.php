@@ -22,8 +22,7 @@ use Youshido\GraphQL\Type\Scalar\IdType;
 class NodeField extends AbstractField
 {
 
-    /** @var  FetcherInterface */
-    protected $fetcher;
+    protected FetcherInterface $fetcher;
 
     /** @var NodeInterfaceType */
     protected $type;
@@ -31,26 +30,26 @@ class NodeField extends AbstractField
     public function __construct(FetcherInterface $fetcher)
     {
         $this->fetcher = $fetcher;
-        $this->type    = (new NodeInterfaceType())->setFetcher($this->fetcher);
+        $this->type = (new NodeInterfaceType())->setFetcher($this->fetcher);
 
         parent::__construct([]);
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'node';
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Fetches an object given its ID';
     }
 
-    public function build(FieldConfig $config)
+    public function build(FieldConfig $config): void
     {
         $config->addArgument(new InputField([
-            'name'        => 'id',
-            'type'        => new NonNullType(new IdType()),
+            'name' => 'id',
+            'type' => new NonNullType(new IdType()),
             'description' => 'The ID of an object'
         ]));
     }

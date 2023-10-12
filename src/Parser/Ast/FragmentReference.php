@@ -18,8 +18,7 @@ class FragmentReference extends AbstractAst implements FragmentInterface
     protected $name;
 
     /**
-     * @param string   $name
-     * @param Location $location
+     * @param string $name
      */
     public function __construct($name, Location $location)
     {
@@ -39,7 +38,7 @@ class FragmentReference extends AbstractAst implements FragmentInterface
     /**
      * @param string $name
      */
-    public function setName($name)
+    public function setName($name): void
     {
         $this->name = $name;
     }

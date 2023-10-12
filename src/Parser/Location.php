@@ -19,7 +19,7 @@ class Location
 
     public function __construct($line, $column)
     {
-        $this->line   = $line;
+        $this->line = $line;
         $this->column = $column;
     }
 
@@ -40,10 +40,10 @@ class Location
     }
 
 
-    public function toArray()
+    public function toArray(): array
     {
         return [
-            'line'   => $this->getLine(),
+            'line' => $this->getLine(),
             'column' => $this->getColumn()
         ];
     }

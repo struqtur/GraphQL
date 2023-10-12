@@ -18,7 +18,7 @@ class TestField extends AbstractField
     /**
      * @return AbstractObjectType
      */
-    public function getType()
+    public function getType(): \Youshido\GraphQL\Type\Scalar\IntType
     {
         return new IntType();
     }
@@ -28,7 +28,7 @@ class TestField extends AbstractField
         return $value;
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'description';
     }

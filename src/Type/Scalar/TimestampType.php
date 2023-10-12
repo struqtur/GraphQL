@@ -9,6 +9,8 @@
 namespace Youshido\GraphQL\Type\Scalar;
 
 
+use DateTime;
+
 /**
  * Class TimestampType
  * @package Youshido\GraphQL\Type\Scalar
@@ -17,13 +19,13 @@ namespace Youshido\GraphQL\Type\Scalar;
 class TimestampType extends AbstractScalarType
 {
 
-    public function getName()
+    public function getName(): string
     {
         return 'Timestamp';
     }
 
     /**
-     * @param $value \DateTime
+     * @param $value DateTime
      * @return null|string
      */
     public function serialize($value)
@@ -35,7 +37,7 @@ class TimestampType extends AbstractScalarType
         return $value->getTimestamp();
     }
 
-    public function isValidValue($value)
+    public function isValidValue($value): bool
     {
         if (is_null($value) || is_object($value)) {
             return true;
@@ -44,7 +46,7 @@ class TimestampType extends AbstractScalarType
         return is_int($value);
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'DEPRECATED. Will be converted to a real timestamp';
     }

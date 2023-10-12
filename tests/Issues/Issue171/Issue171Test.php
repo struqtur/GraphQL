@@ -5,15 +5,16 @@ use Youshido\GraphQL\Execution\Processor;
 
 class Issue171Test extends \PHPUnit_Framework_TestCase
 {
-    public function testItSetsDeprecationReasonToNullByDefault()
+    public function testItSetsDeprecationReasonToNullByDefault(): void
     {
         $schema = new Issue171Schema();
         $processor = new Processor($schema);
 
         $processor->processPayload($this->getIntrospectionQuery(), []);
+        
         $resp = $processor->getResponseData();
 
-        $enumTypes = array_filter($resp['data']['__schema']['types'], function($type){
+        $enumTypes = array_filter($resp['data']['__schema']['types'], static function (array $type) : bool {
             return ($type['kind'] === 'ENUM');
         });
 

@@ -21,7 +21,7 @@ class DirectiveType extends AbstractObjectType
     /**
      * @return String type name
      */
-    public function getName()
+    public function getName(): string
     {
         return '__Directive';
     }
@@ -45,23 +45,25 @@ class DirectiveType extends AbstractObjectType
         /** @var DirectiveConfig $directiveConfig */
         $directiveConfig = $value->getConfig();
 
-        $locations = $directiveConfig->getLocations();
-
-        return $locations;
+        return $directiveConfig->getLocations();
     }
 
-    public function build($config)
+    public function build($config): void
     {
         $config
             ->addField('name', new NonNullType(TypeMap::TYPE_STRING))
             ->addField('description', TypeMap::TYPE_STRING)
             ->addField('args', [
-                'type'    => new NonNullType(new ListType(new NonNullType(new InputValueType()))),
-                'resolve' => [$this, 'resolveArgs'],
+                'type' => new NonNullType(new ListType(new NonNullType(new InputValueType()))),
+                'resolve' => function (DirectiveInterface $value) {
+                    return $this->resolveArgs($value);
+                },
             ])
-            ->addField('locations',[
-                'type'  =>  new NonNullType(new ListType(new NonNullType(new DirectiveLocationType()))),
-                'resolve' => [$this, 'resolveLocations'],
+            ->addField('locations', [
+                'type' => new NonNullType(new ListType(new NonNullType(new DirectiveLocationType()))),
+                'resolve' => function (DirectiveInterface $value) {
+                    return $this->resolveLocations($value);
+                },
             ]);
     }
 }

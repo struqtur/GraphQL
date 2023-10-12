@@ -19,7 +19,7 @@ use Youshido\Tests\DataProvider\TestInterfaceType;
 class InterfaceTypeTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function testInterfaceMethods()
+    public function testInterfaceMethods(): void
     {
         $interface = new TestInterfaceType();
         $this->assertEquals($interface->getNamedType(), $interface->getType());
@@ -47,7 +47,7 @@ class InterfaceTypeTest extends \PHPUnit_Framework_TestCase
             'fields'      => [
                 'name' => new StringType()
             ],
-            'resolveType' => function ($object) {
+            'resolveType' => static function ($object) {
                 return $object;
             }
         ]);
@@ -59,7 +59,7 @@ class InterfaceTypeTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($interfaceType->isValidValue('invalid object'));
     }
 
-    public function testApplyInterface()
+    public function testApplyInterface(): void
     {
         $extendedType = new TestExtendedType();
 

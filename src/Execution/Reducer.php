@@ -8,6 +8,7 @@
 namespace Youshido\GraphQL\Execution;
 
 
+use Generator;
 use Youshido\GraphQL\Execution\Context\ExecutionContextInterface;
 use Youshido\GraphQL\Execution\Visitor\AbstractQueryVisitor;
 use Youshido\GraphQL\Field\Field;
@@ -24,20 +25,18 @@ use Youshido\GraphQL\Type\Union\AbstractUnionType;
 class Reducer
 {
 
-    /** @var  ExecutionContextInterface */
-    private $executionContext;
+    private ?ExecutionContextInterface $executionContext = null;
 
     /**
      * Apply all of $reducers to this query.  Example reducer operations: checking for maximum query complexity,
      * performing look-ahead query planning, etc.
      *
-     * @param ExecutionContextInterface $executionContext
-     * @param AbstractQueryVisitor[]    $reducers
+     * @param AbstractQueryVisitor[] $reducers
      */
-    public function reduceQuery(ExecutionContextInterface $executionContext, array $reducers)
+    public function reduceQuery(ExecutionContextInterface $executionContext, array $reducers): void
     {
         $this->executionContext = $executionContext;
-        $schema                 = $executionContext->getSchema();
+        $schema = $executionContext->getSchema();
 
         foreach ($reducers as $reducer) {
             foreach ($executionContext->getRequest()->getAllOperations() as $operation) {
@@ -50,8 +49,7 @@ class Reducer
      * Entry point for the `walkQuery` routine.  Execution bounces between here, where the reducer's ->visit() method
      * is invoked, and `walkQuery` where we send in the scores from the `visit` call.
      *
-     * @param Query                $query
-     * @param AbstractType         $currentLevelSchema
+     * @param AbstractType $currentLevelSchema
      * @param AbstractQueryVisitor $reducer
      */
     protected function doVisit(Query $query, $currentLevelSchema, $reducer)
@@ -72,7 +70,7 @@ class Reducer
 
                     /**
                      * @var Query|FieldAst $queryField
-                     * @var Field          $astField
+                     * @var Field $astField
                      */
                     $cost = $reducer->visit($queryField->getKeyValueArguments(), $astField->getConfig(), $childCost);
                     $queryCost += $cost;
@@ -92,10 +90,9 @@ class Reducer
      * Fragments (anonymous and named), and Fields.  The core of the function is simple: recurse until we hit the base
      * case of a Field and yield that back up to the visitor up in `doVisit`.
      *
-     * @param Query|Field|\Youshido\GraphQL\Parser\Ast\Interfaces\FragmentInterface $queryNode
-     * @param FieldInterface                                                        $currentLevelAST
+     * @param Query|Field|FragmentInterface $queryNode
      *
-     * @return \Generator
+     * @return Generator
      */
     protected function walkQuery($queryNode, FieldInterface $currentLevelAST)
     {
@@ -106,11 +103,12 @@ class Reducer
                     if ($queryField instanceof FragmentReference) {
                         $queryField = $this->executionContext->getRequest()->getFragment($queryField->getName());
                     }
+
                     // the next 7 lines are essentially equivalent to `yield from $this->walkQuery(...)` in PHP7.
                     // for backwards compatibility this is equivalent.
                     // This pattern is repeated multiple times in this function, and unfortunately cannot be extracted or
                     // made less verbose.
-                    $gen  = $this->walkQuery($queryField, $currentLevelAST);
+                    $gen = $this->walkQuery($queryField, $currentLevelAST);
                     $next = $gen->current();
                     while ($next) {
                         $received = (yield $next);
@@ -122,7 +120,7 @@ class Reducer
                     if ($fieldType instanceof AbstractUnionType) {
                         foreach ($fieldType->getTypes() as $unionFieldType) {
                             if ($fieldAst = $unionFieldType->getField($queryField->getName())) {
-                                $gen  = $this->walkQuery($queryField, $fieldAst);
+                                $gen = $this->walkQuery($queryField, $fieldAst);
                                 $next = $gen->current();
                                 while ($next) {
                                     $received = (yield $next);
@@ -132,7 +130,7 @@ class Reducer
                             }
                         }
                     } elseif ($fieldType instanceof AbstractObjectType && $fieldAst = $fieldType->getField($queryField->getName())) {
-                        $gen  = $this->walkQuery($queryField, $fieldAst);
+                        $gen = $this->walkQuery($queryField, $fieldAst);
                         $next = $gen->current();
                         while ($next) {
                             $received = (yield $next);
@@ -143,6 +141,7 @@ class Reducer
                 }
             }
         }
+
         // sanity check.  don't yield fragments; they don't contribute to cost
         if ($queryNode instanceof Query || $queryNode instanceof FieldAst) {
             // BASE CASE.  If we're here we're done recursing -

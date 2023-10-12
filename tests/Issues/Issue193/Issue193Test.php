@@ -13,15 +13,16 @@ use Youshido\GraphQL\Type\Scalar\StringType;
 
 class Issue193Test extends \PHPUnit_Framework_TestCase
 {
-    public function testResolvedInterfacesShouldBeRegistered()
+    public function testResolvedInterfacesShouldBeRegistered(): void
     {
         $schema    = new Issue193Schema();
         $processor = new Processor($schema);
 
         $processor->processPayload($this->getIntrospectionQuery(), []);
+        
         $resp = $processor->getResponseData();
 
-        $typeNames = array_map(function ($type) {
+        $typeNames = array_map(static function (array $type) {
             return $type['name'];
         }, $resp['data']['__schema']['types']);
 
@@ -67,7 +68,7 @@ TEXT;
 
 class Issue193Schema extends AbstractSchema
 {
-    public function build(SchemaConfig $config)
+    public function build(SchemaConfig $config): void
     {
         $config->getQuery()->addField(
             'post',
@@ -81,7 +82,7 @@ class Issue193Schema extends AbstractSchema
 class PostType extends AbstractObjectType
 {
 
-    public function build($config)
+    public function build($config): void
     {
         $config->applyInterface(new ContentBlockInterface());
         $config->addFields([
@@ -89,7 +90,7 @@ class PostType extends AbstractObjectType
         ]);
     }
 
-    public function getInterfaces()
+    public function getInterfaces(): array
     {
         return [new ContentBlockInterface()];
     }
@@ -97,7 +98,7 @@ class PostType extends AbstractObjectType
 
 class UndiscoveredType extends AbstractObjectType
 {
-    public function build($config)
+    public function build($config): void
     {
         $config->applyInterface(new ContentBlockInterface());
     }
@@ -105,13 +106,13 @@ class UndiscoveredType extends AbstractObjectType
 
 class ContentBlockInterface extends AbstractInterfaceType
 {
-    public function build($config)
+    public function build($config): void
     {
         $config->addField('title', new NonNullType(new StringType()));
         $config->addField('summary', new StringType());
     }
 
-    public function resolveType($object)
+    public function resolveType($object): \Youshido\Tests\Issues\Issue193\PostType|\Youshido\Tests\Issues\Issue193\UndiscoveredType
     {
         if (isset($object['title'])) {
             return new PostType();
@@ -120,7 +121,7 @@ class ContentBlockInterface extends AbstractInterfaceType
         return new UndiscoveredType();
     }
 
-    public function getImplementations()
+    public function getImplementations(): array
     {
         return [
             new PostType(),

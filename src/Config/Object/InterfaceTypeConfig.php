@@ -23,13 +23,14 @@ use Youshido\GraphQL\Type\TypeService;
  */
 class InterfaceTypeConfig extends AbstractConfig implements TypeConfigInterface
 {
-    use FieldsAwareConfigTrait, ArgumentsAwareConfigTrait;
+    use FieldsAwareConfigTrait;
+    use ArgumentsAwareConfigTrait;
 
-    public function getRules()
+    public function getRules(): array
     {
         return [
-            'name'        => ['type' => TypeService::TYPE_STRING, 'final' => true],
-            'fields'      => ['type' => TypeService::TYPE_ARRAY_OF_FIELDS_CONFIG, 'final' => true],
+            'name' => ['type' => TypeService::TYPE_STRING, 'final' => true],
+            'fields' => ['type' => TypeService::TYPE_ARRAY_OF_FIELDS_CONFIG, 'final' => true],
             'description' => ['type' => TypeService::TYPE_STRING],
             'resolveType' => ['type' => TypeService::TYPE_CALLABLE, 'final' => true],
         ];

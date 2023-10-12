@@ -29,7 +29,7 @@ class Directive implements DirectiveInterface
         $this->build($this->config);
     }
 
-    public function build(DirectiveConfig $config)
+    public function build(DirectiveConfig $config): void
     {
 
     }

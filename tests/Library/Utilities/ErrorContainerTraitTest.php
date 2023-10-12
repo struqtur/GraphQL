@@ -25,7 +25,7 @@ class ErrorContainerTraitTest extends \PHPUnit_Framework_TestCase implements Err
         $this->clearErrors();
     }
 
-    public function testAddHasClearMergeErrors()
+    public function testAddHasClearMergeErrors(): void
     {
         $error = new \Exception('Error');
         $this->addError($error);
@@ -41,7 +41,7 @@ class ErrorContainerTraitTest extends \PHPUnit_Framework_TestCase implements Err
         $this->assertEquals([$error, $error], $this->getErrors());
     }
 
-    public function testGetErrorsAsArrayGenericExceptionWithoutCode()
+    public function testGetErrorsAsArrayGenericExceptionWithoutCode(): void
     {
         // Code is zero by default
         $this->addError(new \Exception('Generic exception'));
@@ -52,7 +52,7 @@ class ErrorContainerTraitTest extends \PHPUnit_Framework_TestCase implements Err
         ], $this->getErrorsArray());
     }
 
-    public function testGetErrorsAsArrayGenericExceptionWithCode()
+    public function testGetErrorsAsArrayGenericExceptionWithCode(): void
     {
         $this->addError(new \Exception('Generic exception with code', 4));
         $this->assertEquals([
@@ -63,7 +63,7 @@ class ErrorContainerTraitTest extends \PHPUnit_Framework_TestCase implements Err
         ], $this->getErrorsArray());
     }
 
-    public function testGetErrorsAsArrayLocationableException()
+    public function testGetErrorsAsArrayLocationableException(): void
     {
         $this->addError(new SyntaxErrorException('Syntax error', new Location(5, 88)));
         $this->assertEquals([
@@ -79,7 +79,7 @@ class ErrorContainerTraitTest extends \PHPUnit_Framework_TestCase implements Err
         ], $this->getErrorsArray());
     }
 
-    public function testGetErrorsAsArrayExtendedException()
+    public function testGetErrorsAsArrayExtendedException(): void
     {
         $this->addError(new ExtendedException('Extended exception'));
         $this->assertEquals([
@@ -93,7 +93,7 @@ class ErrorContainerTraitTest extends \PHPUnit_Framework_TestCase implements Err
         ], $this->getErrorsArray());
     }
 
-    public function testGetErrorsAsArrayExceptionWithEverything()
+    public function testGetErrorsAsArrayExceptionWithEverything(): void
     {
         $this->addError(new SuperException('Super exception', 3));
         $this->assertEquals([
@@ -117,7 +117,7 @@ class ErrorContainerTraitTest extends \PHPUnit_Framework_TestCase implements Err
 
 class ExtendedException extends \Exception implements ExtendedExceptionInterface
 {
-    public function getExtensions()
+    public function getExtensions(): array
     {
         return [
             'foo' => 'foo',
@@ -128,7 +128,7 @@ class ExtendedException extends \Exception implements ExtendedExceptionInterface
 
 class SuperException extends \Exception implements LocationableExceptionInterface, ExtendedExceptionInterface
 {
-    public function getExtensions()
+    public function getExtensions(): array
     {
         return [
             'foo' => 'foo',
@@ -136,7 +136,7 @@ class SuperException extends \Exception implements LocationableExceptionInterfac
         ];
     }
 
-    public function getLocation()
+    public function getLocation(): \Youshido\GraphQL\Parser\Location
     {
         return new Location(6, 10);
     }

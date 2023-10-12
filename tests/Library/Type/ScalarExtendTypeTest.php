@@ -18,7 +18,7 @@ use Youshido\Tests\DataProvider\TestTimeType;
 class ScalarExtendTypeTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function testType()
+    public function testType(): void
     {
         $reportType = new ObjectType([
             'name'   => 'Report',
@@ -33,7 +33,7 @@ class ScalarExtendTypeTest extends \PHPUnit_Framework_TestCase
                     'fields' => [
                         'latestReport' => [
                             'type'    => $reportType,
-                            'resolve' => function () {
+                            'resolve' => static function () : array {
                                 return [
                                     'title' => 'Accident #1',
                                     'time'  => '13:30:12',

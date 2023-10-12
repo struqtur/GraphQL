@@ -19,8 +19,9 @@ final class Field extends AbstractField
 
     protected $isFinal = true;
 
-    protected $_typeCache = null;
-    protected $_nameCache = null;
+    protected $_typeCache;
+
+    protected $_nameCache;
 
     /**
      * @return AbstractObjectType

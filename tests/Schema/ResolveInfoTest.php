@@ -19,7 +19,7 @@ use Youshido\Tests\DataProvider\TestSchema;
 
 class ResolveInfoTest extends \PHPUnit_Framework_TestCase
 {
-    public function testMethods()
+    public function testMethods(): void
     {
         $fieldAst         = new FieldAST('name', null, [], [], new Location(1,1));
         $field            = new Field(['name' => 'id', 'type' => new IntType()]);

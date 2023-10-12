@@ -10,14 +10,16 @@ use Youshido\GraphQL\Execution\Processor;
  */
 class Issue99Test extends \PHPUnit_Framework_TestCase
 {
-    const BUG_NOT_EXISTS_VALUE = 'bug not exists';
-    const BUG_EXISTS_VALUE = 'bug exists';
+    final const BUG_NOT_EXISTS_VALUE = 'bug not exists';
+    
+    final const BUG_EXISTS_VALUE = 'bug exists';
 
-    public function testQueryDateTimeTypeWithDateParameter()
+    public function testQueryDateTimeTypeWithDateParameter(): void
     {
         $schema = new Issue99Schema();
         $processor = new Processor($schema);
-        $processor->processPayload(sprintf("{ items{id, custom(argX: {x: \"%s\"}){ value } } }", self::BUG_NOT_EXISTS_VALUE));
+        $processor->processPayload(sprintf('{ items{id, custom(argX: {x: "%s"}){ value } } }', self::BUG_NOT_EXISTS_VALUE));
+        
         $res = $processor->getResponseData();
 
         self::assertTrue(isset($res['data']['items']));

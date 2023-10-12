@@ -19,9 +19,7 @@ class Directive extends AbstractAst
 
 
     /**
-     * @param string   $name
-     * @param array    $arguments
-     * @param Location $location
+     * @param string $name
      */
     public function __construct($name, array $arguments, Location $location)
     {
@@ -42,7 +40,7 @@ class Directive extends AbstractAst
     /**
      * @param mixed $name
      */
-    public function setName($name)
+    public function setName($name): void
     {
         $this->name = $name;
     }

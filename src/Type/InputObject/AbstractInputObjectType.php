@@ -9,6 +9,7 @@
 namespace Youshido\GraphQL\Type\InputObject;
 
 
+use Exception;
 use Youshido\GraphQL\Config\Object\InputObjectTypeConfig;
 use Youshido\GraphQL\Field\InputFieldInterface;
 use Youshido\GraphQL\Parser\Ast\ArgumentValue\InputObject;
@@ -21,7 +22,8 @@ use Youshido\GraphQL\Type\TypeMap;
 abstract class AbstractInputObjectType extends AbstractType
 {
 
-    use AutoNameTrait, FieldsAwareObjectTrait;
+    use AutoNameTrait;
+    use FieldsAwareObjectTrait;
 
     protected $isBuilt = false;
 
@@ -42,6 +44,7 @@ abstract class AbstractInputObjectType extends AbstractType
                 'name' => $this->getName()
             ];
         }
+
         $this->config = new InputObjectTypeConfig($config, $this);
     }
 
@@ -50,7 +53,7 @@ abstract class AbstractInputObjectType extends AbstractType
      */
     abstract public function build($config);
 
-    public function isValidValue($value)
+    public function isValidValue($value): bool
     {
         if ($value instanceof InputObject) {
             $value = $value->getValue();
@@ -64,8 +67,8 @@ abstract class AbstractInputObjectType extends AbstractType
             return false;
         }
 
-        $typeConfig     = $this->getConfig();
-        $requiredFields = array_filter($typeConfig->getFields(), function (InputFieldInterface $field) {
+        $typeConfig = $this->getConfig();
+        $requiredFields = array_filter($typeConfig->getFields(), static function (InputFieldInterface $field): bool {
             return $field->getType()->getKind() == TypeMap::KIND_NON_NULL;
         });
 
@@ -77,7 +80,7 @@ abstract class AbstractInputObjectType extends AbstractType
 
             $field = $typeConfig->getField($valueKey);
             if (!$field->getType()->isValidValue($valueItem)) {
-                $error                     = $field->getType()->getValidationError($valueItem) ?: '(no details available)';
+                $error = $field->getType()->getValidationError($valueItem) ?: '(no details available)';
                 $this->lastValidationError = sprintf('Not valid type for field "%s" in input type "%s": %s', $field->getName(), $this->getName(), $error);
                 return false;
             }
@@ -86,11 +89,12 @@ abstract class AbstractInputObjectType extends AbstractType
                 unset($requiredFields[$valueKey]);
             }
         }
-        if (count($requiredFields)) {
+
+        if (count($requiredFields) > 0) {
             $this->lastValidationError = sprintf('%s %s required on %s', implode(', ', array_keys($requiredFields)), count($requiredFields) > 1 ? 'are' : 'is', $typeConfig->getName());
         }
 
-        return !(count($requiredFields) > 0);
+        return count($requiredFields) <= 0;
     }
 
     public function getKind()
@@ -98,7 +102,7 @@ abstract class AbstractInputObjectType extends AbstractType
         return TypeMap::KIND_INPUT_OBJECT;
     }
 
-    public function isInputType()
+    public function isInputType(): bool
     {
         return true;
     }
@@ -106,7 +110,8 @@ abstract class AbstractInputObjectType extends AbstractType
     public function parseValue($value)
     {
         if (is_null($value)) return null;
-        if($value instanceof InputObject) {
+
+        if ($value instanceof InputObject) {
             $value = $value->getValue();
         }
 
@@ -117,8 +122,9 @@ abstract class AbstractInputObjectType extends AbstractType
             }
 
             if (!($inputField = $typeConfig->getField($valueKey))) {
-                throw new \Exception(sprintf('Invalid field "%s" on %s', $valueKey, $typeConfig->getName()));
+                throw new Exception(sprintf('Invalid field "%s" on %s', $valueKey, $typeConfig->getName()));
             }
+
             $value[$valueKey] = $inputField->getType()->parseValue($item);
         }
 

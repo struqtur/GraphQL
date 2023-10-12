@@ -18,7 +18,8 @@ use Youshido\GraphQL\Type\TypeMap;
 
 abstract class AbstractInterfaceType extends AbstractType
 {
-    use FieldsAwareObjectTrait, AutoNameTrait;
+    use FieldsAwareObjectTrait;
+    use AutoNameTrait;
 
     protected $isBuilt = false;
 
@@ -37,9 +38,9 @@ abstract class AbstractInterfaceType extends AbstractType
      *
      * @param $config
      */
-    public function __construct($config = [])
+    public function __construct(array $config = [])
     {
-        if (empty($config)) {
+        if ($config === []) {
             $config['name'] = $this->getName();
         }
 
@@ -63,13 +64,13 @@ abstract class AbstractInterfaceType extends AbstractType
         return $this;
     }
 
-    public function isValidValue($value)
+    public function isValidValue($value): bool
     {
         return is_array($value) || is_null($value) || is_object($value);
     }
 
     /**
-     * @return TypeInterface[] an array of types that implement this interface. Used mainly for introspection and 
+     * @return TypeInterface[] an array of types that implement this interface. Used mainly for introspection and
      *                         documentation generation.
      */
     public function getImplementations()

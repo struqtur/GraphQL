@@ -17,14 +17,15 @@ use Youshido\GraphQL\Type\TypeService;
 
 class EnumTypeConfig extends AbstractConfig implements TypeConfigInterface
 {
-    use FieldsAwareConfigTrait, ArgumentsAwareConfigTrait;
+    use FieldsAwareConfigTrait;
+    use ArgumentsAwareConfigTrait;
 
-    public function getRules()
+    public function getRules(): array
     {
         return [
-            'name'        => ['type' => TypeService::TYPE_STRING, 'final' => true],
+            'name' => ['type' => TypeService::TYPE_STRING, 'final' => true],
             'description' => ['type' => TypeService::TYPE_STRING],
-            'values'      => ['type' => TypeService::TYPE_ENUM_VALUES, 'required' => true],
+            'values' => ['type' => TypeService::TYPE_ENUM_VALUES, 'required' => true],
         ];
     }
 

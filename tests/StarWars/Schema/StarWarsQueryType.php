@@ -19,12 +19,12 @@ class StarWarsQueryType extends AbstractObjectType
     /**
      * @return String type name
      */
-    public function getName()
+    public function getName(): string
     {
         return 'Query';
     }
 
-    public function build($config)
+    public function build($config): void
     {
         $config
             ->addField('hero', [
@@ -32,7 +32,7 @@ class StarWarsQueryType extends AbstractObjectType
                 'args'    => [
                     'episode' => ['type' => new EpisodeEnum()]
                 ],
-                'resolve' => function ($root, $args) {
+                'resolve' => static function ($root, array $args) {
                     return StarWarsData::getHero(isset($args['episode']) ? $args['episode'] : null);
                 },
             ])
@@ -42,9 +42,8 @@ class StarWarsQueryType extends AbstractObjectType
                 'args'    => [
                     'id' => new IdType()
                 ],
-                'resolve' => function ($value = null, $args = []) {
+                'resolve' => static function ($value = null, array $args = []) {
                     $humans = StarWarsData::humans();
-
                     return isset($humans[$args['id']]) ? $humans[$args['id']] : null;
                 }
             ]))
@@ -54,9 +53,8 @@ class StarWarsQueryType extends AbstractObjectType
                 'args'    => [
                     'id' => new IdType()
                 ],
-                'resolve' => function ($value = null, $args = []) {
+                'resolve' => static function ($value = null, array $args = []) {
                     $droids = StarWarsData::droids();
-
                     return isset($droids[$args['id']]) ? $droids[$args['id']] : null;
                 }
             ]));

@@ -42,7 +42,7 @@ interface DeferredDatabase
 class DeferredQueryBuffer
 {
 
-    protected $database;
+    protected \Youshido\Tests\Schema\DeferredDatabase $database;
 
     protected $buffer = [];
 
@@ -75,6 +75,7 @@ class DeferredQueryBuffer
                 foreach ($query as $id) {
                     $this->results[$index][$id] = $result[$id];
                 }
+                
                 unset($this->buffer[$index]);
             }
         }
@@ -86,10 +87,7 @@ class DeferredQueryBuffer
 class DeferredUserType extends AbstractObjectType
 {
 
-    /**
-     * @var \Youshido\Tests\Schema\DeferredQueryBuffer
-     */
-    protected $database;
+    protected \Youshido\Tests\Schema\DeferredQueryBuffer $database;
 
     public function __construct(DeferredQueryBuffer $database)
     {
@@ -98,14 +96,14 @@ class DeferredUserType extends AbstractObjectType
     }
 
 
-    public function build($config)
+    public function build($config): void
     {
         $config->addField(
           new Field(
             [
               'name' => 'name',
               'type' => new StringType(),
-              'resolve' => function ($value) {
+              'resolve' => static function (array $value) {
                   return $value['name'];
               },
             ]
@@ -117,7 +115,7 @@ class DeferredUserType extends AbstractObjectType
             [
               'name' => 'friends',
               'type' => new ListType(new DeferredUserType($this->database)),
-              'resolve' => function ($value) {
+              'resolve' => function (array $value): \Youshido\GraphQL\Execution\DeferredResolver {
                   return new DeferredResolver(
                     $this->database->add($value['friends'])
                   );
@@ -131,7 +129,7 @@ class DeferredUserType extends AbstractObjectType
             [
               'name' => 'foes',
               'type' => new ListType(new DeferredUserType($this->database)),
-              'resolve' => function ($value) {
+              'resolve' => function (array $value): \Youshido\GraphQL\Execution\DeferredResolver {
                   return new DeferredResolver(
                     $this->database->add($value['foes'])
                   );
@@ -151,7 +149,7 @@ class DeferredSchema extends AbstractSchema
           [
             'name' => 'users',
             'type' => new ListType(new DeferredUserType($buffer)),
-            'resolve' => function ($value, $args) use ($buffer) {
+            'resolve' => static function ($value, array $args) use ($buffer) : \Youshido\GraphQL\Execution\DeferredResolver {
                 return new DeferredResolver($buffer->add($args['ids']));
             },
           ]
@@ -176,7 +174,7 @@ class DeferredSchema extends AbstractSchema
     }
 
 
-    public function build(SchemaConfig $config)
+    public function build(SchemaConfig $config): void
     {
     }
 
@@ -206,7 +204,7 @@ class DeferredTest extends \PHPUnit_Framework_TestCase
     /**
      * Test a simple single deferred field.
      */
-    public function testSingleResolve()
+    public function testSingleResolve(): void
     {
         $query = 'query {
           users(ids: ["a", "b"]) {
@@ -244,7 +242,7 @@ class DeferredTest extends \PHPUnit_Framework_TestCase
     /**
      * Test if multiple calls to the same field result in a single query.
      */
-    public function testMultiResolve()
+    public function testMultiResolve(): void
     {
 
         $query = 'query {
@@ -290,7 +288,7 @@ class DeferredTest extends \PHPUnit_Framework_TestCase
     /**
      * Test if recursive deferred resolvers work properly.
      */
-    public function testRecursiveResolve()
+    public function testRecursiveResolve(): void
     {
 
         $query = 'query {
@@ -344,7 +342,7 @@ class DeferredTest extends \PHPUnit_Framework_TestCase
     /**
      * Test if multiple deferred resolvers are optimized into two queries.
      */
-    public function testMultiRecursiveResolve()
+    public function testMultiRecursiveResolve(): void
     {
 
         $query = 'query {

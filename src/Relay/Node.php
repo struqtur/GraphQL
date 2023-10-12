@@ -8,6 +8,8 @@
 namespace Youshido\GraphQL\Relay;
 
 
+use InvalidArgumentException;
+
 class Node
 {
 
@@ -16,16 +18,18 @@ class Node
      *
      * @return array with type and id element
      */
-    public static function fromGlobalId($id)
+    public static function fromGlobalId($id): array
     {
-        $decoded = base64_decode($id, true);
+        $decoded = base64_decode((string)$id, true);
         if (!$decoded) {
-            throw new \InvalidArgumentException('ID must be a valid base 64 string');
+            throw new InvalidArgumentException('ID must be a valid base 64 string');
         }
+
         $decodedParts = explode(':', $decoded, 2);
         if (count($decodedParts) !== 2) {
-            throw new \InvalidArgumentException('ID was not correctly formed');
+            throw new InvalidArgumentException('ID was not correctly formed');
         }
+
         return $decodedParts;
     }
 
@@ -35,7 +39,7 @@ class Node
      *
      * @return string global id
      */
-    public static function toGlobalId($typeName, $id)
+    public static function toGlobalId($typeName, $id): string
     {
         return base64_encode(implode(':', [$typeName, $id]));
     }

@@ -14,9 +14,10 @@ use Youshido\GraphQL\Field\InputField;
 trait ArgumentsAwareConfigTrait
 {
     protected $arguments = [];
+
     protected $_isArgumentsBuilt;
 
-    public function buildArguments()
+    public function buildArguments(): void
     {
         if ($this->_isArgumentsBuilt) {
             return;
@@ -25,6 +26,7 @@ trait ArgumentsAwareConfigTrait
         if (!empty($this->data['args'])) {
             $this->addArguments($this->data['args']);
         }
+
         $this->_isArgumentsBuilt = true;
     }
 
@@ -47,12 +49,13 @@ trait ArgumentsAwareConfigTrait
         if (!($argument instanceof InputField)) {
             $argument = new InputField($this->buildConfig($argument, $argumentInfo));
         }
+
         $this->arguments[$argument->getName()] = $argument;
 
         return $this;
     }
 
-    protected function buildConfig($name, $info = null)
+    protected function buildConfig($name, $info = null): array
     {
         if (!is_array($info)) {
             return [
@@ -60,6 +63,7 @@ trait ArgumentsAwareConfigTrait
                 'name' => $name
             ];
         }
+
         if (empty($info['name'])) {
             $info['name'] = $name;
         }
@@ -79,15 +83,13 @@ trait ArgumentsAwareConfigTrait
 
     /**
      * @param $name
-     *
-     * @return bool
      */
-    public function hasArgument($name)
+    public function hasArgument($name): bool
     {
         return array_key_exists($name, $this->arguments);
     }
 
-    public function hasArguments()
+    public function hasArguments(): bool
     {
         return !empty($this->arguments);
     }

@@ -18,17 +18,17 @@ class TestInputField extends AbstractInputField
     /**
      * @return InputTypeInterface
      */
-    public function getType()
+    public function getType(): \Youshido\GraphQL\Type\Scalar\IntType
     {
         return new IntType();
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'description';
     }
 
-    public function getDefaultValue()
+    public function getDefaultValue(): string
     {
         return 'default';
     }

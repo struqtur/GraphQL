@@ -8,7 +8,7 @@
 
 namespace Youshido\GraphQL\Type;
 
-Interface TypeInterface extends InputTypeInterface
+interface TypeInterface extends InputTypeInterface
 {
 
 }

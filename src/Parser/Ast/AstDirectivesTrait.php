@@ -14,15 +14,15 @@ trait AstDirectivesTrait
     /** @var Directive[] */
     protected $directives;
 
-    private $directivesCache = null;
+    private $directivesCache;
 
 
-    public function hasDirectives()
+    public function hasDirectives(): bool
     {
         return (bool)count($this->directives);
     }
 
-    public function hasDirective($name)
+    public function hasDirective($name): bool
     {
         return array_key_exists($name, $this->directives);
     }
@@ -53,9 +53,9 @@ trait AstDirectivesTrait
     /**
      * @param $directives Directive[]
      */
-    public function setDirectives(array $directives)
+    public function setDirectives(array $directives): void
     {
-        $this->directives      = [];
+        $this->directives = [];
         $this->directivesCache = null;
 
         foreach ($directives as $directive) {
@@ -63,7 +63,7 @@ trait AstDirectivesTrait
         }
     }
 
-    public function addDirective(Directive $directive)
+    public function addDirective(Directive $directive): void
     {
         $this->directives[$directive->getName()] = $directive;
     }

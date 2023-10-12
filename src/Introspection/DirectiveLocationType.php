@@ -13,21 +13,28 @@ use Youshido\GraphQL\Type\Enum\AbstractEnumType;
 class DirectiveLocationType extends AbstractEnumType
 {
 
-    const QUERY = DirectiveLocation::QUERY;
-    const MUTATION = DirectiveLocation::MUTATION;
-    const FIELD = DirectiveLocation::FIELD;
-    const FIELD_DEFINITION = DirectiveLocation::FIELD_DEFINITION;
-    const FRAGMENT_DEFINITION = DirectiveLocation::FRAGMENT_DEFINITION;
-    const FRAGMENT_SPREAD = DirectiveLocation::FRAGMENT_SPREAD;
-    const INLINE_FRAGMENT = DirectiveLocation::INLINE_FRAGMENT;
-    const ENUM_VALUE = DirectiveLocation::ENUM_VALUE;
+    final const QUERY = DirectiveLocation::QUERY;
 
-    public function getName()
+    final const MUTATION = DirectiveLocation::MUTATION;
+
+    final const FIELD = DirectiveLocation::FIELD;
+
+    final const FIELD_DEFINITION = DirectiveLocation::FIELD_DEFINITION;
+
+    final const FRAGMENT_DEFINITION = DirectiveLocation::FRAGMENT_DEFINITION;
+
+    final const FRAGMENT_SPREAD = DirectiveLocation::FRAGMENT_SPREAD;
+
+    final const INLINE_FRAGMENT = DirectiveLocation::INLINE_FRAGMENT;
+
+    final const ENUM_VALUE = DirectiveLocation::ENUM_VALUE;
+
+    public function getName(): string
     {
         return '__DirectiveLocation';
     }
 
-    public function getValues()
+    public function getValues(): array
     {
         return [
             ['name' => 'QUERY', 'value' => self::QUERY],

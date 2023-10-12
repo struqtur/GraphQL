@@ -8,7 +8,7 @@ use Youshido\GraphQL\Type\TypeService;
 class TypeServiceTest extends TestCase
 {
 
-    public function testGetPropertyValue()
+    public function testGetPropertyValue(): void
     {
         $object = new DummyObjectWithTrickyGetters();
 
@@ -20,17 +20,17 @@ class TypeServiceTest extends TestCase
 
 class DummyObjectWithTrickyGetters
 {
-    public function getIssuer()
+    public function getIssuer(): string
     {
         return 'Foo';
     }
 
-    public function something()
+    public function something(): string
     {
         return 'something';
     }
 
-    public function issuerName()
+    public function issuerName(): string
     {
         return 'Bar';
     }

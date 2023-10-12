@@ -30,7 +30,7 @@ class FieldType extends AbstractObjectType
         return [];
     }
 
-    public function build($config)
+    public function build($config): void
     {
         $config
             ->addField('name', new NonNullType(TypeMap::TYPE_STRING))
@@ -38,16 +38,20 @@ class FieldType extends AbstractObjectType
             ->addField('isDeprecated', new NonNullType(TypeMap::TYPE_BOOLEAN))
             ->addField('deprecationReason', TypeMap::TYPE_STRING)
             ->addField('type', [
-                'type'    => new NonNullType(new QueryType()),
-                'resolve' => [$this, 'resolveType'],
+                'type' => new NonNullType(new QueryType()),
+                'resolve' => function (FieldInterface $value) {
+                    return $this->resolveType($value);
+                },
             ])
             ->addField('args', [
-                'type'    => new NonNullType(new ListType(new NonNullType(new InputValueType()))),
-                'resolve' => [$this, 'resolveArgs'],
+                'type' => new NonNullType(new ListType(new NonNullType(new InputValueType()))),
+                'resolve' => function (FieldInterface $value) {
+                    return $this->resolveArgs($value);
+                },
             ]);
     }
 
-    public function isValidValue($value)
+    public function isValidValue($value): bool
     {
         return $value instanceof FieldInterface;
     }
@@ -55,7 +59,7 @@ class FieldType extends AbstractObjectType
     /**
      * @return String type name
      */
-    public function getName()
+    public function getName(): string
     {
         return '__Field';
     }

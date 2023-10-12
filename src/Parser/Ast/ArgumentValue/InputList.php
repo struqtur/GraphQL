@@ -15,12 +15,8 @@ use Youshido\GraphQL\Parser\Location;
 class InputList extends AbstractAst implements ValueInterface
 {
 
-    protected $list = [];
+    protected array $list;
 
-    /**
-     * @param array    $list
-     * @param Location $location
-     */
     public function __construct(array $list, Location $location)
     {
         parent::__construct($location);
@@ -39,7 +35,7 @@ class InputList extends AbstractAst implements ValueInterface
     /**
      * @param array $value
      */
-    public function setValue($value)
+    public function setValue($value): void
     {
         $this->list = $value;
     }

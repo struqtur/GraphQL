@@ -16,7 +16,7 @@ use Youshido\GraphQL\Type\Scalar\StringType;
 class InputObjectDefaultValuesTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function testDefaultEnum()
+    public function testDefaultEnum(): void
     {
         $enumType = new EnumType([
             'name'   => 'InternalStatus',
@@ -49,7 +49,7 @@ class InputObjectDefaultValuesTest extends \PHPUnit_Framework_TestCase
                                 ]
                             ])
                         ],
-                        'resolve'    => function ($source, $args) {
+                        'resolve'    => static function ($source, array $args) : string {
                             return sprintf('Result with level %s and status %s',
                                 $args['statObject']['level'], $args['statObject']['status']
                             );
@@ -62,7 +62,7 @@ class InputObjectDefaultValuesTest extends \PHPUnit_Framework_TestCase
                                 'status' => $enumType
                             ]
                         ]),
-                        'resolve' => function() {
+                        'resolve' => static function () : array {
                             return [
                                 'status' => null
                             ];
@@ -75,6 +75,7 @@ class InputObjectDefaultValuesTest extends \PHPUnit_Framework_TestCase
 
         $processor = new Processor($schema);
         $processor->processPayload('{ stringQuery(statObject: { level: 1 }) }');
+        
         $result = $processor->getResponseData();
         $this->assertEquals(['data' => [
             'stringQuery' => 'Result with level 1 and status 1'

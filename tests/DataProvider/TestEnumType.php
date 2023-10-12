@@ -13,7 +13,7 @@ use Youshido\GraphQL\Type\Enum\AbstractEnumType;
 
 class TestEnumType extends AbstractEnumType
 {
-    public function getValues()
+    public function getValues(): array
     {
         return [
             [

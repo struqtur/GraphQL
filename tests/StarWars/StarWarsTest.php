@@ -21,7 +21,7 @@ class StarWarsTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider dataProvider
      */
-    public function testSchema($query, $validResult, $variables)
+    public function testSchema($query, $validResult, $variables): void
     {
         $processor = new Processor(new StarWarsSchema());
 
@@ -31,7 +31,7 @@ class StarWarsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($validResult, $responseData);
     }
 
-    public function testInvalidVariableType()
+    public function testInvalidVariableType(): void
     {
         $processor = new Processor(new StarWarsSchema());
 

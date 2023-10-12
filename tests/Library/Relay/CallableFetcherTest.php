@@ -14,9 +14,13 @@ use Youshido\Tests\DataProvider\TestObjectType;
 
 class CallableFetcherTest extends \PHPUnit_Framework_TestCase
 {
-    public function testMethods()
+    public function testMethods(): void
     {
-        $fetcher = new CallableFetcher(function ($type, $id) { return ['name' => $type . ' Name', 'id' => $id]; }, function ($object) { return $object; });
+        $fetcher = new CallableFetcher(static function (string $type, $id) : array {
+            return ['name' => $type . ' Name', 'id' => $id];
+        }, static function ($object) {
+            return $object;
+        });
         $this->assertEquals([
             'name' => 'User Name',
             'id'   => 12

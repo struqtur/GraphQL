@@ -16,14 +16,17 @@ final class ObjectType extends AbstractObjectType
     public function __construct(array $config)
     {
         $this->config = new ObjectTypeConfig($config, $this, true);
+        parent::__construct();
     }
 
     /**
      * @inheritdoc
-     * 
+     *
      * @codeCoverageIgnore
      */
-    public function build($config) { }
+    public function build($config): void
+    {
+    }
 
     public function getName()
     {

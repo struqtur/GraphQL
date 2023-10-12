@@ -12,7 +12,7 @@ class TestScalarDataProvider
 {
 
 
-    public static function getsList()
+    public static function getsList(): array
     {
         return [
             "Int",
@@ -23,7 +23,7 @@ class TestScalarDataProvider
         ];
     }
 
-    public static function getIntTestData()
+    public static function getIntTestData(): array
     {
         /** input, serialization, isValid */
         return [
@@ -47,7 +47,7 @@ class TestScalarDataProvider
         ];
     }
 
-    public static function getFloatTestData()
+    public static function getFloatTestData(): array
     {
         return [
             [1, 1.0, true],
@@ -63,7 +63,7 @@ class TestScalarDataProvider
         ];
     }
 
-    public static function getStringTestData()
+    public static function getStringTestData(): array
     {
         return [
             ["string", "string", true],
@@ -76,7 +76,7 @@ class TestScalarDataProvider
         ];
     }
 
-    public static function getBooleanTestData()
+    public static function getBooleanTestData(): array
     {
         return [
             ["string", true, false],
@@ -92,7 +92,7 @@ class TestScalarDataProvider
         ];
     }
 
-    public static function getIdTestData()
+    public static function getIdTestData(): array
     {
         return [
             ["string-id", "string-id", true],
@@ -101,7 +101,7 @@ class TestScalarDataProvider
         ];
     }
 
-    public static function getDatetimeTestData()
+    public static function getDatetimeTestData(): array
     {
         $time = time();
         return [
@@ -110,7 +110,7 @@ class TestScalarDataProvider
         ];
     }
 
-    public static function getDatetimetzTestData()
+    public static function getDatetimetzTestData(): array
     {
         $time = time();
         return [
@@ -119,7 +119,7 @@ class TestScalarDataProvider
         ];
     }
 
-    public static function getDateTestData()
+    public static function getDateTestData(): array
     {
         $time = time();
         return [
@@ -129,7 +129,7 @@ class TestScalarDataProvider
     }
 
 
-    public static function getTimestampTestData()
+    public static function getTimestampTestData(): array
     {
         $time = time();
         return [

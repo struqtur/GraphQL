@@ -18,7 +18,8 @@ use Youshido\GraphQL\Type\TypeService;
 abstract class AbstractInputField implements InputFieldInterface
 {
 
-    use FieldsArgumentsAwareObjectTrait, AutoNameTrait;
+    use FieldsArgumentsAwareObjectTrait;
+    use AutoNameTrait;
 
     protected $isFinal = false;
 
@@ -37,7 +38,7 @@ abstract class AbstractInputField implements InputFieldInterface
         $this->build($this->config);
     }
 
-    public function build(InputFieldConfig $config)
+    public function build(InputFieldConfig $config): void
     {
 
     }

@@ -17,19 +17,16 @@ class Argument extends AbstractAst
     /** @var string */
     private $name;
 
-    /** @var ValueInterface */
-    private $value;
+    private ValueInterface $value;
 
     /**
-     * @param string         $name
-     * @param ValueInterface $value
-     * @param Location       $location
+     * @param string $name
      */
     public function __construct($name, ValueInterface $value, Location $location)
     {
         parent::__construct($location);
 
-        $this->name  = $name;
+        $this->name = $name;
         $this->value = $value;
     }
 
@@ -44,13 +41,13 @@ class Argument extends AbstractAst
     /**
      * @param mixed $name
      */
-    public function setName($name)
+    public function setName($name): void
     {
         $this->name = $name;
     }
 
     /**
-     * @return \Youshido\GraphQL\Parser\Ast\Interfaces\ValueInterface
+     * @return ValueInterface
      */
     public function getValue()
     {
@@ -60,7 +57,7 @@ class Argument extends AbstractAst
     /**
      * @param mixed $value
      */
-    public function setValue($value)
+    public function setValue($value): void
     {
         $this->value = $value;
     }

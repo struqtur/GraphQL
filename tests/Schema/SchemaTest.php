@@ -22,13 +22,13 @@ use Youshido\Tests\DataProvider\TestSchema;
 class SchemaTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function testStandaloneEmptySchema()
+    public function testStandaloneEmptySchema(): void
     {
         $schema = new TestEmptySchema();
         $this->assertFalse($schema->getQueryType()->hasFields());
     }
 
-    public function testStandaloneSchema()
+    public function testStandaloneSchema(): void
     {
         $schema = new TestSchema();
         $this->assertTrue($schema->getQueryType()->hasFields());
@@ -36,13 +36,13 @@ class SchemaTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(1, count($schema->getMutationType()->getFields()));
 
-        $schema->addMutationField('changeUser', ['type' => new TestObjectType(), 'resolve' => function () {
+        $schema->addMutationField('changeUser', ['type' => new TestObjectType(), 'resolve' => static function () : void {
         }]);
         $this->assertEquals(2, count($schema->getMutationType()->getFields()));
 
     }
 
-    public function testSchemaWithoutClosuresSerializable()
+    public function testSchemaWithoutClosuresSerializable(): void
     {
         $schema = new TestEmptySchema();
         $schema->getQueryType()->addField('randomInt', [
@@ -59,7 +59,7 @@ class SchemaTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, count($unserialized->getQueryType()->getFields()));
     }
 
-    public function testCustomTypes()
+    public function testCustomTypes(): void
     {
         $authorType = null;
 
@@ -68,7 +68,7 @@ class SchemaTest extends \PHPUnit_Framework_TestCase
             'fields'      => [
                 'name' => new StringType(),
             ],
-            'resolveType' => function () use ($authorType) {
+            'resolveType' => static function () use ($authorType) {
                 return $authorType;
             }
         ]);
@@ -87,7 +87,7 @@ class SchemaTest extends \PHPUnit_Framework_TestCase
                 'fields' => [
                     'user' => [
                         'type'    => $userInterface,
-                        'resolve' => function () {
+                        'resolve' => static function () : array {
                             return [
                                 'name' => 'Alex'
                             ];

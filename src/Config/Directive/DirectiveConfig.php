@@ -24,13 +24,13 @@ class DirectiveConfig extends AbstractConfig
 
     protected $locations = [];
 
-    public function getRules()
+    public function getRules(): array
     {
         return [
-            'name'        => ['type' => TypeService::TYPE_STRING, 'final' => true],
+            'name' => ['type' => TypeService::TYPE_STRING, 'final' => true],
             'description' => ['type' => TypeService::TYPE_STRING],
-            'args'        => ['type' => TypeService::TYPE_ARRAY],
-            'locations'   => ['type' => TypeService::TYPE_ARRAY],
+            'args' => ['type' => TypeService::TYPE_ARRAY],
+            'locations' => ['type' => TypeService::TYPE_ARRAY],
         ];
     }
 
@@ -39,7 +39,7 @@ class DirectiveConfig extends AbstractConfig
         return $this->locations;
     }
 
-    public function build()
+    protected function build()
     {
         $this->buildArguments();
 

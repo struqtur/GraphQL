@@ -13,7 +13,7 @@ use Youshido\GraphQL\Type\Scalar\StringType;
 class ProcessorTest extends TestCase
 {
 
-    public function testNonNullDefaultValue()
+    public function testNonNullDefaultValue(): void
     {
         $schema = new Schema([
             'query' => new ObjectType([
@@ -27,7 +27,7 @@ class ProcessorTest extends TestCase
                                 'defaultValue' => 20,
                             ],
                         ],
-                        'resolve' => static function ($source, $args, ResolveInfo $info) {
+                        'resolve' => static function ($source, array $args, ResolveInfo $info): string {
                             return 'Alex age ' . $args['age'];
                         },
                     ],
@@ -44,7 +44,7 @@ class ProcessorTest extends TestCase
             $processor->processPayload('{ currentUser(age:10) }')->getResponseData());
     }
 
-    public function testNullDefaultValue()
+    public function testNullDefaultValue(): void
     {
         $schema = new Schema([
             'query' => new ObjectType([
@@ -58,7 +58,7 @@ class ProcessorTest extends TestCase
                                 'defaultValue' => null,
                             ],
                         ],
-                        'resolve' => static function ($source, $args, ResolveInfo $info) {
+                        'resolve' => static function ($source, array $args, ResolveInfo $info): string {
                             if ($args['age'] === null) {
                                 $args['age'] = 25;
                             }

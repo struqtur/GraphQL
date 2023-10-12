@@ -25,17 +25,17 @@ class FieldConfig extends AbstractConfig
 
     use ArgumentsAwareConfigTrait;
 
-    public function getRules()
+    public function getRules(): array
     {
         return [
-            'name'              => ['type' => TypeService::TYPE_STRING, 'final' => true],
-            'type'              => ['type' => TypeService::TYPE_GRAPHQL_TYPE, 'final' => true],
-            'args'              => ['type' => TypeService::TYPE_ARRAY],
-            'description'       => ['type' => TypeService::TYPE_STRING],
-            'resolve'           => ['type' => TypeService::TYPE_CALLABLE],
-            'isDeprecated'      => ['type' => TypeService::TYPE_BOOLEAN],
+            'name' => ['type' => TypeService::TYPE_STRING, 'final' => true],
+            'type' => ['type' => TypeService::TYPE_GRAPHQL_TYPE, 'final' => true],
+            'args' => ['type' => TypeService::TYPE_ARRAY],
+            'description' => ['type' => TypeService::TYPE_STRING],
+            'resolve' => ['type' => TypeService::TYPE_CALLABLE],
+            'isDeprecated' => ['type' => TypeService::TYPE_BOOLEAN],
             'deprecationReason' => ['type' => TypeService::TYPE_STRING],
-            'cost'              => ['type' => TypeService::TYPE_ANY]
+            'cost' => ['type' => TypeService::TYPE_ANY]
         ];
     }
 

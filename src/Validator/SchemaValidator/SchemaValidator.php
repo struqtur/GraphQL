@@ -19,13 +19,12 @@ class SchemaValidator
 {
 
     /** @var ConfigValidator */
-    private $configValidator = null;
+    private $configValidator;
+
     /**
-     * @param AbstractSchema $schema
-     *
      * @throws ConfigurationException
      */
-    public function validate(AbstractSchema $schema)
+    public function validate(AbstractSchema $schema): void
     {
         if (!$schema->getQueryType()->hasFields()) {
             throw new ConfigurationException('Schema has to have fields');
@@ -43,8 +42,6 @@ class SchemaValidator
     }
 
     /**
-     * @param AbstractObjectType $type
-     *
      * @throws ConfigurationException
      */
     protected function assertInterfaceImplementationCorrect(AbstractObjectType $type)
@@ -61,9 +58,8 @@ class SchemaValidator
     }
 
     /**
-     * @param Field                 $intField
-     * @param Field                 $objField
-     * @param AbstractInterfaceType $interface
+     * @param Field $intField
+     * @param Field $objField
      *
      * @throws ConfigurationException
      */
@@ -73,6 +69,7 @@ class SchemaValidator
         if ($intField->getType()->isCompositeType() !== $objField->getType()->isCompositeType()) {
             $isValid = false;
         }
+
         if ($intField->getType()->getNamedType()->getName() != $objField->getType()->getNamedType()->getName()) {
             $isValid = false;
         }

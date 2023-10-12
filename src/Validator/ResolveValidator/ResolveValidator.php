@@ -24,38 +24,35 @@ use Youshido\GraphQL\Type\Union\AbstractUnionType;
 class ResolveValidator implements ResolveValidatorInterface
 {
 
-    /** @var ExecutionContext */
-    private $executionContext;
+    private readonly ExecutionContext $executionContext;
 
 
     /**
      * ResolveValidator constructor.
-     *
-     * @param ExecutionContext $executionContext
      */
     public function __construct(ExecutionContext $executionContext)
     {
         $this->executionContext = $executionContext;
     }
-    
-    public function assetTypeHasField(AbstractType $objectType, AstFieldInterface $ast)
+
+    public function assetTypeHasField(AbstractType $objectType, AstFieldInterface $ast): void
     {
         /** @var AbstractObjectType $objectType */
         if ($this->executionContext->getField($objectType, $ast->getName()) !== null) {
             return;
         }
-        
-        if (!(TypeService::isObjectType($objectType) || TypeService::isInputObjectType($objectType)) || !$objectType->hasField($ast->getName())) {
-            $availableFieldNames = implode(', ', array_map(function (FieldInterface $field) {
+
+        if (!TypeService::isObjectType($objectType) && !TypeService::isInputObjectType($objectType) || !$objectType->hasField($ast->getName())) {
+            $availableFieldNames = implode(', ', array_map(static function (FieldInterface $field): string {
                 return sprintf('"%s"', $field->getName());
             }, $objectType->getFields()));
             throw new ResolveException(sprintf('Field "%s" not found in type "%s". Available fields are: %s', $ast->getName(), $objectType->getNamedType()->getName(), $availableFieldNames), $ast->getLocation());
         }
     }
 
-    public function assertValidArguments(FieldInterface $field, AstFieldInterface $query, Request $request)
+    public function assertValidArguments(FieldInterface $field, AstFieldInterface $query, Request $request): void
     {
-        $requiredArguments = array_filter($field->getArguments(), function (InputField $argument) {
+        $requiredArguments = array_filter($field->getArguments(), static function (InputField $argument): bool {
             return $argument->getType()->getKind() === TypeMap::KIND_NON_NULL;
         });
 
@@ -64,7 +61,7 @@ class ResolveValidator implements ResolveValidatorInterface
                 throw new ResolveException(sprintf('Unknown argument "%s" on field "%s"', $astArgument->getName(), $field->getName()), $astArgument->getLocation());
             }
 
-            $argument     = $field->getArgument($astArgument->getName());
+            $argument = $field->getArgument($astArgument->getName());
             $argumentType = $argument->getType()->getNullableType();
 
             switch ($argumentType->getKind()) {
@@ -88,12 +85,12 @@ class ResolveValidator implements ResolveValidatorInterface
             }
         }
 
-        if (count($requiredArguments)) {
+        if ($requiredArguments !== []) {
             throw new ResolveException(sprintf('Require "%s" arguments to query "%s"', implode(', ', array_keys($requiredArguments)), $query->getName()));
         }
     }
 
-    public function assertValidResolvedValueForField(FieldInterface $field, $resolvedValue)
+    public function assertValidResolvedValueForField(FieldInterface $field, $resolvedValue): void
     {
         if (null === $resolvedValue && $field->getType()->getKind() === TypeMap::KIND_NON_NULL) {
             throw new ResolveException(sprintf('Cannot return null for non-nullable field "%s"', $field->getName()));
@@ -107,7 +104,7 @@ class ResolveValidator implements ResolveValidatorInterface
         }
     }
 
-    public function assertTypeImplementsInterface(AbstractType $type, AbstractInterfaceType $interface)
+    public function assertTypeImplementsInterface(AbstractType $type, AbstractInterfaceType $interface): void
     {
         if ($type instanceof AbstractObjectType) {
             foreach ($type->getInterfaces() as $typeInterface) {
@@ -120,7 +117,7 @@ class ResolveValidator implements ResolveValidatorInterface
         throw new ResolveException(sprintf('Type "%s" does not implement "%s"', $type->getName(), $interface->getName()));
     }
 
-    public function assertTypeInUnionTypes(AbstractType $type, AbstractUnionType $unionType)
+    public function assertTypeInUnionTypes(AbstractType $type, AbstractUnionType $unionType): void
     {
         foreach ($unionType->getTypes() as $unionTypeItem) {
             if ($unionTypeItem->getName() === $type->getName()) {

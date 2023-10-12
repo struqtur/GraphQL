@@ -33,13 +33,13 @@ class InputValueType extends AbstractObjectType
      *
      * //todo implement value printer
      */
-    public function resolveDefaultValue($value)
+    public function resolveDefaultValue($value): string|array|null
     {
         $resolvedValue = $value->getConfig()->getDefaultValue();
         return $resolvedValue === null ? $resolvedValue : str_replace('"', '', json_encode($resolvedValue));
     }
 
-    public function build($config)
+    public function build($config): void
     {
         $config
             ->addField('name', new NonNullType(TypeMap::TYPE_STRING))
@@ -47,20 +47,24 @@ class InputValueType extends AbstractObjectType
             ->addField('isDeprecated', new NonNullType(TypeMap::TYPE_BOOLEAN))
             ->addField('deprecationReason', TypeMap::TYPE_STRING)
             ->addField(new Field([
-                'name'    => 'type',
-                'type'    => new NonNullType(new QueryType()),
-                'resolve' => [$this, 'resolveType']
+                'name' => 'type',
+                'type' => new NonNullType(new QueryType()),
+                'resolve' => function (AbstractSchema|Field $value): TypeInterface {
+                    return $this->resolveType($value);
+                }
             ]))
             ->addField('defaultValue', [
                 'type' => TypeMap::TYPE_STRING,
-                'resolve' => [$this, 'resolveDefaultValue']
+                'resolve' => function (AbstractSchema|Field $value): ?string {
+                    return $this->resolveDefaultValue($value);
+                }
             ]);
     }
 
     /**
      * @return string type name
      */
-    public function getName()
+    public function getName(): string
     {
         return '__InputValue';
     }

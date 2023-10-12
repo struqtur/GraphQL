@@ -7,6 +7,7 @@
 
 namespace Youshido\GraphQL\Config\Traits;
 
+use Exception;
 use Youshido\GraphQL\Execution\ResolveInfo;
 use Youshido\GraphQL\Type\TypeMap;
 use Youshido\GraphQL\Type\TypeService;
@@ -18,16 +19,14 @@ trait ResolvableObjectTrait
     {
         if ($resolveFunction = $this->getConfig()->getResolveFunction()) {
             return $resolveFunction($value, $args, $info);
+        } elseif (is_array($value) && array_key_exists($this->getName(), $value)) {
+            return $value[$this->getName()];
+        } elseif (is_object($value)) {
+            return TypeService::getPropertyValue($value, $this->getName());
+        } elseif ($this->getType()->getKind() !== TypeMap::KIND_NON_NULL) {
+            return null;
         } else {
-            if (is_array($value) && array_key_exists($this->getName(), $value)) {
-                return $value[$this->getName()];
-            } elseif (is_object($value)) {
-                return TypeService::getPropertyValue($value, $this->getName());
-            } elseif ($this->getType()->getKind() !== TypeMap::KIND_NON_NULL) {
-                return null;
-            } else {
-                throw new \Exception(sprintf('Property "%s" not found in resolve result', $this->getName()));
-            }
+            throw new Exception(sprintf('Property "%s" not found in resolve result', $this->getName()));
         }
     }
 

@@ -25,7 +25,7 @@ use Youshido\Tests\DataProvider\TestInputObjectType;
 class InputObjectTypeTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function testInternal()
+    public function testInternal(): void
     {
         $inputObjectType = new InputObjectType([
             'name'   => 'PostData',
@@ -41,13 +41,13 @@ class InputObjectTypeTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($inputObjectType->isValidValue(['title' => null]));
     }
 
-    public function testStandaloneClass()
+    public function testStandaloneClass(): void
     {
         $inputObjectType = new TestInputObjectType();
         $this->assertEquals('TestInputObject', $inputObjectType->getName());
     }
 
-    public function testListOfInputWithNonNull()
+    public function testListOfInputWithNonNull(): void
     {
         $processor = new Processor(new Schema([
             'query'    => new ObjectType([
@@ -55,7 +55,7 @@ class InputObjectTypeTest extends \PHPUnit_Framework_TestCase
                 'fields' => [
                     'empty' => [
                         'type'    => new StringType(),
-                        'resolve' => function () {
+                        'resolve' => static function () {
                             return null;
                         }
                     ]
@@ -74,7 +74,7 @@ class InputObjectTypeTest extends \PHPUnit_Framework_TestCase
                             ]))
                         ],
                         'type'    => new BooleanType(),
-                        'resolve' => function ($object, $args) {
+                        'resolve' => static function ($object, $args) : bool {
                             return true;
                         }
                     ]
@@ -100,7 +100,7 @@ class InputObjectTypeTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testNullableInputWithNonNull()
+    public function testNullableInputWithNonNull(): void
     {
         $processor = new Processor(new Schema([
             'query'    => new ObjectType([
@@ -108,7 +108,7 @@ class InputObjectTypeTest extends \PHPUnit_Framework_TestCase
                 'fields' => [
                     'empty' => [
                         'type'    => new StringType(),
-                        'resolve' => function () {
+                        'resolve' => static function () {
                             return null;
                         }
                     ]
@@ -127,7 +127,7 @@ class InputObjectTypeTest extends \PHPUnit_Framework_TestCase
                             ])
                         ],
                         'type'    => new BooleanType(),
-                        'resolve' => function ($object, $args) {
+                        'resolve' => static function ($object, $args) : bool {
                             return true;
                         }
                     ]
@@ -143,7 +143,7 @@ class InputObjectTypeTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testListInsideInputObject()
+    public function testListInsideInputObject(): void
     {
         $processor = new Processor(new Schema([
             'query'    => new ObjectType([
@@ -151,7 +151,7 @@ class InputObjectTypeTest extends \PHPUnit_Framework_TestCase
                 'fields' => [
                     'empty' => [
                         'type'    => new StringType(),
-                        'resolve' => function () {
+                        'resolve' => static function () : void {
                         }
                     ],
                 ]
@@ -174,7 +174,7 @@ class InputObjectTypeTest extends \PHPUnit_Framework_TestCase
                                 ]
                             ])
                         ],
-                        'resolve' => function () {
+                        'resolve' => static function () : string {
                             return 'success message';
                         }
                     ]
@@ -200,7 +200,7 @@ class InputObjectTypeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['data' => ['createList' => 'success message']], $processor->getResponseData());
     }
 
-    public function testInputObjectDefaultValue()
+    public function testInputObjectDefaultValue(): void
     {
         $processor = new Processor(new Schema([
             'query' => new ObjectType([
@@ -223,7 +223,7 @@ class InputObjectTypeTest extends \PHPUnit_Framework_TestCase
                                 ],
                             ],
                         ],
-                        'resolve' => function ($source, $args) {
+                        'resolve' => static function ($source, array $args) : array {
                             return [
                                 'limit is ' . $args['paging']['limit'],
                                 'offset is ' . $args['paging']['offset'],
@@ -235,6 +235,7 @@ class InputObjectTypeTest extends \PHPUnit_Framework_TestCase
             ]),
         ]));
         $processor->processPayload('{ cities }');
+        
         $response = $processor->getResponseData();
         $this->assertEquals(
             [
@@ -247,7 +248,7 @@ class InputObjectTypeTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testInvalidTypeErrors()
+    public function testInvalidTypeErrors(): void
     {
         $processor = new Processor(new Schema([
             'query' => new ObjectType([
@@ -270,7 +271,7 @@ class InputObjectTypeTest extends \PHPUnit_Framework_TestCase
                                 ]
                             ]),
                         ],
-                        'resolve' => function ($source, $args) {
+                        'resolve' => static function ($source, array $args) : string {
                             return sprintf('%s by %s', $args['title'], $args['userId']);
                         }
                     ],
@@ -279,6 +280,7 @@ class InputObjectTypeTest extends \PHPUnit_Framework_TestCase
             ]),
         ]));
         $processor->processPayload('mutation { createPost(object: {title: "Hello world"}) }');
+        
         $response = $processor->getResponseData();
         $this->assertEquals(
             [

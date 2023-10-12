@@ -8,7 +8,10 @@
 namespace Youshido\GraphQL\Type\ListType;
 
 
+use Traversable;
 use Youshido\GraphQL\Config\Object\ListTypeConfig;
+use Youshido\GraphQL\Exception\ConfigurationException;
+use Youshido\GraphQL\Exception\ValidationException;
 use Youshido\GraphQL\Type\CompositeTypeInterface;
 use Youshido\GraphQL\Type\Object\AbstractObjectType;
 use Youshido\GraphQL\Type\TypeMap;
@@ -20,9 +23,14 @@ abstract class AbstractListType extends AbstractObjectType implements CompositeT
      */
     protected $config;
 
+    /**
+     * @throws ValidationException
+     * @throws ConfigurationException
+     */
     public function __construct()
     {
         $this->config = new ListTypeConfig(['itemType' => $this->getItemType()], $this);
+        parent::__construct();
     }
 
     /**
@@ -35,7 +43,7 @@ abstract class AbstractListType extends AbstractObjectType implements CompositeT
      *
      * @return bool
      */
-    public function isValidValue($value)
+    public function isValidValue($value): bool
     {
         if (!$this->isIterable($value)) {
             return false;
@@ -68,11 +76,11 @@ abstract class AbstractListType extends AbstractObjectType implements CompositeT
     /**
      * @inheritdoc
      */
-    public function build($config)
+    public function build($config): void
     {
     }
 
-    public function isCompositeType()
+    public function isCompositeType(): bool
     {
         return true;
     }
@@ -94,7 +102,7 @@ abstract class AbstractListType extends AbstractObjectType implements CompositeT
 
     public function parseValue($value)
     {
-        foreach ((array) $value as $keyValue => $valueItem) {
+        foreach ((array)$value as $keyValue => $valueItem) {
             $value[$keyValue] = $this->getItemType()->parseValue($valueItem);
         }
 
@@ -106,16 +114,15 @@ abstract class AbstractListType extends AbstractObjectType implements CompositeT
         if (!$this->isIterable($value)) {
             return 'The value is not an iterable.';
         }
+
         return $this->config->get('itemType')->getValidationError($this->validList($value, true));
     }
 
     /**
      * @param $value
-     *
-     * @return bool
      */
-    protected function isIterable($value)
+    protected function isIterable($value): bool
     {
-        return null === $value || is_array($value) || ($value instanceof \Traversable);
+        return null === $value || is_array($value) || ($value instanceof Traversable);
     }
 }

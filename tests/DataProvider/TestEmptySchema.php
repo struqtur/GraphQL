@@ -14,12 +14,12 @@ use Youshido\GraphQL\Schema\AbstractSchema;
 
 class TestEmptySchema extends AbstractSchema
 {
-    public function build(SchemaConfig $config)
+    public function build(SchemaConfig $config): void
     {
     }
 
 
-    public function getName($config)
+    public function getName($config): string
     {
         return 'TestSchema';
     }

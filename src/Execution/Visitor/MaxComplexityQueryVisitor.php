@@ -12,6 +12,7 @@
 namespace Youshido\GraphQL\Execution\Visitor;
 
 
+use Exception;
 use Youshido\GraphQL\Config\Field\FieldConfig;
 
 class MaxComplexityQueryVisitor extends AbstractQueryVisitor
@@ -53,7 +54,7 @@ class MaxComplexityQueryVisitor extends AbstractQueryVisitor
         $this->memo += $cost;
 
         if ($this->memo > $this->maxScore) {
-            throw new \Exception('query exceeded max allowed complexity of ' . $this->maxScore);
+            throw new Exception('query exceeded max allowed complexity of ' . $this->maxScore);
         }
 
         return $cost;

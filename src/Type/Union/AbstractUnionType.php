@@ -21,7 +21,8 @@ use Youshido\GraphQL\Type\TypeMap;
 abstract class AbstractUnionType extends AbstractType implements AbstractInterfaceTypeInterface
 {
 
-    use ConfigAwareTrait, AutoNameTrait;
+    use ConfigAwareTrait;
+    use AutoNameTrait;
 
     protected $isFinal = false;
 
@@ -29,10 +30,10 @@ abstract class AbstractUnionType extends AbstractType implements AbstractInterfa
      * ObjectType constructor.
      * @param $config
      */
-    public function __construct($config = [])
+    public function __construct(array $config = [])
     {
-        if (empty($config)) {
-            $config['name']  = $this->getName();
+        if ($config === []) {
+            $config['name'] = $this->getName();
             $config['types'] = $this->getTypes();
         }
 
@@ -54,7 +55,7 @@ abstract class AbstractUnionType extends AbstractType implements AbstractInterfa
         return $this;
     }
 
-    public function isValidValue($value)
+    public function isValidValue($value): bool
     {
         return true;
     }

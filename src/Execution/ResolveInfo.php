@@ -16,14 +16,12 @@ use Youshido\GraphQL\Type\AbstractType;
 
 class ResolveInfo
 {
-    /** @var  FieldInterface */
-    protected $field;
+    protected FieldInterface $field;
 
     /** @var Field[] */
-    protected $fieldASTList;
+    protected array $fieldASTList;
 
-    /** @var ExecutionContextInterface */
-    protected $executionContext;
+    protected ExecutionContextInterface $executionContext;
 
     /**
      * This property is to be used for DI in various scenario
@@ -36,8 +34,8 @@ class ResolveInfo
 
     public function __construct(FieldInterface $field, array $fieldASTList, ExecutionContextInterface $executionContext)
     {
-        $this->field            = $field;
-        $this->fieldASTList     = $fieldASTList;
+        $this->field = $field;
+        $this->fieldASTList = $fieldASTList;
         $this->executionContext = $executionContext;
     }
 

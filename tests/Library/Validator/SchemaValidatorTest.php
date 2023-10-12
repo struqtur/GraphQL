@@ -23,7 +23,7 @@ class SchemaValidatorTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException \Youshido\GraphQL\Exception\ConfigurationException
      */
-    public function testInvalidSchema()
+    public function testInvalidSchema(): void
     {
         $validator = new SchemaValidator();
         $validator->validate(new TestEmptySchema());
@@ -33,7 +33,7 @@ class SchemaValidatorTest extends \PHPUnit_Framework_TestCase
      * @expectedException \Youshido\GraphQL\Exception\ConfigurationException
      * @expectedExceptionMessage Implementation of TestInterface is invalid for the field name
      */
-    public function testInvalidInterfacesSimpleType()
+    public function testInvalidInterfacesSimpleType(): void
     {
         $schema = new Schema([
             'query' => new ObjectType([
@@ -58,7 +58,7 @@ class SchemaValidatorTest extends \PHPUnit_Framework_TestCase
      * @expectedException \Youshido\GraphQL\Exception\ConfigurationException
      * @expectedExceptionMessage Implementation of TestInterface is invalid for the field name
      */
-    public function testInvalidInterfacesCompositeType()
+    public function testInvalidInterfacesCompositeType(): void
     {
         $schema = new Schema([
             'query' => new ObjectType([
@@ -83,7 +83,7 @@ class SchemaValidatorTest extends \PHPUnit_Framework_TestCase
      * @expectedException \Youshido\GraphQL\Exception\ConfigurationException
      * @expectedExceptionMessage Implementation of TestInterface is invalid for the field name
      */
-    public function testInvalidInterfaces()
+    public function testInvalidInterfaces(): void
     {
         $schema = new Schema([
             'query' => new ObjectType([
@@ -104,7 +104,7 @@ class SchemaValidatorTest extends \PHPUnit_Framework_TestCase
         $validator->validate($schema);
     }
 
-    public function testValidSchema()
+    public function testValidSchema(): void
     {
         $schema = new Schema([
             'query' => new ObjectType([
@@ -126,7 +126,7 @@ class SchemaValidatorTest extends \PHPUnit_Framework_TestCase
         try {
             $validator->validate($schema);
             $this->assertTrue(true);
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
             $this->assertTrue(false);
         }
     }

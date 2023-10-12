@@ -29,25 +29,27 @@ class GlobalIdField extends AbstractField
         $this->typeName = $typeName;
 
         $config = [
-            'type'    => $this->getType(),
-            'name'    => $this->getName(),
-            'resolve' => [$this, 'resolve']
+            'type' => $this->getType(),
+            'name' => $this->getName(),
+            'resolve' => function ($value, array $args, ResolveInfo $info) {
+                return $this->resolve($value, $args, $info);
+            }
         ];
 
         parent::__construct($config);
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'id';
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'The ID of an object';
     }
 
-    public function getType()
+    public function getType(): NonNullType
     {
         return new NonNullType(new IdType());
     }

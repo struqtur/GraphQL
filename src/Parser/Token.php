@@ -10,35 +10,57 @@ namespace Youshido\GraphQL\Parser;
 class Token
 {
 
-    const TYPE_END        = 'end';
-    const TYPE_IDENTIFIER = 'identifier';
-    const TYPE_NUMBER     = 'number';
-    const TYPE_STRING     = 'string';
-    const TYPE_ON         = 'on';
+    final const TYPE_END = 'end';
 
-    const TYPE_QUERY              = 'query';
-    const TYPE_MUTATION           = 'mutation';
-    const TYPE_FRAGMENT           = 'fragment';
-    const TYPE_FRAGMENT_REFERENCE = '...';
-    const TYPE_TYPED_FRAGMENT     = 'typed fragment';
+    final const TYPE_IDENTIFIER = 'identifier';
 
-    const TYPE_LBRACE        = '{';
-    const TYPE_RBRACE        = '}';
-    const TYPE_LPAREN        = '(';
-    const TYPE_RPAREN        = ')';
-    const TYPE_LSQUARE_BRACE = '[';
-    const TYPE_RSQUARE_BRACE = ']';
-    const TYPE_COLON         = ':';
-    const TYPE_COMMA         = ',';
-    const TYPE_VARIABLE      = '$';
-    const TYPE_POINT         = '.';
-    const TYPE_REQUIRED      = '!';
-    const TYPE_EQUAL         = '=';
-    const TYPE_AT            = '@';
+    final const TYPE_NUMBER = 'number';
 
-    const TYPE_NULL  = 'null';
-    const TYPE_TRUE  = 'true';
-    const TYPE_FALSE = 'false';
+    final const TYPE_STRING = 'string';
+
+    final const TYPE_ON = 'on';
+
+    final const TYPE_QUERY = 'query';
+
+    final const TYPE_MUTATION = 'mutation';
+
+    final const TYPE_FRAGMENT = 'fragment';
+
+    final const TYPE_FRAGMENT_REFERENCE = '...';
+
+    final const TYPE_TYPED_FRAGMENT = 'typed fragment';
+
+    final const TYPE_LBRACE = '{';
+
+    final const TYPE_RBRACE = '}';
+
+    final const TYPE_LPAREN = '(';
+
+    final const TYPE_RPAREN = ')';
+
+    final const TYPE_LSQUARE_BRACE = '[';
+
+    final const TYPE_RSQUARE_BRACE = ']';
+
+    final const TYPE_COLON = ':';
+
+    final const TYPE_COMMA = ',';
+
+    final const TYPE_VARIABLE = '$';
+
+    final const TYPE_POINT = '.';
+
+    final const TYPE_REQUIRED = '!';
+
+    final const TYPE_EQUAL = '=';
+
+    final const TYPE_AT = '@';
+
+    final const TYPE_NULL = 'null';
+
+    final const TYPE_TRUE = 'true';
+
+    final const TYPE_FALSE = 'false';
 
 
     /** @var mixed */
@@ -58,11 +80,11 @@ class Token
         $this->type = $type;
         $this->data = $data;
 
-        $this->line   = $line;
+        $this->line = $line;
         $this->column = $column;
 
         if ($data) {
-            $tokenLength = mb_strlen($data);
+            $tokenLength = mb_strlen((string)$data);
             $tokenLength = $tokenLength > 1 ? $tokenLength - 1 : 0;
 
             $this->column = $column - $tokenLength;
@@ -81,34 +103,34 @@ class Token
         }
     }
 
-    public static function tokenName($tokenType)
+    public static function tokenName($tokenType): string
     {
         return [
-            self::TYPE_END                => 'END',
-            self::TYPE_IDENTIFIER         => 'IDENTIFIER',
-            self::TYPE_NUMBER             => 'NUMBER',
-            self::TYPE_STRING             => 'STRING',
-            self::TYPE_ON                 => 'ON',
-            self::TYPE_QUERY              => 'QUERY',
-            self::TYPE_MUTATION           => 'MUTATION',
-            self::TYPE_FRAGMENT           => 'FRAGMENT',
+            self::TYPE_END => 'END',
+            self::TYPE_IDENTIFIER => 'IDENTIFIER',
+            self::TYPE_NUMBER => 'NUMBER',
+            self::TYPE_STRING => 'STRING',
+            self::TYPE_ON => 'ON',
+            self::TYPE_QUERY => 'QUERY',
+            self::TYPE_MUTATION => 'MUTATION',
+            self::TYPE_FRAGMENT => 'FRAGMENT',
             self::TYPE_FRAGMENT_REFERENCE => 'FRAGMENT_REFERENCE',
-            self::TYPE_TYPED_FRAGMENT     => 'TYPED_FRAGMENT',
-            self::TYPE_LBRACE             => 'LBRACE',
-            self::TYPE_RBRACE             => 'RBRACE',
-            self::TYPE_LPAREN             => 'LPAREN',
-            self::TYPE_RPAREN             => 'RPAREN',
-            self::TYPE_LSQUARE_BRACE      => 'LSQUARE_BRACE',
-            self::TYPE_RSQUARE_BRACE      => 'RSQUARE_BRACE',
-            self::TYPE_COLON              => 'COLON',
-            self::TYPE_COMMA              => 'COMMA',
-            self::TYPE_VARIABLE           => 'VARIABLE',
-            self::TYPE_POINT              => 'POINT',
-            self::TYPE_NULL               => 'NULL',
-            self::TYPE_TRUE               => 'TRUE',
-            self::TYPE_FALSE              => 'FALSE',
-            self::TYPE_REQUIRED           => 'REQUIRED',
-            self::TYPE_AT                 => 'AT',
+            self::TYPE_TYPED_FRAGMENT => 'TYPED_FRAGMENT',
+            self::TYPE_LBRACE => 'LBRACE',
+            self::TYPE_RBRACE => 'RBRACE',
+            self::TYPE_LPAREN => 'LPAREN',
+            self::TYPE_RPAREN => 'RPAREN',
+            self::TYPE_LSQUARE_BRACE => 'LSQUARE_BRACE',
+            self::TYPE_RSQUARE_BRACE => 'RSQUARE_BRACE',
+            self::TYPE_COLON => 'COLON',
+            self::TYPE_COMMA => 'COMMA',
+            self::TYPE_VARIABLE => 'VARIABLE',
+            self::TYPE_POINT => 'POINT',
+            self::TYPE_NULL => 'NULL',
+            self::TYPE_TRUE => 'TRUE',
+            self::TYPE_FALSE => 'FALSE',
+            self::TYPE_REQUIRED => 'REQUIRED',
+            self::TYPE_AT => 'AT',
         ][$tokenType];
     }
 

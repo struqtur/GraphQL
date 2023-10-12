@@ -16,14 +16,15 @@ final class InterfaceType extends AbstractInterfaceType
     public function __construct($config = [])
     {
         $this->config = new InterfaceTypeConfig($config, $this, true);
+        parent::__construct();
     }
 
     /**
      * @inheritdoc
-     * 
+     *
      * @codeCoverageIgnore
      */
-    public function build($config)
+    public function build($config): void
     {
     }
 

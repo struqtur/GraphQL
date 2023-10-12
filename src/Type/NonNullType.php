@@ -16,20 +16,21 @@ final class NonNullType extends AbstractType implements CompositeTypeInterface
 {
     use ConfigAwareTrait;
 
-    private $_typeOf;
+    private AbstractType|string|Scalar\AbstractScalarType $_typeOf;
 
     /**
      * NonNullType constructor.
      *
-     * @param AbstractType|string $fieldType
+     * @param string|AbstractType $fieldType
      *
      * @throws ConfigurationException
      */
-    public function __construct($fieldType)
+    public function __construct(string|AbstractType $fieldType)
     {
         if (!TypeService::isGraphQLType($fieldType)) {
             throw new ConfigurationException('NonNullType accepts only GraphpQL Types as argument');
         }
+
         if (TypeService::isScalarType($fieldType)) {
             $fieldType = TypeFactory::getScalarType($fieldType);
         }
@@ -42,7 +43,7 @@ final class NonNullType extends AbstractType implements CompositeTypeInterface
         return null;
     }
 
-    public function getKind()
+    public function getKind(): string
     {
         return TypeMap::KIND_NON_NULL;
     }
@@ -52,7 +53,7 @@ final class NonNullType extends AbstractType implements CompositeTypeInterface
         return $value;
     }
 
-    public function isValidValue($value)
+    public function isValidValue($value): bool
     {
         if ($value === null) {
             return false;
@@ -61,27 +62,27 @@ final class NonNullType extends AbstractType implements CompositeTypeInterface
         return $this->getNullableType()->isValidValue($value);
     }
 
-    public function isCompositeType()
+    public function isCompositeType(): bool
     {
         return true;
     }
 
-    public function isInputType()
+    public function isInputType(): bool
     {
         return true;
     }
 
-    public function getNamedType()
+    public function getNamedType(): NonNullType|Scalar\AbstractScalarType|string|AbstractType
     {
         return $this->getTypeOf();
     }
 
-    public function getNullableType()
+    public function getNullableType(): NonNullType|Object\AbstractObjectType|Scalar\AbstractScalarType|string|AbstractType
     {
         return $this->getTypeOf();
     }
 
-    public function getTypeOf()
+    public function getTypeOf(): Scalar\AbstractScalarType|string|AbstractType
     {
         return $this->_typeOf;
     }
@@ -91,11 +92,12 @@ final class NonNullType extends AbstractType implements CompositeTypeInterface
         return $this->getNullableType()->parseValue($value);
     }
 
-    public function getValidationError($value = null)
+    public function getValidationError($value = null): string
     {
         if ($value === null) {
             return 'Field must not be NULL';
         }
+
         return $this->getNullableType()->getValidationError($value);
     }
 

@@ -51,8 +51,6 @@ trait TypeCollectorTrait
                 break;
 
             case TypeMap::KIND_LIST:
-                $this->collectTypes($type->getNamedType());
-                break;
 
             case TypeMap::KIND_NON_NULL:
                 $this->collectTypes($type->getNamedType());
@@ -61,7 +59,7 @@ trait TypeCollectorTrait
         }
     }
 
-    private function checkAndInsertInterfaces($type)
+    private function checkAndInsertInterfaces($type): void
     {
         foreach ((array)$type->getConfig()->getInterfaces() as $interface) {
             $this->insertType($interface->getName(), $interface);
@@ -77,7 +75,7 @@ trait TypeCollectorTrait
     /**
      * @param $type AbstractObjectType
      */
-    private function collectFieldsArgsTypes($type)
+    private function collectFieldsArgsTypes($type): void
     {
         foreach ($type->getConfig()->getFields() as $field) {
             $arguments = $field->getConfig()->getArguments();
@@ -92,7 +90,7 @@ trait TypeCollectorTrait
         }
     }
 
-    private function insertType($name, $type)
+    private function insertType($name, $type): bool
     {
         if (!array_key_exists($name, $this->types)) {
             $this->types[$name] = $type;

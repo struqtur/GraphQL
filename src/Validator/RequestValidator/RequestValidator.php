@@ -14,7 +14,7 @@ use Youshido\GraphQL\Execution\Request;
 class RequestValidator implements RequestValidatorInterface
 {
 
-    public function validate(Request $request)
+    public function validate(Request $request): void
     {
         $this->assertFragmentReferencesValid($request);
         $this->assetFragmentsUsed($request);
@@ -22,7 +22,7 @@ class RequestValidator implements RequestValidatorInterface
         $this->assertAllVariablesUsed($request);
     }
 
-    private function assetFragmentsUsed(Request $request)
+    private function assetFragmentsUsed(Request $request): void
     {
         foreach ($request->getFragmentReferences() as $fragmentReference) {
             $request->getFragment($fragmentReference->getName())->setUsed(true);
@@ -35,16 +35,16 @@ class RequestValidator implements RequestValidatorInterface
         }
     }
 
-    private function assertFragmentReferencesValid(Request $request)
+    private function assertFragmentReferencesValid(Request $request): void
     {
         foreach ($request->getFragmentReferences() as $fragmentReference) {
-            if (!$request->getFragment($fragmentReference->getName())) {
+            if ($request->getFragment($fragmentReference->getName()) === null) {
                 throw new InvalidRequestException(sprintf('Fragment "%s" not defined in query', $fragmentReference->getName()), $fragmentReference->getLocation());
             }
         }
     }
 
-    private function assertAllVariablesExists(Request $request)
+    private function assertAllVariablesExists(Request $request): void
     {
         foreach ($request->getVariableReferences() as $variableReference) {
             if (!$variableReference->getVariable()) {
@@ -53,7 +53,7 @@ class RequestValidator implements RequestValidatorInterface
         }
     }
 
-    private function assertAllVariablesUsed(Request $request)
+    private function assertAllVariablesUsed(Request $request): void
     {
         foreach ($request->getQueryVariables() as $queryVariable) {
             if (!$queryVariable->isUsed()) {

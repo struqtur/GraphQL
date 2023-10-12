@@ -18,12 +18,12 @@ class SchemaField extends AbstractField
     /**
      * @return AbstractObjectType
      */
-    public function getType()
+    public function getType(): SchemaType
     {
         return new SchemaType();
     }
 
-    public function getName()
+    public function getName(): string
     {
         return '__schema';
     }

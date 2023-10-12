@@ -18,7 +18,7 @@ use Youshido\Tests\DataProvider\TestObjectType;
 class TypeUtilitiesTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function testTypeService()
+    public function testTypeService(): void
     {
         $this->assertTrue(TypeService::isScalarType(TypeMap::TYPE_STRING));
         $this->assertFalse(TypeService::isScalarType('gibberish'));
@@ -35,12 +35,12 @@ class TypeUtilitiesTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException \Exception
      */
-    public function testNamedTypeResolverException()
+    public function testNamedTypeResolverException(): void
     {
         TypeService::resolveNamedType(['name' => 'test']);
     }
 
-    public function testIsInputType()
+    public function testIsInputType(): void
     {
         $testType = new ObjectType(['name' => 'test', 'fields' => ['name' => new StringType()]]);
         $this->assertTrue(TypeService::isInputType(new StringType()));
@@ -49,14 +49,14 @@ class TypeUtilitiesTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse(TypeService::isInputType($testType));
     }
 
-    public function testIsAbstractType()
+    public function testIsAbstractType(): void
     {
         $this->assertTrue(TypeService::isAbstractType(new TestInterfaceType()));
         $this->assertFalse(TypeService::isAbstractType(new StringType()));
         $this->assertFalse(TypeService::isAbstractType('invalid type'));
     }
 
-    public function testGetPropertyValue() {
+    public function testGetPropertyValue(): void {
         $arrayData = (new TestObjectType())->getData();
 
         // Test with arrays
@@ -80,22 +80,22 @@ class TypeUtilitiesTest extends \PHPUnit_Framework_TestCase
  */
 class ObjectWithVariousGetters
 {
-    public function getName()
+    public function getName(): string
     {
         return 'John';
     }
 
-    public function getNamedAfter()
+    public function getNamedAfter(): string
     {
         return 'John Doe';
     }
 
-    public function isTrue()
+    public function isTrue(): bool
     {
         return true;
     }
 
-    public function isFalse()
+    public function isFalse(): bool
     {
         return false;
     }

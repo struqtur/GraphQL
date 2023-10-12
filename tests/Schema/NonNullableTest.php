@@ -18,14 +18,14 @@ use Youshido\GraphQL\Type\Scalar\StringType;
 
 class uid
 {
-    private $uid;
+    private readonly string $uid;
 
     public function __construct($uid)
     {
         $this->uid = $uid;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->uid;
     }
@@ -40,7 +40,7 @@ class NonNullableTest extends \PHPUnit_Framework_TestCase
      * @param $query
      * @param $expected
      */
-    public function testNullableResolving($query, $expected)
+    public function testNullableResolving($query, $expected): void
     {
         $schema = new Schema([
             'query' => new ObjectType([
@@ -48,13 +48,13 @@ class NonNullableTest extends \PHPUnit_Framework_TestCase
                 'fields' => [
                     'nonNullScalar'        => [
                         'type'    => new NonNullType(new IntType()),
-                        'resolve' => function () {
+                        'resolve' => static function () {
                             return null;
                         },
                     ],
                     'nonNullList'          => [
                         'type'    => new NonNullType(new ListType(new IntType())),
-                        'resolve' => function () {
+                        'resolve' => static function () {
                             return null;
                         }
                     ],
@@ -66,7 +66,7 @@ class NonNullableTest extends \PHPUnit_Framework_TestCase
                                 'name' => new StringType(),
                             ]
                         ])),
-                        'resolve' => function () {
+                        'resolve' => static function () : array {
                             return [
                                 'id'   => new uid('6cfb044c-9c0a-4ddd-9ef8-a0b940818db3'),
                                 'name' => 'Alex'
@@ -75,7 +75,7 @@ class NonNullableTest extends \PHPUnit_Framework_TestCase
                     ],
                     'nonNullListOfNpnNull' => [
                         'type'    => new NonNullType(new ListType(new NonNullType(new IntType()))),
-                        'resolve' => function () {
+                        'resolve' => static function () : array {
                             return [1, null];
                         }
                     ],
@@ -84,7 +84,7 @@ class NonNullableTest extends \PHPUnit_Framework_TestCase
                             'ids' => new NonNullType(new ListType(new IntType()))
                         ],
                         'type'    => new IntType(),
-                        'resolve' => function () {
+                        'resolve' => static function () : int {
                             return 1;
                         }
                     ],
@@ -93,7 +93,7 @@ class NonNullableTest extends \PHPUnit_Framework_TestCase
                             'ids' => new NonNullType(new ListType(new NonNullType(new IntType())))
                         ],
                         'type'    => new IntType(),
-                        'resolve' => function () {
+                        'resolve' => static function () : int {
                             return 1;
                         }
                     ],
@@ -103,6 +103,7 @@ class NonNullableTest extends \PHPUnit_Framework_TestCase
 
         $processor = new Processor($schema);
         $processor->processPayload($query);
+        
         $result = $processor->getResponseData();
 
         $this->assertEquals($expected, $result);

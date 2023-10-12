@@ -11,7 +11,7 @@ namespace Youshido\GraphQL\Type\Scalar;
 class FloatType extends AbstractScalarType
 {
 
-    public function getName()
+    public function getName(): string
     {
         return 'Float';
     }
@@ -21,20 +21,19 @@ class FloatType extends AbstractScalarType
         if ($value === null) {
             return null;
         } else {
-            return floatval($value);
+            return (float)$value;
         }
     }
 
-    public function isValidValue($value)
+    public function isValidValue($value): bool
     {
         return is_null($value) || is_float($value) || is_int($value);
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
-        return 'The `Float` scalar type represents signed double-precision fractional ' .
-               'values as specified by ' .
-               '[IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point).';
+        return 'The `Float` scalar type represents signed double-precision fractional values as specified by ' .
+            '[IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point).';
     }
 
 }

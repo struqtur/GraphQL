@@ -19,7 +19,7 @@ class SchemaType extends AbstractObjectType
     /**
      * @return String type name
      */
-    public function getName()
+    public function getName(): string
     {
         return '__Schema';
     }
@@ -48,29 +48,37 @@ class SchemaType extends AbstractObjectType
         return $dirs;
     }
 
-    public function build($config)
+    public function build($config): void
     {
         $config
             ->addField(new Field([
-                'name'    => 'queryType',
-                'type'    => new QueryType(),
-                'resolve' => [$this, 'resolveQueryType']
+                'name' => 'queryType',
+                'type' => new QueryType(),
+                'resolve' => function ($value) {
+                    return $this->resolveQueryType($value);
+                }
             ]))
             ->addField(new Field([
-                'name'    => 'mutationType',
-                'type'    => new QueryType(),
-                'resolve' => [$this, 'resolveMutationType']
+                'name' => 'mutationType',
+                'type' => new QueryType(),
+                'resolve' => function ($value) {
+                    return $this->resolveMutationType($value);
+                }
             ]))
             ->addField(new Field([
-                'name'    => 'subscriptionType',
-                'type'    => new QueryType(),
-                'resolve' => [$this, 'resolveSubscriptionType']
+                'name' => 'subscriptionType',
+                'type' => new QueryType(),
+                'resolve' => function () {
+                    return $this->resolveSubscriptionType();
+                }
             ]))
             ->addField(new TypesField())
             ->addField(new Field([
-                'name'    => 'directives',
-                'type'    => new ListType(new DirectiveType()),
-                'resolve' => [$this, 'resolveDirectives']
+                'name' => 'directives',
+                'type' => new ListType(new DirectiveType()),
+                'resolve' => function ($value) {
+                    return $this->resolveDirectives($value);
+                }
             ]));
     }
 }

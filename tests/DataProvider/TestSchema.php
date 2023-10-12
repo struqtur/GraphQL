@@ -17,14 +17,14 @@ use Youshido\GraphQL\Type\Scalar\IntType;
 
 class TestSchema extends AbstractSchema
 {
-    private $testStatusValue = 0;
+    private int $testStatusValue = 0;
 
-    public function build(SchemaConfig $config)
+    public function build(SchemaConfig $config): void
     {
         $config->getQuery()->addFields([
             'me'     => [
                 'type'    => new TestObjectType(),
-                'resolve' => function ($value, $args, ResolveInfo $info) {
+                'resolve' => static function ($value, $args, ResolveInfo $info) {
                     return $info->getReturnType()->getData();
                 }
             ],

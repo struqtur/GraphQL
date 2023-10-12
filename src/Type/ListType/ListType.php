@@ -17,6 +17,7 @@ final class ListType extends AbstractListType
     public function __construct($itemType)
     {
         $this->config = new ListTypeConfig(['itemType' => $itemType], $this, true);
+        parent::__construct();
     }
 
     public function getItemType()

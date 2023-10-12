@@ -18,7 +18,7 @@ class InputParseTest extends \PHPUnit_Framework_TestCase
      * @param $query
      * @param $expected
      */
-    public function testDateInput($query, $expected)
+    public function testDateInput($query, $expected): void
     {
         $schema = new Schema([
             'query' => new ObjectType([
@@ -30,7 +30,7 @@ class InputParseTest extends \PHPUnit_Framework_TestCase
                             'from'   => new DateTimeType('Y-m-d H:i:s'),
                             'fromtz' => new DateTimeTzType(),
                         ],
-                        'resolve' => function ($source, $args) {
+                        'resolve' => static function ($source, array $args) : string {
                             return sprintf('Result with %s date and %s tz',
                                 empty($args['from']) ? 'default' : $args['from']->format('Y-m-d H:i:s'),
                                 empty($args['fromtz']) ? 'default' : $args['fromtz']->format('r')
@@ -43,6 +43,7 @@ class InputParseTest extends \PHPUnit_Framework_TestCase
 
         $processor = new Processor($schema);
         $processor->processPayload($query);
+        
         $result = $processor->getResponseData();
 
         $this->assertEquals($expected, $result);

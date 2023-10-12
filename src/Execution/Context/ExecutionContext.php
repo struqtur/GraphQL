@@ -9,6 +9,7 @@
 namespace Youshido\GraphQL\Execution\Context;
 
 
+use Exception;
 use Youshido\GraphQL\Execution\Container\ContainerInterface;
 use Youshido\GraphQL\Execution\Request;
 use Youshido\GraphQL\Field\Field;
@@ -24,22 +25,16 @@ class ExecutionContext implements ExecutionContextInterface
 
     use ErrorContainerTrait;
 
-    /** @var AbstractSchema */
-    private $schema;
+    private AbstractSchema $schema;
 
-    /** @var Request */
-    private $request;
+    private ?Request $request = null;
 
-    /** @var ContainerInterface */
-    private $container;
+    private ?ContainerInterface $container = null;
 
-    /** @var array */
-    private $typeFieldLookupTable;
+    private array $typeFieldLookupTable = [];
 
     /**
      * ExecutionContext constructor.
-     *
-     * @param AbstractSchema $schema
      */
     public function __construct(AbstractSchema $schema)
     {
@@ -47,14 +42,10 @@ class ExecutionContext implements ExecutionContextInterface
         $this->validateSchema();
 
         $this->introduceIntrospectionFields();
-
-        $this->typeFieldLookupTable = [];
     }
 
     /**
-     * @param AbstractObjectType $type
-     * @param string             $fieldName
-     * 
+     * @param string $fieldName
      * @return Field
      */
     public function getField(AbstractObjectType $type, $fieldName)
@@ -76,9 +67,9 @@ class ExecutionContext implements ExecutionContextInterface
     {
         try {
             (new SchemaValidator())->validate($this->schema);
-        } catch (\Exception $e) {
-            $this->addError($e);
-        };
+        } catch (Exception $exception) {
+            $this->addError($exception);
+        }
     }
 
     protected function introduceIntrospectionFields()
@@ -97,11 +88,9 @@ class ExecutionContext implements ExecutionContextInterface
     }
 
     /**
-     * @param AbstractSchema $schema
-     *
      * @return $this
      */
-    public function setSchema(AbstractSchema $schema)
+    public function setSchema(AbstractSchema $schema): static
     {
         $this->schema = $schema;
 
@@ -117,11 +106,9 @@ class ExecutionContext implements ExecutionContextInterface
     }
 
     /**
-     * @param Request $request
-     *
      * @return $this
      */
-    public function setRequest(Request $request)
+    public function setRequest(Request $request): static
     {
         $this->request = $request;
 
@@ -142,11 +129,9 @@ class ExecutionContext implements ExecutionContextInterface
     }
 
     /**
-     * @param ContainerInterface $container
-     *
      * @return $this
      */
-    public function setContainer(ContainerInterface $container)
+    public function setContainer(ContainerInterface $container): static
     {
         $this->container = $container;
 

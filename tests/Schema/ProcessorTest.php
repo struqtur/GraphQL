@@ -34,15 +34,15 @@ use Youshido\Tests\DataProvider\TestSchema;
 class ProcessorTest extends \PHPUnit_Framework_TestCase
 {
 
-    private $_counter = 0;
+    private int $_counter = 0;
 
-    public function testInit()
+    public function testInit(): void
     {
         $processor = new Processor(new TestEmptySchema());
         $this->assertEquals([['message' => 'Schema has to have fields']], $processor->getExecutionContext()->getErrorsArray());
     }
 
-    public function testEmptyQueries()
+    public function testEmptyQueries(): void
     {
         $processor = new Processor(new TestSchema());
         $processor->processPayload('');
@@ -58,7 +58,7 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
 
     }
 
-    public function testNestedVariables()
+    public function testNestedVariables(): void
     {
         $processor    = new Processor(new TestSchema());
         $noArgsQuery  = '{ me { echo(value:"foo") } }';
@@ -88,7 +88,7 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayNotHasKey('errors', $processor->getResponseData());
     }
 
-    public function testNullListVariable()
+    public function testNullListVariable(): void
     {
         $processor = new Processor(new TestSchema());
         $processor->processPayload(
@@ -102,7 +102,7 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayNotHasKey('errors', $processor->getResponseData());
     }
 
-    public function testListNullResponse()
+    public function testListNullResponse(): void
     {
         $processor = new Processor(new Schema([
             'query' => new ObjectType([
@@ -110,7 +110,7 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
                 'fields' => [
                     'list' => [
                         'type'    => new ListType(new StringType()),
-                        'resolve' => function () {
+                        'resolve' => static function () {
                             return null;
                         }
                     ]
@@ -122,7 +122,7 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testSubscriptionNullResponse()
+    public function testSubscriptionNullResponse(): void
     {
         $processor = new Processor(new Schema([
             'query' => new ObjectType([
@@ -130,7 +130,7 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
                 'fields' => [
                     'list' => [
                         'type'    => new ListType(new StringType()),
-                        'resolve' => function () {
+                        'resolve' => static function () {
                             return null;
                         }
                     ]
@@ -141,7 +141,7 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['data' => ['__schema' => ['subscriptionType' => null]]], $data);
     }
 
-    public function testSchemaOperations()
+    public function testSchemaOperations(): void
     {
         $schema    = new Schema([
             'query' => new ObjectType([
@@ -156,13 +156,13 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
                                     'args'    => [
                                         'shorten' => new BooleanType()
                                     ],
-                                    'resolve' => function ($value, $args) {
+                                    'resolve' => static function (array $value, array $args) {
                                         return empty($args['shorten']) ? $value['firstName'] : $value['firstName'];
                                     }
                                 ],
                                 'id_alias'  => [
                                     'type'    => new IdType(),
-                                    'resolve' => function ($value) {
+                                    'resolve' => static function (array $value) {
                                         return $value['id'];
                                     }
                                 ],
@@ -170,14 +170,13 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
                                 'code'      => new StringType(),
                             ]
                         ]),
-                        'resolve' => function ($value, $args) {
+                        'resolve' => static function ($value, array $args) : array {
                             $data = ['id' => '123', 'firstName' => 'John', 'code' => '007'];
                             if (!empty($args['upper'])) {
                                 foreach ($data as $key => $value) {
                                     $data[$key] = strtoupper($value);
                                 }
                             }
-
                             return $data;
                         },
                         'args'    => [
@@ -189,19 +188,19 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
                     ],
                     'randomUser'        => [
                         'type'    => new TestObjectType(),
-                        'resolve' => function () {
+                        'resolve' => static function () : array {
                             return ['invalidField' => 'John'];
                         }
                     ],
                     'invalidValueQuery' => [
                         'type'    => new TestObjectType(),
-                        'resolve' => function () {
+                        'resolve' => static function () : string {
                             return 'stringValue';
                         }
                     ],
                     'labels'            => [
                         'type'    => new ListType(new StringType()),
-                        'resolve' => function () {
+                        'resolve' => static function () : array {
                             return ['one', 'two'];
                         }
                     ]
@@ -238,7 +237,7 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
             ->addField(new Field([
                 'name'    => 'increaseCounter',
                 'type'    => new IntType(),
-                'resolve' => function ($value, $args, ResolveInfo $info) {
+                'resolve' => function ($value, array $args, ResolveInfo $info): float|int|array {
                     return $this->_counter += $args['amount'];
                 },
                 'args'    => [
@@ -250,13 +249,13 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
             ]))->addField(new Field([
                 'name'    => 'invalidResolveTypeMutation',
                 'type'    => new NonNullType(new IntType()),
-                'resolve' => function () {
+                'resolve' => static function () {
                     return null;
                 }
             ]))->addField(new Field([
                 'name'    => 'interfacedMutation',
                 'type'    => new TestInterfaceType(),
-                'resolve' => function () {
+                'resolve' => static function () : array {
                     return ['name' => 'John'];
                 }
             ]));
@@ -362,7 +361,7 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['data' => ['user' => ['name' => 'John']]], $processor->getResponseData());
     }
 
-    public function testEnumType()
+    public function testEnumType(): void
     {
         $processor = new Processor(new Schema([
             'query' => new ObjectType([
@@ -385,7 +384,7 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
                             ]))
                         ],
                         'type'    => new StringType(),
-                        'resolve' => function ($value, $args) {
+                        'resolve' => static function ($value, array $args) {
                             return $args['argument1'];
                         }
                     ]
@@ -394,6 +393,7 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
         ]));
 
         $processor->processPayload('{ test }');
+        
         $response = $processor->getResponseData();
         $this->assertEquals([
             'data'   => ['test' => null],
@@ -430,7 +430,7 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['data' => ['alias' => 'val1']], $response);
     }
 
-    public function testListEnumsSchemaOperations()
+    public function testListEnumsSchemaOperations(): void
     {
         $processor = new Processor(new Schema([
             'query' => new ObjectType([
@@ -438,43 +438,43 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
                 'fields' => [
                     'listQuery'                 => [
                         'type'    => new ListType(new TestEnumType()),
-                        'resolve' => function () {
+                        'resolve' => static function () : string {
                             return 'invalid list';
                         }
                     ],
                     'listEnumQuery'             => [
                         'type'    => new ListType(new TestEnumType()),
-                        'resolve' => function () {
+                        'resolve' => static function () : array {
                             return ['invalid enum'];
                         }
                     ],
                     'invalidEnumQuery'          => [
                         'type'    => new TestEnumType(),
-                        'resolve' => function () {
+                        'resolve' => static function () : string {
                             return 'invalid enum';
                         }
                     ],
                     'enumQuery'                 => [
                         'type'    => new TestEnumType(),
-                        'resolve' => function () {
+                        'resolve' => static function () : int {
                             return 1;
                         }
                     ],
                     'invalidNonNullQuery'       => [
                         'type'    => new NonNullType(new IntType()),
-                        'resolve' => function () {
+                        'resolve' => static function () {
                             return null;
                         }
                     ],
                     'invalidNonNullInsideQuery' => [
                         'type'    => new NonNullType(new IntType()),
-                        'resolve' => function () {
+                        'resolve' => static function () : string {
                             return 'hello';
                         }
                     ],
                     'objectQuery'               => [
                         'type'    => new TestObjectType(),
-                        'resolve' => function () {
+                        'resolve' => static function () : array {
                             return ['name' => 'John'];
                         }
                     ],
@@ -486,7 +486,7 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
                                 'enum'   => new TestEnumType(),
                             ],
                         ]),
-                        'resolve' => function () {
+                        'resolve' => static function () : array {
                             return [
                                 'object' => [
                                     'name' => 'John'
@@ -541,7 +541,7 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['data' => ['test' => ['object' => ['name' => 'John']]]], $processor->getResponseData());
     }
 
-    public function testTypedFragment()
+    public function testTypedFragment(): void
     {
 
         $object1 = new ObjectType([
@@ -568,18 +568,17 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
         $union        = new UnionType([
             'name'        => 'TestUnion',
             'types'       => [$object1, $object2],
-            'resolveType' => function ($object) use ($object1, $object2) {
+            'resolveType' => static function (array $object) use ($object1, $object2) {
                 if (isset($object['id'])) {
                     return $object1;
                 }
-
                 return $object2;
             }
         ]);
         $invalidUnion = new UnionType([
             'name'        => 'TestUnion',
             'types'       => [$object1, $object2],
-            'resolveType' => function ($object) use ($object3) {
+            'resolveType' => static function ($object) use ($object3) {
                 return $object3;
             }
         ]);
@@ -593,7 +592,7 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
                             'type' => ['type' => 'string']
                         ],
                         'cost'    => 10,
-                        'resolve' => function ($value, $args) {
+                        'resolve' => static function ($value, array $args) {
                             if ($args['type'] == 'object1') {
                                 return [
                                     'id' => 43
@@ -607,7 +606,7 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
                     ],
                     'invalidUnion' => [
                         'type'    => $invalidUnion,
-                        'resolve' => function () {
+                        'resolve' => static function () : array {
                             return ['name' => 'name resolved'];
                         }
                     ],
@@ -666,7 +665,7 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(10 + 13 + 1, $visitor->getMemo());
     }
 
-    public function testContainer()
+    public function testContainer(): void
     {
         $container = new Container();
         $container->set('user', ['name' => 'Alex']);
@@ -677,7 +676,7 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
                 'fields' => [
                     'currentUser' => [
                         'type'    => new StringType(),
-                        'resolve' => function ($source, $args, ResolveInfo $info) {
+                        'resolve' => static function ($source, $args, ResolveInfo $info) {
                             return $info->getContainer()->get('user')['name'];
                         }
                     ]
@@ -692,7 +691,7 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['data' => ['currentUser' => 'Alex']], $processor->processPayload('{ currentUser }')->getResponseData());
     }
 
-    public function testComplexityReducer()
+    public function testComplexityReducer(): void
     {
         $schema    = new Schema(
             [
@@ -710,7 +709,7 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
                                                 'args'    => [
                                                     'shorten' => new BooleanType()
                                                 ],
-                                                'resolve' => function ($value, $args) {
+                                                'resolve' => static function (array $value, array $args) {
                                                     return empty($args['shorten']) ? $value['firstName'] : $value['firstName'];
                                                 }
                                             ],
@@ -719,22 +718,19 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
                                             'likes'     => [
                                                 'type'    => new IntType(),
                                                 'cost'    => 10,
-                                                'resolve' => function () {
+                                                'resolve' => static function () : int {
                                                     return 42;
                                                 }
                                             ]
                                         ]
                                     ]
                                 ),
-                                'cost'    => function ($args, $context, $childCost) {
+                                'cost'    => static function (array $args, $context, $childCost) : int|float {
                                     $argsCost = isset($args['cost']) ? $args['cost'] : 1;
-
                                     return 1 + $argsCost * $childCost;
                                 },
-                                'resolve' => function ($value, $args) {
-                                    $data = ['firstName' => 'John', 'code' => '007'];
-
-                                    return $data;
+                                'resolve' => static function ($value, $args) : array {
+                                    return ['firstName' => 'John', 'code' => '007'];
                                 },
                                 'args'    => [
                                     'cost' => [
@@ -779,7 +775,7 @@ class ProcessorTest extends \PHPUnit_Framework_TestCase
 
         foreach (range(1, 5) as $cost_multiplier) {
             $visitor = new MaxComplexityQueryVisitor(1000); // arbitrarily high cost
-            $processor->processPayload("{ me (cost: $cost_multiplier) { firstName, lastName, code, likes } }", ['cost' => $cost_multiplier], [$visitor]);
+            $processor->processPayload(sprintf('{ me (cost: %s) { firstName, lastName, code, likes } }', $cost_multiplier), ['cost' => $cost_multiplier], [$visitor]);
             $expected = 1 + 13 * (1 + $cost_multiplier);
             $this->assertEquals($expected, $visitor->getMemo());
         }

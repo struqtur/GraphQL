@@ -18,7 +18,7 @@ use Youshido\GraphQL\Type\TypeService;
 class ScalarTypeTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function testScalarPrimitives()
+    public function testScalarPrimitives(): void
     {
         foreach (TypeFactory::getScalarTypesNames() as $typeName) {
             $scalarType     = TypeFactory::getScalarType($typeName);
@@ -32,7 +32,7 @@ class ScalarTypeTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($scalarType->getType(), $scalarType->getNamedType());
             $this->assertNull($scalarType->getConfig());
 
-            foreach (call_user_func(['Youshido\Tests\DataProvider\TestScalarDataProvider', $testDataMethod]) as list($data, $serialized, $isValid)) {
+            foreach (call_user_func([\Youshido\Tests\DataProvider\TestScalarDataProvider::class, $testDataMethod]) as list($data, $serialized, $isValid)) {
 
                 $this->assertSerialization($scalarType, $data, $serialized);
                 $this->assertParse($scalarType, $data, $serialized, $typeName);
@@ -44,27 +44,29 @@ class ScalarTypeTest extends \PHPUnit_Framework_TestCase
                 }
             }
         }
+        
         try {
             TypeFactory::getScalarType('invalid type');
-        } catch (\Exception $e) {
-            $this->assertEquals('Configuration problem with type invalid type', $e->getMessage());
+        } catch (\Exception $exception) {
+            $this->assertEquals('Configuration problem with type invalid type', $exception->getMessage());
         }
+        
         $this->assertEquals('String', (string)new StringType());
 
     }
 
-    public function testDateTimeType()
+    public function testDateTimeType(): void
     {
         $dateType = new DateTimeType('Y/m/d H:i:s');
         $this->assertEquals('2016/05/31 12:00:00', $dateType->serialize(new \DateTimeImmutable('2016-05-31 12:00pm')));
     }
 
-    private function assertSerialization(AbstractScalarType $object, $input, $expected)
+    private function assertSerialization(AbstractScalarType $object, $input, $expected): void
     {
         $this->assertEquals($expected, $object->serialize($input), $object->getName() . ' serialize for: ' . serialize($input));
     }
 
-    private function assertParse(AbstractScalarType $object, $input, $expected, $typeName)
+    private function assertParse(AbstractScalarType $object, $input, $expected, $typeName): void
     {
         $parsed = $object->parseValue($input);
         if ($parsed instanceof \DateTime) {

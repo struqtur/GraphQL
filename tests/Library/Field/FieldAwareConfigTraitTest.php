@@ -17,7 +17,7 @@ use Youshido\GraphQL\Type\Scalar\StringType;
 class FieldAwareConfigTraitTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function testAddField()
+    public function testAddField(): void
     {
         $fieldsData = [
             'id' => [
@@ -32,6 +32,7 @@ class FieldAwareConfigTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($config->hasFields());
         $idField = new Field(['name' => 'id', 'type' => new IntType()]);
         $idField->getName();
+        
         $nameField = new Field(['name' => 'name', 'type' => new StringType()]);
 
         $this->assertEquals([

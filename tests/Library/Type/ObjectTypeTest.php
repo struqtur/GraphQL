@@ -24,7 +24,7 @@ class ObjectTypeTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException Youshido\GraphQL\Exception\ConfigurationException
      */
-    public function testCreatingInvalidObject()
+    public function testCreatingInvalidObject(): void
     {
         new ObjectType([]);
     }
@@ -32,7 +32,7 @@ class ObjectTypeTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException Youshido\GraphQL\Exception\ConfigurationException
      */
-    public function testInvalidNameParam()
+    public function testInvalidNameParam(): void
     {
         $type = new ObjectType([
             'name' => null
@@ -43,7 +43,7 @@ class ObjectTypeTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException Youshido\GraphQL\Exception\ConfigurationException
      */
-    public function testInvalidFieldsParam()
+    public function testInvalidFieldsParam(): void
     {
         $type = new ObjectType([
             'name'   => 'SomeName',
@@ -55,7 +55,7 @@ class ObjectTypeTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException \InvalidArgumentException
      */
-    public function testSerialize()
+    public function testSerialize(): void
     {
         $object = new ObjectType([
             'name'   => 'SomeName',
@@ -67,7 +67,7 @@ class ObjectTypeTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testNormalCreatingParam()
+    public function testNormalCreatingParam(): void
     {
         $objectType = new ObjectType([
             'name'        => 'Post',
@@ -89,7 +89,7 @@ class ObjectTypeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Post type description', $objectType->getDescription());
     }
 
-    public function testFieldsTrait()
+    public function testFieldsTrait(): void
     {
         $idField = new Field(['name' => 'id', 'type' => new IntType()]);
         $nameField = new Field(['name' => 'name', 'type' => new StringType()]);
@@ -113,7 +113,7 @@ class ObjectTypeTest extends \PHPUnit_Framework_TestCase
         ], $objectType->getFields());
     }
 
-    public function testExtendedClass()
+    public function testExtendedClass(): void
     {
         $objectType = new TestObjectType();
         $this->assertEquals($objectType->getName(), 'TestObject');
@@ -122,7 +122,7 @@ class ObjectTypeTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($objectType->getDescription());
     }
 
-    public function testMutationObjectClass()
+    public function testMutationObjectClass(): void
     {
         $mutation = new TestMutationObjectType();
         $this->assertEquals(new StringType(), $mutation->getType());

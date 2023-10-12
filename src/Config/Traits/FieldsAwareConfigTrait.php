@@ -10,7 +10,6 @@ namespace Youshido\GraphQL\Config\Traits;
 
 
 use Youshido\GraphQL\Exception\ConfigurationException;
-use Youshido\GraphQL\Exception\ValidationException;
 use Youshido\GraphQL\Field\Field;
 use Youshido\GraphQL\Field\FieldInterface;
 use Youshido\GraphQL\Field\InputFieldInterface;
@@ -24,7 +23,7 @@ trait FieldsAwareConfigTrait
 {
     protected $fields = [];
 
-    public function buildFields()
+    public function buildFields(): void
     {
         if (!empty($this->data['fields'])) {
             $this->addFields($this->data['fields']);
@@ -33,7 +32,6 @@ trait FieldsAwareConfigTrait
 
     /**
      * Add fields from passed interface
-     * @param AbstractInterfaceType $interfaceType
      * @return $this
      */
     public function applyInterface(AbstractInterfaceType $interfaceType)
@@ -54,7 +52,7 @@ trait FieldsAwareConfigTrait
             if ($fieldConfig instanceof FieldInterface) {
                 $this->fields[$fieldConfig->getName()] = $fieldConfig;
                 continue;
-            } elseif($fieldConfig instanceof InputFieldInterface) {
+            } elseif ($fieldConfig instanceof InputFieldInterface) {
                 $this->fields[$fieldConfig->getName()] = $fieldConfig;
                 continue;
             } else {
@@ -66,8 +64,8 @@ trait FieldsAwareConfigTrait
     }
 
     /**
-     * @param FieldInterface|string $field     Field name or Field Object
-     * @param mixed                 $fieldInfo Field Type or Field Config array
+     * @param FieldInterface|string $field Field name or Field Object
+     * @param mixed $fieldInfo Field Type or Field Config array
      *
      * @return $this
      *
@@ -82,7 +80,7 @@ trait FieldsAwareConfigTrait
         if ($this->hasField($field->getName())) {
             throw new ConfigurationException(sprintf('Type "%s" was defined more than once', $field->getName()));
         }
-        
+
         $this->fields[$field->getName()] = $field;
 
         return $this;
@@ -114,15 +112,13 @@ trait FieldsAwareConfigTrait
 
     /**
      * @param $name
-     *
-     * @return bool
      */
-    public function hasField($name)
+    public function hasField($name): bool
     {
         return array_key_exists($name, $this->fields);
     }
 
-    public function hasFields()
+    public function hasFields(): bool
     {
         return !empty($this->fields);
     }

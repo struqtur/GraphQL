@@ -27,7 +27,7 @@ use Youshido\Tests\DataProvider\TestSchema;
 
 class IntrospectionTest extends \PHPUnit_Framework_TestCase
 {
-    private $introspectionQuery = <<<TEXT
+    private string $introspectionQuery = <<<TEXT
 query IntrospectionQuery {
                 __schema {
                     queryType { name }
@@ -105,7 +105,7 @@ query IntrospectionQuery {
 TEXT;
 
 
-    public function testIntrospectionDirectiveRequest()
+    public function testIntrospectionDirectiveRequest(): void
     {
         $processor = new Processor(new TestSchema());
 
@@ -120,7 +120,7 @@ TEXT;
      *
      * @dataProvider predefinedSchemaProvider
      */
-    public function testPredefinedQueries($query, $expectedResponse)
+    public function testPredefinedQueries($query, $expectedResponse): void
     {
         $schema = new TestEmptySchema();
         $schema->addQueryField(new Field([
@@ -139,7 +139,7 @@ TEXT;
             'description'       => 'latest description',
             'deprecationReason' => 'for test',
             'isDeprecated'      => true,
-            'resolve'           => function () {
+            'resolve'           => static function () : array {
                 return [
                     'id'   => 1,
                     'name' => 'Alex'
@@ -150,6 +150,7 @@ TEXT;
         $processor = new Processor($schema);
 
         $processor->processPayload($query);
+        
         $responseData = $processor->getResponseData();
 
         $this->assertEquals($expectedResponse, $responseData);
@@ -285,7 +286,7 @@ TEXT;
         ];
     }
 
-    public function testCombinedFields()
+    public function testCombinedFields(): void
     {
         $schema = new TestEmptySchema();
 
@@ -295,8 +296,7 @@ TEXT;
                 'id'   => ['type' => new IntType()],
                 'name' => ['type' => new IntType()],
             ],
-            'resolveType' => function ($type) {
-
+            'resolveType' => static function ($type) : void {
             }
         ]);
 
@@ -323,8 +323,7 @@ TEXT;
         $unionType = new UnionType([
             'name'        => 'UnionType',
             'types'       => [$object1, $object2],
-            'resolveType' => function () {
-
+            'resolveType' => static function () : void {
             }
         ]);
 
@@ -334,7 +333,7 @@ TEXT;
             'args'    => [
                 'id' => ['type' => TypeMap::TYPE_INT]
             ],
-            'resolve' => function () {
+            'resolve' => static function () : array {
                 return [
                     'id'   => 1,
                     'name' => 'Alex'
@@ -360,7 +359,7 @@ TEXT;
                     ]
                 ])
             ],
-            'resolve' => function () {
+            'resolve' => static function () {
                 return null;
             }
         ]));
@@ -368,13 +367,14 @@ TEXT;
         $processor = new Processor($schema);
 
         $processor->processPayload($this->introspectionQuery);
+        
         $responseData = $processor->getResponseData();
 
         /** strange that this test got broken after I fixed the field resolve behavior */
         $this->assertArrayNotHasKey('errors', $responseData);
     }
 
-    public function testCanIntrospectDirectives()
+    public function testCanIntrospectDirectives(): void
     {
         $schema = new TestSchema();
         $schema->getDirectiveList()->addDirectives([
@@ -429,6 +429,7 @@ TEXT;
         $processor = new Processor($schema);
 
         $processor->processPayload($this->introspectionQuery);
+        
         $responseData = $processor->getResponseData();
         $this->assertArrayNotHasKey('errors', $responseData);
     }

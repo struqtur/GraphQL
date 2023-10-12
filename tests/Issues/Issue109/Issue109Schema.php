@@ -11,7 +11,7 @@ use Youshido\GraphQL\Type\Scalar\IntType;
 class Issue109Schema extends AbstractSchema
 {
 
-    public function build(SchemaConfig $config)
+    public function build(SchemaConfig $config): void
     {
         $config->setQuery(
             new ObjectType([
@@ -40,14 +40,13 @@ class Issue109Schema extends AbstractSchema
                                 ]
                             ]
                         ]),
-                        'resolve' => function ($source, array $args, ResolveInfo $info) {
+                        'resolve' => static function ($source, array $args, ResolveInfo $info) : array {
                             $internalArgs = [
                                 'comment_id' => 200
                             ];
                             if ($field = $info->getFieldAST('comments')->hasArguments()) {
                                 $internalArgs['comment_id'] = $info->getFieldAST('comments')->getArgumentValue('comment_id');
                             }
-
                             return [
                                 "id"       => 1,
                                 "title"    => "New approach in API has been revealed",

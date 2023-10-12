@@ -13,7 +13,7 @@ use Youshido\GraphQL\Type\Scalar\StringType;
 class Issue116Test extends \PHPUnit_Framework_TestCase
 {
 
-    public function testInternalVariableArgument()
+    public function testInternalVariableArgument(): void
     {
         $schema    = new Schema([
             'query' => new ObjectType([
@@ -32,12 +32,11 @@ class Issue116Test extends \PHPUnit_Framework_TestCase
                                             'args'    => [
                                                 'size' => new NonNullType(new IntType()),
                                             ],
-                                            'resolve' => function ($source, $args) {
+                                            'resolve' => static function ($source, array $args) : array {
                                                 $res = [];
                                                 foreach (range(1, $args['size']) as $i) {
                                                     $res[] = 'Cursor #' . $i;
                                                 }
-
                                                 return $res;
                                             }
                                         ],
@@ -48,7 +47,7 @@ class Issue116Test extends \PHPUnit_Framework_TestCase
                         'args'    => [
                             'first' => new IntType(),
                         ],
-                        'resolve' => function () {
+                        'resolve' => static function () : array {
                             return [
                                 'pageInfo' => [
                                     'totalEdges' => 10,

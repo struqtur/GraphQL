@@ -19,14 +19,12 @@ use Youshido\GraphQL\Type\TypeService;
 class SchemaConfig extends AbstractConfig
 {
 
-    /**
-     * @var SchemaTypesList
-     */
-    private $typesList;
+    private readonly SchemaTypesList $typesList;
+
     /**
      * @var SchemaDirectivesList;
      */
-    private $directiveList;
+    private readonly SchemaDirectivesList $directiveList;
 
     public function __construct(array $configData, $contextObject = null, $finalClass = false)
     {
@@ -36,14 +34,14 @@ class SchemaConfig extends AbstractConfig
     }
 
 
-    public function getRules()
+    public function getRules(): array
     {
         return [
-            'query'      => ['type' => TypeService::TYPE_OBJECT_TYPE, 'required' => true],
-            'mutation'   => ['type' => TypeService::TYPE_OBJECT_TYPE],
-            'types'      => ['type' => TypeService::TYPE_ARRAY],
+            'query' => ['type' => TypeService::TYPE_OBJECT_TYPE, 'required' => true],
+            'mutation' => ['type' => TypeService::TYPE_OBJECT_TYPE],
+            'types' => ['type' => TypeService::TYPE_ARRAY],
             'directives' => ['type' => TypeService::TYPE_ARRAY],
-            'name'       => ['type' => TypeService::TYPE_STRING],
+            'name' => ['type' => TypeService::TYPE_STRING],
         ];
     }
 
@@ -53,6 +51,7 @@ class SchemaConfig extends AbstractConfig
         if (!empty($this->data['types'])) {
             $this->typesList->addTypes($this->data['types']);
         }
+
         if (!empty($this->data['directives'])) {
             $this->directiveList->addDirectives($this->data['directives']);
         }
@@ -69,10 +68,8 @@ class SchemaConfig extends AbstractConfig
 
     /**
      * @param $query AbstractObjectType
-     *
-     * @return SchemaConfig
      */
-    public function setQuery($query)
+    public function setQuery($query): static
     {
         $this->data['query'] = $query;
 
@@ -89,10 +86,8 @@ class SchemaConfig extends AbstractConfig
 
     /**
      * @param $query AbstractObjectType
-     *
-     * @return SchemaConfig
      */
-    public function setMutation($query)
+    public function setMutation($query): static
     {
         $this->data['mutation'] = $query;
 

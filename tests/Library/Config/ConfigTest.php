@@ -24,7 +24,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException Youshido\GraphQL\Exception\ConfigurationException
      */
-    public function testEmptyParams()
+    public function testEmptyParams(): void
     {
         new TestConfig([]);
     }
@@ -32,7 +32,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException Youshido\GraphQL\Exception\ConfigurationException
      */
-    public function testInvalidParams()
+    public function testInvalidParams(): void
     {
         ConfigValidator::getInstance()->assertValidConfig(new TestConfig(['id' => 1]));
     }
@@ -40,13 +40,13 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException \Exception
      */
-    public function testInvalidMethod()
+    public function testInvalidMethod(): void
     {
         $config = new TestConfig(['name' => 'test']);
         $config->doSomethingStrange();
     }
 
-    public function testMethods()
+    public function testMethods(): void
     {
         $name  = 'Test';
         $rules = [
@@ -80,7 +80,9 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
 
-        $finalConfig = new TestConfig(['name' => $name . 'final', 'resolve' => function () { return []; }], $object, true);
+        $finalConfig = new TestConfig(['name' => $name . 'final', 'resolve' => static function () : array {
+            return [];
+        }], $object, true);
         $this->assertEquals($finalConfig->getType(), null);
 
         $rules['resolve']['required'] = true;
@@ -98,15 +100,15 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException Youshido\GraphQL\Exception\ConfigurationException
      */
-    public function testFinalRule()
+    public function testFinalRule(): void
     {
-        ConfigValidator::getInstance()->assertValidConfig(new TestConfig(['name' => 'Test' . 'final'], null, true));
+        ConfigValidator::getInstance()->assertValidConfig(new TestConfig(['name' => 'Testfinal'], null, true));
     }
 
     /**
      * @expectedException Youshido\GraphQL\Exception\ConfigurationException
      */
-    public function testInvalidRule()
+    public function testInvalidRule(): void
     {
         ConfigValidator::getInstance()->assertValidConfig(
             new TestConfigInvalidRule(['name' => 'Test', 'invalidRuleField' => 'test'], null, null)
@@ -116,7 +118,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException Youshido\GraphQL\Exception\ConfigurationException
      */
-    public function testEnumConfig()
+    public function testEnumConfig(): void
     {
         $enumType = new EnumType([
             'name'   => 'Status',

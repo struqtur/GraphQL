@@ -19,7 +19,7 @@ use Youshido\GraphQL\Type\Scalar\StringType;
 
 class UserType extends AbstractObjectType
 {
-    public function build($config)
+    public function build($config): void
     {
         $config->addFields([
             'id'           => new IdType(),
@@ -32,7 +32,7 @@ class UserType extends AbstractObjectType
 class CourtReservation extends AbstractObjectType
 {
 
-    public function build($config)
+    public function build($config): void
     {
         $config->addFields([
             'id'      => new IdType(),
@@ -46,7 +46,7 @@ class CourtReservation extends AbstractObjectType
         ]);
     }
 
-    public function getInterfaces()
+    public function getInterfaces(): array
     {
         return [new ReservationInterface()];
     }
@@ -55,7 +55,7 @@ class CourtReservation extends AbstractObjectType
 
 class ClassReservation extends AbstractObjectType
 {
-    public function build($config)
+    public function build($config): void
     {
         $config->addFields([
             'id'   => new IdType(),
@@ -63,7 +63,7 @@ class ClassReservation extends AbstractObjectType
         ]);
     }
 
-    public function getInterfaces()
+    public function getInterfaces(): array
     {
         return [new ReservationInterface()];
     }
@@ -71,12 +71,12 @@ class ClassReservation extends AbstractObjectType
 
 class ReservationInterface extends AbstractInterfaceType
 {
-    public function resolveType($object)
+    public function resolveType($object): \Youshido\Tests\Schema\CourtReservation|\Youshido\Tests\Schema\ClassReservation
     {
-        return strpos($object['id'], 'cl') === false ? new CourtReservation() : new ClassReservation();
+        return strpos((string) $object['id'], 'cl') === false ? new CourtReservation() : new ClassReservation();
     }
 
-    public function build($config)
+    public function build($config): void
     {
         $config->addFields([
             'id' => new IdType()
@@ -95,7 +95,7 @@ class FragmentsTest extends \PHPUnit_Framework_TestCase
      * @param $expected
      * @param $variables
      */
-    public function testVariables($query, $expected, $variables)
+    public function testVariables($query, $expected, $variables): void
     {
         $schema = new Schema([
             'query' => new ObjectType([
@@ -103,7 +103,7 @@ class FragmentsTest extends \PHPUnit_Framework_TestCase
                 'fields' => [
                     'user' => [
                         'type'    => new UserType(),
-                        'resolve' => function ($args) {
+                        'resolve' => static function ($args) : array {
                             return [
                                 'id'           => 'user-id-1',
                                 'fullName'     => 'Alex',
@@ -137,6 +137,7 @@ class FragmentsTest extends \PHPUnit_Framework_TestCase
 
         $processor = new Processor($schema);
         $processor->processPayload($query, $variables);
+        
         $result = $processor->getResponseData();
 
         $this->assertEquals($expected, $result);
@@ -209,7 +210,7 @@ class FragmentsTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function testSimpleFragment()
+    public function testSimpleFragment(): void
     {
         $schema = new Schema([
             'query' => new ObjectType([
@@ -217,7 +218,7 @@ class FragmentsTest extends \PHPUnit_Framework_TestCase
                 'fields' => [
                     'user' => [
                         'type'    => new UserType(),
-                        'resolve' => function ($args) {
+                        'resolve' => static function ($args) : array {
                             return [
                                 'id'       => 'user-id-1',
                                 'fullName' => 'Alex',
@@ -247,6 +248,7 @@ class FragmentsTest extends \PHPUnit_Framework_TestCase
 
         $processor = new Processor($schema);
         $processor->processPayload($query);
+        
         $result = $processor->getResponseData();
 
         $expected = ['data' => ['User1' => ['fullName' => 'Alex'], 'User2' => ['fullName' => 'Alex']]];

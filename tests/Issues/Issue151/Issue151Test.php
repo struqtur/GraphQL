@@ -12,7 +12,7 @@ use Youshido\GraphQL\Type\Union\UnionType;
 
 class Issue151Test extends \PHPUnit_Framework_TestCase
 {
-    public function testInternalVariableArgument()
+    public function testInternalVariableArgument(): void
     {
         $type1 = new ObjectType([
             'name'   => 'Type1',
@@ -32,11 +32,10 @@ class Issue151Test extends \PHPUnit_Framework_TestCase
         $unionType = new UnionType([
             'name'        => 'Union',
             'types'       => [$type1, $type2],
-            'resolveType' => function ($value) use ($type1, $type2) {
+            'resolveType' => static function (array $value) use ($type1, $type2) {
                 if (isset($value['name'])) {
                     return $type1;
                 }
-
                 return $type2;
             },
         ]);
@@ -47,7 +46,7 @@ class Issue151Test extends \PHPUnit_Framework_TestCase
                 'fields' => [
                     'list' => [
                         'type'    => new ListType($unionType),
-                        'resolve' => function () {
+                        'resolve' => static function () : array {
                             return [
                                 [
                                     'id'   => 1,
@@ -64,7 +63,7 @@ class Issue151Test extends \PHPUnit_Framework_TestCase
             ]),
         ]);
         $processor = new Processor($schema);
-        $response  = $processor->processPayload('
+        $processor->processPayload('
 {
     list {
         ...UnitFragment

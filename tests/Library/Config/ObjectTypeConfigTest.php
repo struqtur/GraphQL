@@ -16,7 +16,7 @@ use Youshido\Tests\DataProvider\TestInterfaceType;
 class ObjectTypeConfigTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function testCreation()
+    public function testCreation(): void
     {
         $config = new ObjectTypeConfig(['name' => 'Test'], null, false);
         $this->assertEquals($config->getName(), 'Test', 'Normal creation');
@@ -25,7 +25,7 @@ class ObjectTypeConfigTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException Youshido\GraphQL\Exception\ConfigurationException
      */
-    public function testInvalidConfigNoFields()
+    public function testInvalidConfigNoFields(): void
     {
         ConfigValidator::getInstance()->assertValidConfig(
             new ObjectTypeConfig(['name' => 'Test'], null, true)
@@ -35,14 +35,14 @@ class ObjectTypeConfigTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException Youshido\GraphQL\Exception\ConfigurationException
      */
-    public function testInvalidConfigInvalidInterface()
+    public function testInvalidConfigInvalidInterface(): void
     {
         ConfigValidator::getInstance()->assertValidConfig(
             new ObjectTypeConfig(['name' => 'Test', 'interfaces' => ['Invalid interface']], null, false)
         );
     }
 
-    public function testInterfaces()
+    public function testInterfaces(): void
     {
         $testInterfaceType = new TestInterfaceType();
         $config            = new ObjectTypeConfig(['name' => 'Test', 'interfaces' => [$testInterfaceType]], null, false);

@@ -15,12 +15,12 @@ use Youshido\GraphQL\Type\Scalar\StringType;
 class FieldConfigTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function testInvalidParams()
+    public function testInvalidParams(): void
     {
         $fieldConfig = new FieldConfig([
             'name'    => 'FirstName',
             'type'    => new StringType(),
-            'resolve' => function ($value, $args = [], $type = null) {
+            'resolve' => static function ($value, $args = [], $type = null) : string {
                 return 'John';
             }
         ]);

@@ -24,9 +24,10 @@ abstract class AbstractField implements FieldInterface
     use AutoNameTrait {
         getName as getAutoName;
     }
+
     protected $isFinal = false;
 
-    private $nameCache            = null;
+    private $nameCache;
 
     public function __construct(array $config = [])
     {
@@ -34,13 +35,14 @@ abstract class AbstractField implements FieldInterface
             $config['type'] = $this->getType();
             $config['name'] = $this->getName();
             if (empty($config['name'])) {
-                $config['name'] =$this->getAutoName();
+                $config['name'] = $this->getAutoName();
             }
         }
 
         if (TypeService::isScalarType($config['type'])) {
             $config['type'] = TypeFactory::getScalarType($config['type']);
         }
+
         $this->nameCache = isset($config['name']) ? $config['name'] : $this->getAutoName();
 
         $this->config = new FieldConfig($config, $this, $this->isFinal);
@@ -52,11 +54,11 @@ abstract class AbstractField implements FieldInterface
      */
     abstract public function getType();
 
-    public function build(FieldConfig $config)
+    public function build(FieldConfig $config): void
     {
     }
 
-    public function setType($type)
+    public function setType($type): void
     {
         $this->getConfig()->set('type', $type);
     }

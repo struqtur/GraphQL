@@ -13,7 +13,7 @@ use Youshido\GraphQL\Type\Scalar\StringType;
 
 class Issue149Test extends \PHPUnit_Framework_TestCase
 {
-    public function testInternalVariableArgument()
+    public function testInternalVariableArgument(): void
     {
         $schema    = new Schema([
             'query' => new ObjectType([
@@ -36,7 +36,7 @@ class Issue149Test extends \PHPUnit_Framework_TestCase
                                 ])),
                             ],
                         ]),
-                        'resolve' => function () {
+                        'resolve' => static function () : array {
                             return [
                                 'id'      => 1,
                                 'name'    => 'John',

@@ -14,8 +14,7 @@ use Youshido\GraphQL\Parser\Location;
 abstract class AbstractAst implements LocatableInterface
 {
 
-    /** @var  Location */
-    private $location;
+    private Location $location;
 
     public function __construct(Location $location)
     {
@@ -27,7 +26,7 @@ abstract class AbstractAst implements LocatableInterface
         return $this->location;
     }
 
-    public function setLocation(Location $location)
+    public function setLocation(Location $location): void
     {
         $this->location = $location;
     }

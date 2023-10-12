@@ -28,10 +28,10 @@ class ObjectTypeConfig extends AbstractConfig implements TypeConfigInterface
     public function getRules()
     {
         return [
-            'name'        => ['type' => TypeService::TYPE_STRING, 'required' => true],
+            'name' => ['type' => TypeService::TYPE_STRING, 'required' => true],
             'description' => ['type' => TypeService::TYPE_STRING],
-            'fields'      => ['type' => TypeService::TYPE_ARRAY_OF_FIELDS_CONFIG, 'final' => true],
-            'interfaces'  => ['type' => TypeService::TYPE_ARRAY_OF_INTERFACES]
+            'fields' => ['type' => TypeService::TYPE_ARRAY_OF_FIELDS_CONFIG, 'final' => true],
+            'interfaces' => ['type' => TypeService::TYPE_ARRAY_OF_INTERFACES]
         ];
     }
 

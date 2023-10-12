@@ -9,6 +9,7 @@
 namespace Youshido\GraphQL\Config;
 
 
+use Exception;
 use Youshido\GraphQL\Exception\ConfigurationException;
 use Youshido\GraphQL\Exception\ValidationException;
 use Youshido\GraphQL\Validator\ConfigValidator\ConfigValidator;
@@ -21,41 +22,37 @@ use Youshido\GraphQL\Validator\ConfigValidator\ConfigValidator;
 abstract class AbstractConfig
 {
 
-    /**
-     * @var array
-     */
-    protected $data = [];
+    protected array $data;
 
     protected $contextObject;
 
     protected $finalClass = false;
 
-    protected $extraFieldsAllowed = null;
+    protected $extraFieldsAllowed;
 
     /**
      * TypeConfig constructor.
      *
-     * @param array $configData
      * @param mixed $contextObject
-     * @param bool  $finalClass
+     * @param bool $finalClass
      *
      * @throws ConfigurationException
      * @throws ValidationException
      */
     public function __construct(array $configData, $contextObject = null, $finalClass = false)
     {
-        if (empty($configData)) {
+        if ($configData === []) {
             throw new ConfigurationException('Config for Type should be an array');
         }
 
         $this->contextObject = $contextObject;
-        $this->data          = $configData;
-        $this->finalClass    = $finalClass;
+        $this->data = $configData;
+        $this->finalClass = $finalClass;
 
         $this->build();
     }
 
-    public function validate()
+    public function validate(): void
     {
         $validator = ConfigValidator::getInstance();
 
@@ -141,12 +138,12 @@ abstract class AbstractConfig
         return $this;
     }
 
-    public function has($key)
+    public function has($key): bool
     {
         return array_key_exists($key, $this->data);
     }
 
-    public function __call($method, $arguments)
+    public function __call(string $method, array $arguments)
     {
         if (substr($method, 0, 3) == 'get') {
             $propertyName = lcfirst(substr($method, 3));
@@ -158,7 +155,7 @@ abstract class AbstractConfig
         } elseif (substr($method, 0, 2) == 'is') {
             $propertyName = lcfirst(substr($method, 2));
         } else {
-            throw new \Exception('Call to undefined method ' . $method);
+            throw new Exception('Call to undefined method ' . $method);
         }
 
         return $this->get($propertyName);

@@ -18,7 +18,7 @@ use Youshido\Tests\DataProvider\TestUnionType;
 class UnionTypeTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function testInlineCreation()
+    public function testInlineCreation(): void
     {
         $object = new ObjectType([
             'name' => 'TestObject',
@@ -32,7 +32,7 @@ class UnionTypeTest extends \PHPUnit_Framework_TestCase
                 new TestObjectType(),
                 $object
             ],
-            'resolveType' => function ($type) {
+            'resolveType' => static function ($type) {
                 return $type;
             }
         ]);
@@ -46,7 +46,7 @@ class UnionTypeTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($type->isValidValue(true));
     }
 
-    public function testObjectCreation()
+    public function testObjectCreation(): void
     {
         $type = new TestUnionType();
 
@@ -59,7 +59,7 @@ class UnionTypeTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException Youshido\GraphQL\Exception\ConfigurationException
      */
-    public function testInvalidTypesWithScalar()
+    public function testInvalidTypesWithScalar(): void
     {
         $type = new UnionType([
             'name'        => 'Car',
@@ -67,7 +67,7 @@ class UnionTypeTest extends \PHPUnit_Framework_TestCase
             'types'       => [
                 'test', new IntType()
             ],
-            'resolveType' => function ($type) {
+            'resolveType' => static function ($type) {
                 return $type;
             }
         ]);
@@ -77,7 +77,7 @@ class UnionTypeTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException Youshido\GraphQL\Exception\ConfigurationException
      */
-    public function testInvalidTypes()
+    public function testInvalidTypes(): void
     {
         $type = new UnionType([
             'name'        => 'Car',
@@ -85,7 +85,7 @@ class UnionTypeTest extends \PHPUnit_Framework_TestCase
             'types'       => [
                 new IntType()
             ],
-            'resolveType' => function ($type) {
+            'resolveType' => static function ($type) {
                 return $type;
             }
         ]);

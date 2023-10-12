@@ -11,19 +11,21 @@ namespace Youshido\GraphQL\Type\Scalar;
 
 class BooleanType extends AbstractScalarType
 {
-    public function getName()
+    public function getName(): string
     {
         return 'Boolean';
     }
 
-    public function serialize($value)
+    public function serialize($value): ?bool
     {
         if ($value === null) {
             return null;
         }
+
         if ($value === 'true') {
             return true;
         }
+
         if ($value === 'false') {
             return false;
         }
@@ -31,12 +33,12 @@ class BooleanType extends AbstractScalarType
         return (bool)$value;
     }
 
-    public function isValidValue($value)
+    public function isValidValue($value): bool
     {
         return is_null($value) || is_bool($value);
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'The `Boolean` scalar type represents `true` or `false`.';
     }

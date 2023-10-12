@@ -7,25 +7,26 @@
 
 namespace Youshido\GraphQL\Validator\ErrorContainer;
 
+use Exception;
 use Youshido\GraphQL\Exception\Interfaces\ExtendedExceptionInterface;
 use Youshido\GraphQL\Exception\Interfaces\LocationableExceptionInterface;
 
 trait ErrorContainerTrait
 {
 
-    /** @var \Exception[] */
+    /** @var Exception[] */
     protected $errors = [];
 
-    public function addError(\Exception $exception)
+    public function addError(Exception $exception)
     {
         $this->errors[] = $exception;
 
         return $this;
     }
 
-    public function hasErrors()
+    public function hasErrors(): bool
     {
-        return ! empty($this->errors);
+        return !empty($this->errors);
     }
 
     public function getErrors()
@@ -44,7 +45,10 @@ trait ErrorContainerTrait
         return $this;
     }
 
-    public function getErrorsArray($inGraphQLStyle = true)
+    /**
+     * @return mixed[]
+     */
+    public function getErrorsArray($inGraphQLStyle = true): array
     {
         $errors = [];
 

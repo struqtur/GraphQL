@@ -14,12 +14,13 @@ namespace Youshido\GraphQL\Execution;
  * Fields may return a value implementing this interface to use deferred
  * resolving to optimize query performance.
  */
-interface DeferredResolverInterface {
+interface DeferredResolverInterface
+{
 
-  /**
-   * @return mixed
-   *   The actual result value.
-   */
-  public function resolve();
+    /**
+     * @return mixed
+     *   The actual result value.
+     */
+    public function resolve();
 
 }

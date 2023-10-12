@@ -15,12 +15,12 @@ use Youshido\GraphQL\Type\Scalar\StringType;
 class TestInterfaceType extends AbstractInterfaceType
 {
 
-    public function resolveType($object)
+    public function resolveType($object): object
     {
         return is_object($object) ? $object : new TestObjectType();
     }
 
-    public function build($config)
+    public function build($config): void
     {
         $config->addField('name', new StringType());
     }

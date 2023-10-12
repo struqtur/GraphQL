@@ -13,7 +13,7 @@ use Youshido\GraphQL\Type\Scalar\StringType;
 
 class Issue99Schema extends AbstractSchema
 {
-    public function build(SchemaConfig $config)
+    public function build(SchemaConfig $config): void
     {
         $config->setQuery(
             new ObjectType([
@@ -39,9 +39,8 @@ class Issue99Schema extends AbstractSchema
                                             ]))
                                         ]
                                     ],
-                                    'resolve' => function($source, $args) {
+                                    'resolve' => static function ($source, array $args) : array {
                                         $x = isset($args['argX']['x']) ? $args['argX']['x'] : Issue99Test::BUG_EXISTS_VALUE;
-
                                         return [
                                             'value' => $x
                                         ];
@@ -52,7 +51,7 @@ class Issue99Schema extends AbstractSchema
                         'args'    => [
                             'example' => new StringType()
                         ],
-                        'resolve' => function () {
+                        'resolve' => static function () : array {
                             return [
                                 ['id' => 1],
                                 ['id' => 2],
