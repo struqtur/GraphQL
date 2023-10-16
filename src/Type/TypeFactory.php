@@ -59,6 +59,7 @@ class TypeFactory
             TypeMap::TYPE_DATE,
             TypeMap::TYPE_TIMESTAMP,
             TypeMap::TYPE_DATETIMETZ,
+            TypeMap::TYPE_DATETIME_AS_STRING
         ];
     }
 }

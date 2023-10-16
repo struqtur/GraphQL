@@ -41,6 +41,8 @@ class TypeMap
 
     final const TYPE_DATETIMETZ = 'datetimetz';
 
+    final const TYPE_DATETIME_AS_STRING = 'datetimeasstring';
+
     final const TYPE_DATE = 'date';
 
     final const TYPE_TIMESTAMP = 'timestamp';
