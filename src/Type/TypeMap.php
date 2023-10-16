@@ -10,7 +10,6 @@ namespace Youshido\GraphQL\Type;
 
 class TypeMap
 {
-
     final const KIND_SCALAR = 'SCALAR';
 
     final const KIND_OBJECT = 'OBJECT';
@@ -47,5 +46,5 @@ class TypeMap
 
     final const TYPE_TIMESTAMP = 'timestamp';
 
-
+    final const TYPE_STRING_OR_ARRAY = 'stringorarray';
 }
