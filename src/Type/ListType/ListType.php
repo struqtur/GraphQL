@@ -10,7 +10,9 @@ namespace Youshido\GraphQL\Type\ListType;
 
 
 use Youshido\GraphQL\Config\Object\ListTypeConfig;
+use Youshido\GraphQL\Type\InputObject\InputObjectType;
 use Youshido\GraphQL\Type\Object\AbstractObjectType;
+use Youshido\GraphQL\Type\Scalar\AbstractScalarType;
 
 final class ListType extends AbstractListType
 {
@@ -21,7 +23,7 @@ final class ListType extends AbstractListType
         parent::__construct();
     }
 
-    public function getItemType(): AbstractObjectType
+    public function getItemType(): AbstractObjectType|AbstractScalarType|InputObjectType
     {
         return $this->getConfig()->get('itemType');
     }

@@ -8,12 +8,15 @@
 namespace Youshido\GraphQL\Type\ListType;
 
 
+use Exception;
 use Traversable;
 use Youshido\GraphQL\Config\Object\ListTypeConfig;
 use Youshido\GraphQL\Exception\ConfigurationException;
 use Youshido\GraphQL\Exception\ValidationException;
 use Youshido\GraphQL\Type\CompositeTypeInterface;
+use Youshido\GraphQL\Type\InputObject\InputObjectType;
 use Youshido\GraphQL\Type\Object\AbstractObjectType;
+use Youshido\GraphQL\Type\Scalar\AbstractScalarType;
 use Youshido\GraphQL\Type\TypeMap;
 
 abstract class AbstractListType extends AbstractObjectType implements CompositeTypeInterface
@@ -33,10 +36,7 @@ abstract class AbstractListType extends AbstractObjectType implements CompositeT
         parent::__construct();
     }
 
-    /**
-     * @return AbstractObjectType
-     */
-    abstract public function getItemType(): AbstractObjectType;
+    abstract public function getItemType(): AbstractObjectType|AbstractScalarType|InputObjectType;
 
     /**
      * @param mixed $value
@@ -104,6 +104,9 @@ abstract class AbstractListType extends AbstractObjectType implements CompositeT
         return $this->getNamedType();
     }
 
+    /**
+     * @throws Exception
+     */
     public function parseValue($value)
     {
         foreach ((array)$value as $keyValue => $valueItem) {
