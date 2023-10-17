@@ -15,12 +15,11 @@ use Youshido\GraphQL\Type\Union\AbstractUnionType;
 
 trait TypeCollectorTrait
 {
+    protected array $types = [];
 
-    protected $types = [];
-
-    protected function collectTypes(AbstractType $type)
+    protected function collectTypes(?AbstractType $type): void
     {
-        if (is_object($type) && array_key_exists($type->getName(), $this->types)) return;
+        if (empty($type) || array_key_exists($type->getName(), $this->types)) return;
 
         switch ($type->getKind()) {
             case TypeMap::KIND_INTERFACE:
@@ -75,7 +74,7 @@ trait TypeCollectorTrait
     /**
      * @param $type AbstractObjectType
      */
-    private function collectFieldsArgsTypes($type): void
+    private function collectFieldsArgsTypes(AbstractObjectType $type): void
     {
         foreach ($type->getConfig()->getFields() as $field) {
             $arguments = $field->getConfig()->getArguments();
@@ -100,5 +99,4 @@ trait TypeCollectorTrait
 
         return false;
     }
-
 }

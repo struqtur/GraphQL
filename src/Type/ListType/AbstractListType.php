@@ -36,7 +36,7 @@ abstract class AbstractListType extends AbstractObjectType implements CompositeT
     /**
      * @return AbstractObjectType
      */
-    abstract public function getItemType();
+    abstract public function getItemType(): AbstractObjectType;
 
     /**
      * @param mixed $value
@@ -58,9 +58,13 @@ abstract class AbstractListType extends AbstractObjectType implements CompositeT
      *
      * @return bool
      */
-    protected function validList($value, $returnValue = false)
+    protected function validList($value, bool $returnValue = false): bool
     {
         $itemType = $this->config->get('itemType');
+
+        if (empty($itemType)) {
+            return false;
+        }
 
         if ($value && $itemType->isInputType()) {
             foreach ($value as $item) {
@@ -85,17 +89,17 @@ abstract class AbstractListType extends AbstractObjectType implements CompositeT
         return true;
     }
 
-    public function getNamedType()
+    public function getNamedType(): AbstractObjectType
     {
         return $this->getItemType();
     }
 
-    final public function getKind()
+    final public function getKind(): string
     {
         return TypeMap::KIND_LIST;
     }
 
-    public function getTypeOf()
+    public function getTypeOf(): AbstractObjectType
     {
         return $this->getNamedType();
     }
@@ -115,11 +119,16 @@ abstract class AbstractListType extends AbstractObjectType implements CompositeT
             return 'The value is not an iterable.';
         }
 
+        if (empty($this->config->get('itemType'))) {
+            return 'itemType is empty.';
+        }
+
         return $this->config->get('itemType')->getValidationError($this->validList($value, true));
     }
 
     /**
      * @param $value
+     * @return bool
      */
     protected function isIterable($value): bool
     {
