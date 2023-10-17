@@ -21,19 +21,19 @@ class MaxComplexityQueryVisitor extends AbstractQueryVisitor
     /**
      * @var int max score allowed before throwing an exception (causing processing to stop)
      */
-    public $maxScore;
+    public int $maxScore;
 
     /**
      * @var int default score for nodes without explicit cost functions
      */
-    protected $defaultScore = 1;
+    protected int $defaultScore = 1;
 
     /**
      * MaxComplexityQueryVisitor constructor.
      *
      * @param int $max max allowed complexity score
      */
-    public function __construct($max)
+    public function __construct(int $max)
     {
         parent::__construct();
 
@@ -42,10 +42,11 @@ class MaxComplexityQueryVisitor extends AbstractQueryVisitor
 
     /**
      * {@inheritdoc}
+     * @throws Exception
      */
     public function visit(array $args, FieldConfig $fieldConfig, $childScore = 0)
     {
-        $cost = $fieldConfig->get('cost', null);
+        $cost = $fieldConfig->get('cost');
         if (is_callable($cost)) {
             $cost = $cost($args, $fieldConfig, $childScore);
         }
@@ -53,7 +54,7 @@ class MaxComplexityQueryVisitor extends AbstractQueryVisitor
         $cost = is_null($cost) ? $this->defaultScore : $cost;
         $this->memo += $cost;
 
-        if ($this->memo > $this->maxScore) {
+        if (!empty($this->maxScore) && $this->memo > $this->maxScore) {
             throw new Exception('query exceeded max allowed complexity of ' . $this->maxScore);
         }
 
