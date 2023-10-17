@@ -11,17 +11,15 @@
 
 namespace Youshido\GraphQL\Execution\Visitor;
 
-
 use Exception;
 use Youshido\GraphQL\Config\Field\FieldConfig;
 
 class MaxComplexityQueryVisitor extends AbstractQueryVisitor
 {
-
     /**
-     * @var int max score allowed before throwing an exception (causing processing to stop)
+     * @var ?int max score allowed before throwing an exception (causing processing to stop)
      */
-    public int $maxScore;
+    public ?int $maxScore;
 
     /**
      * @var int default score for nodes without explicit cost functions
@@ -31,9 +29,9 @@ class MaxComplexityQueryVisitor extends AbstractQueryVisitor
     /**
      * MaxComplexityQueryVisitor constructor.
      *
-     * @param int $max max allowed complexity score
+     * @param int|null $max max allowed complexity score
      */
-    public function __construct(int $max)
+    public function __construct(?int $max)
     {
         parent::__construct();
 
