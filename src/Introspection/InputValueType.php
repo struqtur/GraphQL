@@ -30,7 +30,7 @@ class InputValueType extends AbstractObjectType
     /**
      * @param AbstractSchema|Field|InputField $value
      *
-     * @return string|array|null //todo implement value printer
+     * @return string|array|null
      *
      * //todo implement value printer
      */

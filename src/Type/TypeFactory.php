@@ -8,7 +8,6 @@
 
 namespace Youshido\GraphQL\Type;
 
-
 use Youshido\GraphQL\Exception\ConfigurationException;
 use Youshido\GraphQL\Type\Scalar\AbstractScalarType;
 
@@ -18,16 +17,18 @@ class TypeFactory
 
     /**
      *
-     * @return AbstractScalarType
+     * @param string $type
+     * @return AbstractScalarType|null
      * @throws ConfigurationException
      */
-    public static function getScalarType(string $type)
+    public static function getScalarType(string $type): ?AbstractScalarType
     {
-        if (TypeService::isScalarType($type)) {
-            if (is_object($type)) {
-                return $type;
-            }
+        // TODO how this gets here and how to resolve? - hotfix
+        if ($type == '__DirectiveLocation') {
+            return null;
+        }
 
+        if (TypeService::isScalarType($type)) {
             if (empty(self::$objectsHash[$type])) {
                 $name = ucfirst($type);
 
@@ -36,7 +37,7 @@ class TypeFactory
 
                 $className = 'Youshido\GraphQL\Type\Scalar\\' . $name . 'Type';
 
-                if ($name == 'DateTimeAsString' || $name == 'StringOrArray') {
+                if ($name == 'DateTimeAsString' || $name == 'StringOrArray' || $name == 'Boolean' || $name == 'Float' || $name == 'Int') {
                     $className = 'App\GraphQL\Schema\Type\Scalar\\' . $name . 'Type';
                 }
 
