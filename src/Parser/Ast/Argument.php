@@ -7,22 +7,19 @@
 
 namespace Youshido\GraphQL\Parser\Ast;
 
-
 use Youshido\GraphQL\Parser\Ast\Interfaces\ValueInterface;
 use Youshido\GraphQL\Parser\Location;
 
 class Argument extends AbstractAst
 {
+    private string $name;
 
-    /** @var string */
-    private $name;
-
-    private ValueInterface $value;
+    private ValueInterface|bool $value;
 
     /**
      * @param string $name
      */
-    public function __construct($name, ValueInterface $value, Location $location)
+    public function __construct($name, $value, Location $location)
     {
         parent::__construct($location);
 
@@ -31,25 +28,25 @@ class Argument extends AbstractAst
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
     /**
-     * @param mixed $name
+     * @param string $name
      */
-    public function setName($name): void
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
     /**
-     * @return ValueInterface
+     * @return ValueInterface|bool
      */
-    public function getValue()
+    public function getValue(): ValueInterface|bool
     {
         return $this->value;
     }
@@ -57,7 +54,7 @@ class Argument extends AbstractAst
     /**
      * @param mixed $value
      */
-    public function setValue($value): void
+    public function setValue(mixed $value): void
     {
         $this->value = $value;
     }
