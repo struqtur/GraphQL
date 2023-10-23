@@ -17,9 +17,9 @@ use Youshido\GraphQL\Field\FieldInterface;
 trait AutoNameTrait
 {
 
-    public function getName(): string
+    public function getName(): ?string
     {
-        if (!empty($this->config)) {
+        if (!empty($this->config?->getName())) {
             return $this->config->getName();
         }
 
@@ -29,9 +29,9 @@ trait AutoNameTrait
             $className = substr($className, $prevPos + 1);
         }
 
-        if (substr($className, -5) == 'Field') {
+        if (str_ends_with($className, 'Field')) {
             $className = lcfirst(substr($className, 0, -5));
-        } elseif (substr($className, -4) == 'Type') {
+        } elseif (str_ends_with($className, 'Type')) {
             $className = substr($className, 0, -4);
         }
 
@@ -39,8 +39,6 @@ trait AutoNameTrait
             $className = lcfirst($className);
         }
 
-
         return $className;
     }
-
 }

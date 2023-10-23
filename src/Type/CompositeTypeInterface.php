@@ -10,9 +10,5 @@ namespace Youshido\GraphQL\Type;
 
 interface CompositeTypeInterface
 {
-
-    /**
-     * @return AbstractType
-     */
-    public function getTypeOf(): AbstractType;
+    public function getTypeOf(): mixed;
 }

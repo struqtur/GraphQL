@@ -12,9 +12,9 @@ namespace Youshido\GraphQL\Type;
 interface InputTypeInterface
 {
     /**
-     * @return String type name
+     * @return string|null type name
      */
-    public function getName(): string;
+    public function getName(): ?string;
 
     /**
      * @return String predefined type kind

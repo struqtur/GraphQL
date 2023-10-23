@@ -38,9 +38,9 @@ final class NonNullType extends AbstractType implements CompositeTypeInterface
         $this->_typeOf = $fieldType;
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
-        return '';
+        return null;
     }
 
     public function getKind(): string
@@ -82,7 +82,7 @@ final class NonNullType extends AbstractType implements CompositeTypeInterface
         return $this->getTypeOf();
     }
 
-    public function getTypeOf(): AbstractType
+    public function getTypeOf(): mixed
     {
         return $this->_typeOf;
     }
