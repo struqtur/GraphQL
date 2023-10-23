@@ -72,17 +72,17 @@ final class NonNullType extends AbstractType implements CompositeTypeInterface
         return true;
     }
 
-    public function getNamedType(): NonNullType|Scalar\AbstractScalarType|string|AbstractType
+    public function getNamedType(): NonNullType|Scalar\AbstractScalarType
     {
         return $this->getTypeOf();
     }
 
-    public function getNullableType(): NonNullType|Object\AbstractObjectType|Scalar\AbstractScalarType|string|AbstractType
+    public function getNullableType(): AbstractType|Object\AbstractObjectType
     {
         return $this->getTypeOf();
     }
 
-    public function getTypeOf(): Scalar\AbstractScalarType|string|AbstractType
+    public function getTypeOf(): Scalar\AbstractScalarType|string|AbstractType|NonNullType
     {
         return $this->_typeOf;
     }
