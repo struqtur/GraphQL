@@ -10,6 +10,7 @@ namespace Youshido\GraphQL\Type\InterfaceType;
 
 
 use Youshido\GraphQL\Config\Object\InterfaceTypeConfig;
+use Youshido\GraphQL\Exception\ConfigurationException;
 use Youshido\GraphQL\Type\AbstractType;
 use Youshido\GraphQL\Type\Traits\AutoNameTrait;
 use Youshido\GraphQL\Type\Traits\FieldsAwareObjectTrait;
@@ -21,9 +22,9 @@ abstract class AbstractInterfaceType extends AbstractType
     use FieldsAwareObjectTrait;
     use AutoNameTrait;
 
-    protected $isBuilt = false;
+    protected bool $isBuilt = false;
 
-    public function getConfig()
+    public function getConfig(): InterfaceTypeConfig
     {
         if (!$this->isBuilt) {
             $this->isBuilt = true;
@@ -36,11 +37,12 @@ abstract class AbstractInterfaceType extends AbstractType
     /**
      * ObjectType constructor.
      *
-     * @param $config
+     * @param array $config
+     * @throws ConfigurationException
      */
     public function __construct(array $config = [])
     {
-        if ($config === []) {
+        if (empty($config)) {
             $config['name'] = $this->getName();
         }
 
@@ -52,14 +54,14 @@ abstract class AbstractInterfaceType extends AbstractType
     /**
      * @param InterfaceTypeConfig $config
      */
-    abstract public function build($config);
+    abstract public function build(InterfaceTypeConfig $config);
 
-    public function getKind()
+    public function getKind(): string
     {
         return TypeMap::KIND_INTERFACE;
     }
 
-    public function getNamedType()
+    public function getNamedType(): AbstractInterfaceType|static
     {
         return $this;
     }
@@ -73,7 +75,7 @@ abstract class AbstractInterfaceType extends AbstractType
      * @return TypeInterface[] an array of types that implement this interface. Used mainly for introspection and
      *                         documentation generation.
      */
-    public function getImplementations()
+    public function getImplementations(): array
     {
         return [];
     }

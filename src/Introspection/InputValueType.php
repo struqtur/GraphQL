@@ -7,6 +7,7 @@
 
 namespace Youshido\GraphQL\Introspection;
 
+use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
 use Youshido\GraphQL\Exception\ConfigurationException;
 use Youshido\GraphQL\Field\Field;
 use Youshido\GraphQL\Field\InputField;
@@ -43,7 +44,7 @@ class InputValueType extends AbstractObjectType
     /**
      * @throws ConfigurationException
      */
-    public function build($config): void
+    public function build(ObjectTypeConfig $config): void
     {
         $config
             ->addField('name', new NonNullType(TypeMap::TYPE_STRING))

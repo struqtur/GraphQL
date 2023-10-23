@@ -9,10 +9,14 @@
 namespace Youshido\GraphQL\Type\Object;
 
 use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
+use Youshido\GraphQL\Exception\ConfigurationException;
 
 final class ObjectType extends AbstractObjectType
 {
 
+    /**
+     * @throws ConfigurationException
+     */
     public function __construct(array $config)
     {
         parent::__construct();
@@ -24,7 +28,7 @@ final class ObjectType extends AbstractObjectType
      *
      * @codeCoverageIgnore
      */
-    public function build($config): void
+    public function build(ObjectTypeConfig $config): void
     {
     }
 

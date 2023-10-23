@@ -17,7 +17,7 @@ use Youshido\GraphQL\Type\Scalar\StringType;
 
 class BookType extends AbstractObjectType
 {
-    public function build($config)
+    public function build(ObjectTypeConfig $config)
     {
         $config->addFields([
             'id'     => new IdType(),

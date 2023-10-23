@@ -10,6 +10,7 @@ namespace Youshido\GraphQL\Type\Enum;
 
 use Youshido\GraphQL\Config\Object\EnumTypeConfig;
 use Youshido\GraphQL\Config\Traits\ConfigAwareTrait;
+use Youshido\GraphQL\Exception\ConfigurationException;
 use Youshido\GraphQL\Type\AbstractType;
 use Youshido\GraphQL\Type\Traits\AutoNameTrait;
 use Youshido\GraphQL\Type\TypeMap;
@@ -22,11 +23,12 @@ abstract class AbstractEnumType extends AbstractType
 
     /**
      * ObjectType constructor.
-     * @param $config
+     * @param array $config
+     * @throws ConfigurationException
      */
     public function __construct(array $config = [])
     {
-        if ($config === []) {
+        if (empty($config)) {
             $config['name'] = $this->getName();
             $config['values'] = $this->getValues();
         }
@@ -37,7 +39,7 @@ abstract class AbstractEnumType extends AbstractType
     /**
      * @return String predefined type kind
      */
-    public function getKind()
+    public function getKind(): string
     {
         return TypeMap::KIND_ENUM;
     }
@@ -58,7 +60,7 @@ abstract class AbstractEnumType extends AbstractType
         return false;
     }
 
-    public function getValidationError($value = null)
+    public function getValidationError($value = null): string
     {
         $allowedValues = array_map(static function (array $value): string {
             return sprintf('%s (%s)', $value['name'], $value['value']);
@@ -69,7 +71,7 @@ abstract class AbstractEnumType extends AbstractType
     /**
      * @return array
      */
-    abstract public function getValues();
+    abstract public function getValues(): array;
 
     public function serialize($value)
     {

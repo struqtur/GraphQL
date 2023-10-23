@@ -3,6 +3,7 @@
 namespace Youshido\Tests\Issues\Issue220;
 
 use PHPUnit\Framework\TestCase;
+use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
 use Youshido\GraphQL\Field\Field;
 use Youshido\GraphQL\Type\Object\AbstractObjectType;
 use Youshido\GraphQL\Type\Scalar\StringType;
@@ -50,7 +51,7 @@ class Issue220Test extends TestCase
 
 class ArticleType extends AbstractObjectType
 {
-    public function build($config): void
+    public function build(ObjectTypeConfig $config): void
     {
         $config->addFields([
             'title' => new StringType(),

@@ -19,7 +19,7 @@ use Youshido\GraphQL\Type\Scalar\StringType;
 
 class UserType extends AbstractObjectType
 {
-    public function build($config): void
+    public function build(ObjectTypeConfig $config): void
     {
         $config->addFields([
             'id'           => new IdType(),
@@ -32,7 +32,7 @@ class UserType extends AbstractObjectType
 class CourtReservation extends AbstractObjectType
 {
 
-    public function build($config): void
+    public function build(ObjectTypeConfig $config): void
     {
         $config->addFields([
             'id'      => new IdType(),
@@ -55,7 +55,7 @@ class CourtReservation extends AbstractObjectType
 
 class ClassReservation extends AbstractObjectType
 {
-    public function build($config): void
+    public function build(ObjectTypeConfig $config): void
     {
         $config->addFields([
             'id'   => new IdType(),
@@ -76,7 +76,7 @@ class ReservationInterface extends AbstractInterfaceType
         return strpos((string) $object['id'], 'cl') === false ? new CourtReservation() : new ClassReservation();
     }
 
-    public function build($config): void
+    public function build(InterfaceTypeConfig $config): void
     {
         $config->addFields([
             'id' => new IdType()

@@ -8,8 +8,9 @@
 namespace Youshido\Tests\StarWars\Schema;
 
 
+use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
+use Youshido\GraphQL\Exception\ConfigurationException;
 use Youshido\GraphQL\Field\Field;
-use Youshido\GraphQL\Field\FieldFactory;
 use Youshido\GraphQL\Type\Object\AbstractObjectType;
 use Youshido\GraphQL\Type\Scalar\IdType;
 
@@ -24,7 +25,10 @@ class StarWarsQueryType extends AbstractObjectType
         return 'Query';
     }
 
-    public function build($config): void
+    /**
+     * @throws ConfigurationException
+     */
+    public function build(ObjectTypeConfig $config): void
     {
         $config
             ->addField('hero', [
@@ -33,7 +37,7 @@ class StarWarsQueryType extends AbstractObjectType
                     'episode' => ['type' => new EpisodeEnum()]
                 ],
                 'resolve' => static function ($root, array $args) {
-                    return StarWarsData::getHero(isset($args['episode']) ? $args['episode'] : null);
+                    return StarWarsData::getHero($args['episode'] ?? null);
                 },
             ])
             ->addField(new Field([
@@ -44,7 +48,7 @@ class StarWarsQueryType extends AbstractObjectType
                 ],
                 'resolve' => static function ($value = null, array $args = []) {
                     $humans = StarWarsData::humans();
-                    return isset($humans[$args['id']]) ? $humans[$args['id']] : null;
+                    return $humans[$args['id']] ?? null;
                 }
             ]))
             ->addField(new Field([
@@ -55,7 +59,7 @@ class StarWarsQueryType extends AbstractObjectType
                 ],
                 'resolve' => static function ($value = null, array $args = []) {
                     $droids = StarWarsData::droids();
-                    return isset($droids[$args['id']]) ? $droids[$args['id']] : null;
+                    return $droids[$args['id']] ?? null;
                 }
             ]));
     }

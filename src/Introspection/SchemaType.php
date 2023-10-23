@@ -7,6 +7,7 @@
 
 namespace Youshido\GraphQL\Introspection;
 
+use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
 use Youshido\GraphQL\Field\Field;
 use Youshido\GraphQL\Introspection\Field\TypesField;
 use Youshido\GraphQL\Schema\AbstractSchema;
@@ -48,7 +49,7 @@ class SchemaType extends AbstractObjectType
         return $dirs;
     }
 
-    public function build($config): void
+    public function build(ObjectTypeConfig $config): void
     {
         $config
             ->addField(new Field([

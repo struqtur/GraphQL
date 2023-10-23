@@ -9,6 +9,7 @@
 namespace Examples\StarWars;
 
 
+use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
 use Youshido\GraphQL\Relay\Connection\ArrayConnection;
 use Youshido\GraphQL\Relay\Connection\Connection;
 use Youshido\GraphQL\Relay\Field\GlobalIdField;
@@ -22,7 +23,7 @@ class FactionType extends AbstractObjectType
 
     const TYPE_KEY = 'faction';
 
-    public function build($config)
+    public function build(ObjectTypeConfig $config)
     {
         $config
             ->addField(new GlobalIdField(self::TYPE_KEY))
@@ -59,7 +60,7 @@ class FactionType extends AbstractObjectType
         return TestDataProvider::getFaction($id);
     }
 
-    public function getInterfaces()
+    public function getInterfaces(): array
     {
         return [new NodeInterfaceType()];
     }

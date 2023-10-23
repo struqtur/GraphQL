@@ -7,6 +7,7 @@
 
 namespace Youshido\GraphQL\Introspection;
 
+use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
 use Youshido\GraphQL\Execution\ResolveInfo;
 use Youshido\GraphQL\Field\Field;
 use Youshido\GraphQL\Introspection\Traits\TypeCollectorTrait;
@@ -154,7 +155,7 @@ class QueryType extends AbstractObjectType
         return null;
     }
 
-    public function build($config): void
+    public function build(ObjectTypeConfig $config): void
     {
         $config
             ->addField('name', TypeMap::TYPE_STRING)

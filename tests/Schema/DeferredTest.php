@@ -8,6 +8,7 @@
 
 namespace Youshido\Tests\Schema;
 
+use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
 use Youshido\GraphQL\Config\Schema\SchemaConfig;
 use Youshido\GraphQL\Execution\DeferredResolver;
 use Youshido\GraphQL\Execution\Processor;
@@ -96,7 +97,7 @@ class DeferredUserType extends AbstractObjectType
     }
 
 
-    public function build($config): void
+    public function build(ObjectTypeConfig $config): void
     {
         $config->addField(
           new Field(

@@ -8,6 +8,7 @@
 namespace Youshido\Tests\StarWars\Schema;
 
 
+use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
 use Youshido\GraphQL\Type\ListType\ListType;
 use Youshido\GraphQL\Type\NonNullType;
 use Youshido\GraphQL\Type\Object\AbstractObjectType;
@@ -18,7 +19,7 @@ use Youshido\GraphQL\Type\TypeMap;
 class HumanType extends AbstractObjectType
 {
 
-    public function build($config): void
+    public function build(ObjectTypeConfig $config): void
     {
         $config
             ->addField('id', new NonNullType(new IdType()))

@@ -9,6 +9,7 @@
 namespace Examples\StarWars;
 
 
+use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
 use Youshido\GraphQL\Relay\Field\GlobalIdField;
 use Youshido\GraphQL\Relay\NodeInterfaceType;
 use Youshido\GraphQL\Type\Object\AbstractObjectType;
@@ -18,7 +19,7 @@ class ShipType extends AbstractObjectType
 {
     const TYPE_KEY = 'ship';
 
-    public function build($config)
+    public function build(ObjectTypeConfig $config)
     {
         $config
             ->addField(new GlobalIdField(self::TYPE_KEY))
@@ -35,7 +36,7 @@ class ShipType extends AbstractObjectType
         return 'A ship in the Star Wars saga';
     }
 
-    public function getInterfaces()
+    public function getInterfaces(): array
     {
         return [new NodeInterfaceType()];
     }

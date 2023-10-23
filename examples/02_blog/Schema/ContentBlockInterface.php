@@ -6,6 +6,7 @@
 namespace Examples\Blog\Schema;
 
 
+use Youshido\GraphQL\Config\Object\InterfaceTypeConfig;
 use Youshido\GraphQL\Type\InterfaceType\AbstractInterfaceType;
 use Youshido\GraphQL\Type\NonNullType;
 use Youshido\GraphQL\Type\Scalar\StringType;
@@ -13,7 +14,7 @@ use Youshido\GraphQL\Type\Scalar\StringType;
 class ContentBlockInterface extends AbstractInterfaceType
 {
 
-    public function build($config)
+    public function build(InterfaceTypeConfig $config)
     {
         $config->addField('title', new NonNullType(new StringType()));
         $config->addField('summary', new StringType());

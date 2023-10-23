@@ -5,6 +5,7 @@
 
 namespace Examples\Blog\Schema;
 
+use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
 use Youshido\GraphQL\Type\NonNullType;
 use Youshido\GraphQL\Type\Object\AbstractObjectType;
 use Youshido\GraphQL\Type\Scalar\BooleanType;
@@ -14,10 +15,10 @@ use Youshido\GraphQL\Type\Scalar\StringType;
 class PostType extends AbstractObjectType
 {
     /**
-     * @param \Youshido\GraphQL\Config\Object\ObjectTypeConfig $config
+     * @param ObjectTypeConfig $config
      * @throws \Youshido\GraphQL\Exception\ConfigurationException
      */
-    public function build($config)
+    public function build(ObjectTypeConfig $config)
     {
         $config
             ->addField('oldTitle', [
@@ -49,7 +50,7 @@ class PostType extends AbstractObjectType
         return DataProvider::getPost($id);
     }
 
-    public function getInterfaces()
+    public function getInterfaces(): array
     {
         return [new ContentBlockInterface()];
     }

@@ -9,6 +9,7 @@
 namespace Examples\BookStore\Schema\Type;
 
 use Examples\BookStore\Schema\Field\CategoriesField;
+use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
 use Youshido\GraphQL\Type\ListType\ListType;
 use Youshido\GraphQL\Type\Object\AbstractObjectType;
 use Youshido\GraphQL\Type\Scalar\IdType;
@@ -16,7 +17,7 @@ use Youshido\GraphQL\Type\Scalar\StringType;
 
 class CategoryType extends AbstractObjectType
 {
-    public function build($config)
+    public function build(ObjectTypeConfig $config)
     {
         $config->addFields([
             'id'      => new IdType(),

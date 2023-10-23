@@ -7,6 +7,7 @@
 
 namespace Youshido\GraphQL\Introspection;
 
+use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
 use Youshido\GraphQL\Field\FieldInterface;
 use Youshido\GraphQL\Type\ListType\ListType;
 use Youshido\GraphQL\Type\NonNullType;
@@ -30,7 +31,7 @@ class FieldType extends AbstractObjectType
         return [];
     }
 
-    public function build($config): void
+    public function build(ObjectTypeConfig $config): void
     {
         $config
             ->addField('name', new NonNullType(TypeMap::TYPE_STRING))

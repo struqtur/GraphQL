@@ -8,6 +8,7 @@
 namespace Youshido\GraphQL\Introspection;
 
 
+use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
 use Youshido\GraphQL\Type\NonNullType;
 use Youshido\GraphQL\Type\Object\AbstractObjectType;
 use Youshido\GraphQL\Type\TypeMap;
@@ -15,7 +16,7 @@ use Youshido\GraphQL\Type\TypeMap;
 class EnumValueType extends AbstractObjectType
 {
 
-    public function build($config): void
+    public function build(ObjectTypeConfig $config): void
     {
         $config
             ->addField('name', new NonNullType(TypeMap::TYPE_STRING))

@@ -9,11 +9,12 @@
 namespace Youshido\GraphQL\Schema;
 
 
+use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
 use Youshido\GraphQL\Type\Object\AbstractObjectType;
 
 class InternalSchemaMutationObject extends AbstractObjectType
 {
-    public function build($config): void
+    public function build(ObjectTypeConfig $config): void
     {
     }
 

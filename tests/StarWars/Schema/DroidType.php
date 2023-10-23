@@ -8,6 +8,7 @@
 namespace Youshido\Tests\StarWars\Schema;
 
 
+use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
 use Youshido\GraphQL\Type\TypeMap;
 
 class DroidType extends HumanType
@@ -21,7 +22,7 @@ class DroidType extends HumanType
         return 'Droid';
     }
 
-    public function build($config): void
+    public function build(ObjectTypeConfig $config): void
     {
         parent::build($config);
 

@@ -8,6 +8,7 @@
 
 namespace Examples\BookStore\Schema\Type;
 
+use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
 use Youshido\GraphQL\Type\NonNullType;
 use Youshido\GraphQL\Type\Object\AbstractObjectType;
 use Youshido\GraphQL\Type\Scalar\IdType;
@@ -15,7 +16,7 @@ use Youshido\GraphQL\Type\Scalar\StringType;
 
 class AuthorType extends AbstractObjectType
 {
-    public function build($config)
+    public function build(ObjectTypeConfig $config)
     {
         $config->addFields([
             'id'        => new NonNullType(new IdType()),

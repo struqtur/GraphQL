@@ -8,6 +8,7 @@
 
 namespace Youshido\Tests\DataProvider;
 
+use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
 use Youshido\GraphQL\Type\Object\AbstractObjectType;
 use Youshido\GraphQL\Type\Object\ObjectType;
 use Youshido\GraphQL\Type\Scalar\IntType;
@@ -17,7 +18,7 @@ use Youshido\GraphQL\Type\NonNullType;
 class TestObjectType extends AbstractObjectType
 {
 
-    public function build($config): void
+    public function build(ObjectTypeConfig $config): void
     {
         $config
             ->addField('id', new IntType())

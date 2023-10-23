@@ -8,6 +8,7 @@
 namespace Youshido\GraphQL\Introspection;
 
 use Youshido\GraphQL\Config\Directive\DirectiveConfig;
+use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
 use Youshido\GraphQL\Directive\Directive;
 use Youshido\GraphQL\Directive\DirectiveInterface;
 use Youshido\GraphQL\Type\ListType\ListType;
@@ -48,7 +49,7 @@ class DirectiveType extends AbstractObjectType
         return $directiveConfig->getLocations();
     }
 
-    public function build($config): void
+    public function build(ObjectTypeConfig $config): void
     {
         $config
             ->addField('name', new NonNullType(TypeMap::TYPE_STRING))

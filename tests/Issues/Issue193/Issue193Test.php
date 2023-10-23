@@ -2,6 +2,8 @@
 
 namespace Youshido\Tests\Issues\Issue193;
 
+use Youshido\GraphQL\Config\Object\InterfaceTypeConfig;
+use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
 use Youshido\GraphQL\Config\Schema\SchemaConfig;
 use Youshido\GraphQL\Execution\Processor;
 use Youshido\GraphQL\Schema\AbstractSchema;
@@ -82,7 +84,7 @@ class Issue193Schema extends AbstractSchema
 class PostType extends AbstractObjectType
 {
 
-    public function build($config): void
+    public function build(ObjectTypeConfig $config): void
     {
         $config->applyInterface(new ContentBlockInterface());
         $config->addFields([
@@ -98,7 +100,7 @@ class PostType extends AbstractObjectType
 
 class UndiscoveredType extends AbstractObjectType
 {
-    public function build($config): void
+    public function build(ObjectTypeConfig $config): void
     {
         $config->applyInterface(new ContentBlockInterface());
     }
@@ -106,7 +108,7 @@ class UndiscoveredType extends AbstractObjectType
 
 class ContentBlockInterface extends AbstractInterfaceType
 {
-    public function build($config): void
+    public function build(InterfaceTypeConfig $config): void
     {
         $config->addField('title', new NonNullType(new StringType()));
         $config->addField('summary', new StringType());

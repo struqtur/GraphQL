@@ -8,6 +8,7 @@
 
 namespace Youshido\Tests\StarWars\Schema;
 
+use Youshido\GraphQL\Config\Object\InterfaceTypeConfig;
 use Youshido\GraphQL\Type\InterfaceType\AbstractInterfaceType;
 use Youshido\GraphQL\Type\ListType\ListType;
 use Youshido\GraphQL\Type\NonNullType;
@@ -16,7 +17,7 @@ use Youshido\GraphQL\Type\Scalar\StringType;
 
 class CharacterInterface extends AbstractInterfaceType
 {
-    public function build($config): void
+    public function build(InterfaceTypeConfig $config): void
     {
         $config
             ->addField('id', new NonNullType(new IdType()))

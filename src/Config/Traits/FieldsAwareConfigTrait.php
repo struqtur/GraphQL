@@ -13,6 +13,8 @@ use Youshido\GraphQL\Exception\ConfigurationException;
 use Youshido\GraphQL\Field\Field;
 use Youshido\GraphQL\Field\FieldInterface;
 use Youshido\GraphQL\Field\InputFieldInterface;
+use Youshido\GraphQL\Introspection\Field\TypesField;
+use Youshido\GraphQL\Relay\Field\GlobalIdField;
 use Youshido\GraphQL\Type\InterfaceType\AbstractInterfaceType;
 
 /**
@@ -21,7 +23,7 @@ use Youshido\GraphQL\Type\InterfaceType\AbstractInterfaceType;
  */
 trait FieldsAwareConfigTrait
 {
-    protected $fields = [];
+    protected array $fields = [];
 
     public function buildFields(): void
     {
@@ -34,7 +36,7 @@ trait FieldsAwareConfigTrait
      * Add fields from passed interface
      * @return $this
      */
-    public function applyInterface(AbstractInterfaceType $interfaceType)
+    public function applyInterface(AbstractInterfaceType $interfaceType): static
     {
         $this->addFields($interfaceType->getFields());
 
@@ -45,7 +47,7 @@ trait FieldsAwareConfigTrait
      * @param array $fieldsList
      * @return $this
      */
-    public function addFields($fieldsList)
+    public function addFields($fieldsList): static
     {
         foreach ($fieldsList as $fieldName => $fieldConfig) {
 
@@ -64,14 +66,14 @@ trait FieldsAwareConfigTrait
     }
 
     /**
-     * @param FieldInterface|string $field Field name or Field Object
-     * @param mixed $fieldInfo Field Type or Field Config array
+     * @param Field|GlobalIdField|TypesField|string $field Field name or Field Object
+     * @param null $fieldInfo Field Type or Field Config array
      *
      * @return $this
      *
      * @throws ConfigurationException
      */
-    public function addField($field, $fieldInfo = null)
+    public function addField(Field|GlobalIdField|TypesField|string $field, $fieldInfo = null): static
     {
         if (!($field instanceof FieldInterface)) {
             $field = new Field($this->buildFieldConfig($field, $fieldInfo));
@@ -105,7 +107,7 @@ trait FieldsAwareConfigTrait
      *
      * @return Field
      */
-    public function getField($name)
+    public function getField($name): ?Field
     {
         return $this->hasField($name) ? $this->fields[$name] : null;
     }
@@ -126,12 +128,12 @@ trait FieldsAwareConfigTrait
     /**
      * @return Field[]
      */
-    public function getFields()
+    public function getFields(): array
     {
         return $this->fields;
     }
 
-    public function removeField($name)
+    public function removeField($name): static
     {
         if ($this->hasField($name)) {
             unset($this->fields[$name]);
