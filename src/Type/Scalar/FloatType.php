@@ -16,7 +16,7 @@ class FloatType extends AbstractScalarType
         return 'Float';
     }
 
-    public function serialize($value)
+    public function serialize($value): mixed
     {
         if ($value === null) {
             return null;
@@ -25,7 +25,7 @@ class FloatType extends AbstractScalarType
         }
     }
 
-    public function isValidValue($value): bool
+    public function isValidValue(mixed $value): bool
     {
         return is_null($value) || is_float($value) || is_int($value);
     }

@@ -14,7 +14,7 @@ interface AbstractInterfaceTypeInterface
     /**
      * @param $object object from resolve function
      *
-     * @return AbstractType
+     * @return AbstractType|null
      */
-    public function resolveType($object);
+    public function resolveType(object $object): ?AbstractType;
 }

@@ -43,7 +43,7 @@ abstract class AbstractListType extends AbstractObjectType implements CompositeT
      *
      * @return bool
      */
-    public function isValidValue($value): bool
+    public function isValidValue(mixed $value): bool
     {
         if (!$this->isIterable($value)) {
             return false;
@@ -99,7 +99,7 @@ abstract class AbstractListType extends AbstractObjectType implements CompositeT
         return TypeMap::KIND_LIST;
     }
 
-    public function getTypeOf(): AbstractObjectType|AbstractScalarType|InputObjectType|NonNullType|null
+    public function getTypeOf(): \Youshido\GraphQL\Type\AbstractType
     {
         return $this->getNamedType();
     }
@@ -107,7 +107,7 @@ abstract class AbstractListType extends AbstractObjectType implements CompositeT
     /**
      * @throws Exception
      */
-    public function parseValue($value)
+    public function parseValue($value): mixed
     {
         foreach ((array)$value as $keyValue => $valueItem) {
             $value[$keyValue] = $this->getItemType()->parseValue($valueItem);

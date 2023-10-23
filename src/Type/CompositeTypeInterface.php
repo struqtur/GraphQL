@@ -14,5 +14,5 @@ interface CompositeTypeInterface
     /**
      * @return AbstractType
      */
-    public function getTypeOf();
+    public function getTypeOf(): AbstractType;
 }

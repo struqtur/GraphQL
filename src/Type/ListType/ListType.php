@@ -29,8 +29,8 @@ final class ListType extends AbstractListType
         return $this->getConfig()->get('itemType');
     }
 
-    public function getName()
+    public function getName(): string
     {
-        return null;
+        return '';
     }
 }

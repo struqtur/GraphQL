@@ -57,7 +57,7 @@ abstract class AbstractObjectType extends AbstractType
         $this->config = new ObjectTypeConfig($config, $this);
     }
 
-    final public function serialize($value): void
+    final public function serialize($value): mixed
     {
         throw new InvalidArgumentException('You can not serialize object value directly');
     }
@@ -90,7 +90,7 @@ abstract class AbstractObjectType extends AbstractType
         return $this->getConfigValue('interfaces', []);
     }
 
-    public function isValidValue($value): bool
+    public function isValidValue(mixed $value): bool
     {
         return is_array($value) || is_null($value) || is_object($value);
     }

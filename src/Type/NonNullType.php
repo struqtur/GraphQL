@@ -16,7 +16,7 @@ final class NonNullType extends AbstractType implements CompositeTypeInterface
 {
     use ConfigAwareTrait;
 
-    private AbstractType|string|Scalar\AbstractScalarType|null $_typeOf;
+    private mixed $_typeOf;
 
     /**
      * NonNullType constructor.
@@ -38,9 +38,9 @@ final class NonNullType extends AbstractType implements CompositeTypeInterface
         $this->_typeOf = $fieldType;
     }
 
-    public function getName()
+    public function getName(): string
     {
-        return null;
+        return '';
     }
 
     public function getKind(): string
@@ -53,7 +53,7 @@ final class NonNullType extends AbstractType implements CompositeTypeInterface
         return $value;
     }
 
-    public function isValidValue($value): bool
+    public function isValidValue(mixed $value): bool
     {
         if ($value === null) {
             return false;
@@ -72,22 +72,22 @@ final class NonNullType extends AbstractType implements CompositeTypeInterface
         return true;
     }
 
-    public function getNamedType(): NonNullType|Scalar\AbstractScalarType
+    public function getNamedType(): mixed
     {
         return $this->getTypeOf();
     }
 
-    public function getNullableType(): AbstractType|Object\AbstractObjectType
+    public function getNullableType(): mixed
     {
         return $this->getTypeOf();
     }
 
-    public function getTypeOf(): Scalar\AbstractScalarType|string|AbstractType|NonNullType
+    public function getTypeOf(): AbstractType
     {
         return $this->_typeOf;
     }
 
-    public function parseValue($value)
+    public function parseValue($value): mixed
     {
         return $this->getNullableType()->parseValue($value);
     }

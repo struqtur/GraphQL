@@ -22,7 +22,7 @@ trait ConfigAwareTrait
 
     protected $configCache = [];
 
-    public function getConfig()
+    public function getConfig(): AbstractConfig|ObjectTypeConfig|FieldConfig|InputFieldConfig
     {
         return $this->config;
     }

@@ -34,7 +34,7 @@ class StringType extends AbstractScalarType
         return (string)$value;
     }
 
-    public function isValidValue($value): bool
+    public function isValidValue(mixed $value): bool
     {
         return is_null($value) || is_scalar($value) || ((is_object($value) && method_exists($value, '__toString')));
     }

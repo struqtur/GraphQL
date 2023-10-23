@@ -60,7 +60,7 @@ abstract class AbstractUnionType extends AbstractType implements AbstractInterfa
         return $this;
     }
 
-    public function isValidValue($value): bool
+    public function isValidValue(mixed $value): bool
     {
         return true;
     }

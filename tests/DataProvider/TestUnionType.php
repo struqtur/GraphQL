@@ -20,7 +20,7 @@ class TestUnionType extends AbstractUnionType
         ];
     }
 
-    public function resolveType($object)
+    public function resolveType(object $object)
     {
         return $object;
     }

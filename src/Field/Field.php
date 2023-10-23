@@ -7,8 +7,6 @@
 
 namespace Youshido\GraphQL\Field;
 
-use Youshido\GraphQL\Type\Object\AbstractObjectType;
-
 /**
  * Class Field
  * @package Youshido\GraphQL\Type\Field
@@ -24,9 +22,9 @@ final class Field extends AbstractField
     protected $_nameCache;
 
     /**
-     * @return AbstractObjectType
+     * @return mixed
      */
-    public function getType(): AbstractObjectType
+    public function getType(): mixed
     {
         return $this->_typeCache ?: ($this->_typeCache = $this->getConfigValue('type'));
     }

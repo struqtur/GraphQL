@@ -32,7 +32,7 @@ class TestTimeType extends AbstractScalarType
         return $value instanceof \DateTime ? $value->format('H:i:s') : $value;
     }
 
-    public function isValidValue($value): bool
+    public function isValidValue(mixed $value): bool
     {
         if (is_object($value)) {
             return true;

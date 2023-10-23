@@ -28,7 +28,7 @@ class DateType extends AbstractScalarType
      * @param $value DateTime
      * @return null|string
      */
-    public function serialize($value)
+    public function serialize($value): mixed
     {
         if ($value === null) {
             return null;
@@ -37,7 +37,7 @@ class DateType extends AbstractScalarType
         return $value->format('Y-m-d');
     }
 
-    public function isValidValue($value): bool
+    public function isValidValue(mixed $value): bool
     {
         if (is_null($value) || is_object($value)) {
             return true;

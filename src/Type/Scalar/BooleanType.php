@@ -33,7 +33,7 @@ class BooleanType extends AbstractScalarType
         return (bool)$value;
     }
 
-    public function isValidValue($value): bool
+    public function isValidValue(mixed $value): bool
     {
         return is_null($value) || is_bool($value);
     }

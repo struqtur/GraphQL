@@ -19,7 +19,7 @@ trait FieldsArgumentsAwareObjectTrait
 {
     use FieldsAwareObjectTrait;
 
-    protected bool $hasArgumentCache;
+    protected bool $hasArgumentCache = false;
 
     public function addArguments($argumentsList): AbstractConfig|ObjectTypeConfig|FieldConfig|InputFieldConfig
     {
@@ -53,6 +53,6 @@ trait FieldsArgumentsAwareObjectTrait
 
     public function hasArguments(): bool
     {
-        return $this->hasArgumentCache === null ? ($this->hasArgumentCache = $this->getConfig()->hasArguments()) : $this->hasArgumentCache;
+        return empty($this->hasArgumentCache) ? ($this->hasArgumentCache = $this->getConfig()->hasArguments()) : $this->hasArgumentCache;
     }
 }

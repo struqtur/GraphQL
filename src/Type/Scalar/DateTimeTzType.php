@@ -20,7 +20,7 @@ class DateTimeTzType extends AbstractScalarType
         return 'DateTimeTz';
     }
 
-    public function isValidValue($value): bool
+    public function isValidValue(mixed $value): bool
     {
         if ((is_object($value) && $value instanceof DateTimeInterface) || is_null($value)) {
             return true;
@@ -33,7 +33,7 @@ class DateTimeTzType extends AbstractScalarType
         return (bool)$date;
     }
 
-    public function serialize($value)
+    public function serialize($value): mixed
     {
         $date = null;
 
@@ -46,7 +46,7 @@ class DateTimeTzType extends AbstractScalarType
         return $date ? $date->format($this->format) : null;
     }
 
-    public function parseValue($value)
+    public function parseValue($value): bool|null|DateTimeInterface|DateTime
     {
         if (is_string($value)) {
             $date = $this->createFromFormat($value);

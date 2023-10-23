@@ -47,7 +47,7 @@ abstract class AbstractEnumType extends AbstractType
     /**
      * @param $value mixed
      */
-    public function isValidValue($value): bool
+    public function isValidValue(mixed $value): bool
     {
         if (is_null($value)) return true;
 
@@ -73,7 +73,7 @@ abstract class AbstractEnumType extends AbstractType
      */
     abstract public function getValues(): array;
 
-    public function serialize($value)
+    public function serialize($value): mixed
     {
         foreach ($this->getConfig()->get('values') as $valueItem) {
             if ($value === $valueItem['value']) {
@@ -84,7 +84,7 @@ abstract class AbstractEnumType extends AbstractType
         return null;
     }
 
-    public function parseValue($value)
+    public function parseValue($value): mixed
     {
         foreach ($this->getConfig()->get('values') as $valueItem) {
             if ($value === $valueItem['name']) {

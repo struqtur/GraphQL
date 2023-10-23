@@ -21,12 +21,8 @@ class SchemaTypesList
      * @return $this
      * @throws
      */
-    public function addTypes($types): static
+    public function addTypes(array $types): static
     {
-        if (!is_array($types)) {
-            throw new Exception('addTypes accept only array of types');
-        }
-
         foreach ($types as $type) {
             $this->addType($type);
         }
@@ -34,13 +30,15 @@ class SchemaTypesList
         return $this;
     }
 
-    public function getTypes()
+    public function getTypes(): array
     {
         return $this->typesList;
     }
 
     /**
+     * @param TypeInterface $type
      * @return $this
+     * @throws Exception
      */
     public function addType(TypeInterface $type): static
     {
@@ -56,11 +54,13 @@ class SchemaTypesList
         return (isset($this->typesList[$typeName]));
     }
 
+    /**
+     * @throws Exception
+     */
     private function getTypeName(TypeInterface $type)
     {
-        if (is_string($type)) return $type;
 
-        if (is_object($type) && $type instanceof AbstractType) {
+        if ($type instanceof AbstractType) {
             return $type->getName();
         }
 

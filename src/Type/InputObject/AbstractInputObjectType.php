@@ -10,6 +10,7 @@ namespace Youshido\GraphQL\Type\InputObject;
 
 
 use Exception;
+use Youshido\GraphQL\Config\AbstractConfig;
 use Youshido\GraphQL\Config\Object\InputObjectTypeConfig;
 use Youshido\GraphQL\Field\InputFieldInterface;
 use Youshido\GraphQL\Parser\Ast\ArgumentValue\InputObject;
@@ -27,7 +28,7 @@ abstract class AbstractInputObjectType extends AbstractType
 
     protected $isBuilt = false;
 
-    public function getConfig()
+    public function getConfig(): InputObjectTypeConfig
     {
         if (!$this->isBuilt) {
             $this->isBuilt = true;
@@ -53,7 +54,7 @@ abstract class AbstractInputObjectType extends AbstractType
      */
     abstract public function build($config);
 
-    public function isValidValue($value): bool
+    public function isValidValue(mixed $value): bool
     {
         if ($value instanceof InputObject) {
             $value = $value->getValue();
@@ -97,7 +98,7 @@ abstract class AbstractInputObjectType extends AbstractType
         return count($requiredFields) <= 0;
     }
 
-    public function getKind()
+    public function getKind(): string
     {
         return TypeMap::KIND_INPUT_OBJECT;
     }
@@ -107,7 +108,7 @@ abstract class AbstractInputObjectType extends AbstractType
         return true;
     }
 
-    public function parseValue($value)
+    public function parseValue($value): mixed
     {
         if (is_null($value)) return null;
 

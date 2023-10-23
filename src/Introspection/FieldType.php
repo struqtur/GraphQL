@@ -52,7 +52,7 @@ class FieldType extends AbstractObjectType
             ]);
     }
 
-    public function isValidValue($value): bool
+    public function isValidValue(mixed $value): bool
     {
         return $value instanceof FieldInterface;
     }

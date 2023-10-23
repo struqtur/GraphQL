@@ -16,19 +16,19 @@ abstract class AbstractScalarType extends AbstractType
 {
     use ConfigAwareTrait;
 
-    public function getName()
+    public function getName(): string
     {
         $className = get_class($this);
 
         return substr($className, strrpos($className, '\\') + 1, -4);
     }
 
-    final public function getKind()
+    final public function getKind(): string
     {
         return TypeMap::KIND_SCALAR;
     }
 
-    public function parseValue($value)
+    public function parseValue($value): mixed
     {
         return $this->serialize($value);
     }

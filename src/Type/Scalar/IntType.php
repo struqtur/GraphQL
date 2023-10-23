@@ -17,7 +17,7 @@ class IntType extends AbstractScalarType
         return 'Int';
     }
 
-    public function serialize($value)
+    public function serialize($value): mixed
     {
         if ($value === null) {
             return null;
@@ -30,7 +30,7 @@ class IntType extends AbstractScalarType
         }
     }
 
-    public function isValidValue($value): bool
+    public function isValidValue(mixed $value): bool
     {
         return is_null($value) || is_int($value);
     }

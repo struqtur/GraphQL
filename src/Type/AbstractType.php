@@ -8,13 +8,6 @@
 
 namespace Youshido\GraphQL\Type;
 
-
-use Youshido\GraphQL\Type\InputObject\InputObjectType;
-use Youshido\GraphQL\Type\InterfaceType\AbstractInterfaceType;
-use Youshido\GraphQL\Type\Object\AbstractObjectType;
-use Youshido\GraphQL\Type\Scalar\AbstractScalarType;
-use Youshido\GraphQL\Type\Union\AbstractUnionType;
-
 abstract class AbstractType implements TypeInterface
 {
 
@@ -26,25 +19,25 @@ abstract class AbstractType implements TypeInterface
     }
 
     /**
-     * @return AbstractType|InputObjectType|NonNullType|AbstractObjectType|AbstractScalarType|null
+     * @return mixed
      */
-    public function getType(): NonNullType|AbstractObjectType|AbstractScalarType|InputObjectType|null|static
+    public function getType(): mixed
     {
         return $this;
     }
 
     /**
-     * @return NonNullType|AbstractObjectType|AbstractScalarType|InputObjectType|AbstractInterfaceType|AbstractUnionType|AbstractType|null
+     * @return mixed
      */
-    public function getNamedType(): NonNullType|AbstractObjectType|AbstractScalarType|InputObjectType|AbstractInterfaceType|AbstractUnionType|null|static
+    public function getNamedType(): mixed
     {
         return $this->getType();
     }
 
     /**
-     * @return AbstractType|AbstractObjectType
+     * @return mixed
      */
-    public function getNullableType(): AbstractObjectType|AbstractType|static
+    public function getNullableType(): mixed
     {
         return $this;
     }
@@ -54,12 +47,12 @@ abstract class AbstractType implements TypeInterface
         return $this->lastValidationError;
     }
 
-    public function isValidValue($value): bool
+    public function isValidValue(mixed $value): bool
     {
         return true;
     }
 
-    public function parseValue($value)
+    public function parseValue($value): mixed
     {
         return $value;
     }
@@ -69,7 +62,7 @@ abstract class AbstractType implements TypeInterface
         return $this->parseValue($value);
     }
 
-    public function serialize($value)
+    public function serialize($value): mixed
     {
         return $value;
     }

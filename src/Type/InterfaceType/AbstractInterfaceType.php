@@ -66,7 +66,7 @@ abstract class AbstractInterfaceType extends AbstractType
         return $this;
     }
 
-    public function isValidValue($value): bool
+    public function isValidValue(mixed $value): bool
     {
         return is_array($value) || is_null($value) || is_object($value);
     }

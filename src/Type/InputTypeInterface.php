@@ -9,24 +9,22 @@
 namespace Youshido\GraphQL\Type;
 
 
-use Youshido\GraphQL\Config\AbstractConfig;
-
 interface InputTypeInterface
 {
     /**
      * @return String type name
      */
-    public function getName();
+    public function getName(): string;
 
     /**
      * @return String predefined type kind
      */
-    public function getKind();
+    public function getKind(): string;
 
     /**
      * @return String type description
      */
-    public function getDescription();
+    public function getDescription(): string;
 
     /**
      * Coercing value received as input to current type
@@ -34,7 +32,7 @@ interface InputTypeInterface
      * @param $value
      * @return mixed
      */
-    public function parseValue($value);
+    public function parseValue($value): mixed;
 
     /**
      * Coercing result to current type
@@ -42,17 +40,14 @@ interface InputTypeInterface
      * @param $value
      * @return mixed
      */
-    public function serialize($value);
+    public function serialize($value): mixed;
 
     /**
      * @param $value mixed
      *
      * @return bool
      */
-    public function isValidValue($value);
+    public function isValidValue(mixed $value): bool;
 
-    /**
-     * @return AbstractConfig
-     */
     public function getConfig();
 }
