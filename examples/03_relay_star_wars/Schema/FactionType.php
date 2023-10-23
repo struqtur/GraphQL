@@ -50,7 +50,7 @@ class FactionType extends AbstractObjectType
 
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'A faction in the Star Wars saga';
     }

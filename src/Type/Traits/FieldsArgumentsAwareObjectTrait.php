@@ -41,12 +41,12 @@ trait FieldsArgumentsAwareObjectTrait
         return $this->getConfig()->getArguments();
     }
 
-    public function getArgument($argumentName): ?InputField
+    public function getArgument(string $argumentName): ?InputField
     {
         return $this->getConfig()->getArgument($argumentName);
     }
 
-    public function hasArgument($argumentName): bool
+    public function hasArgument(string $argumentName): bool
     {
         return $this->getConfig()->hasArgument($argumentName);
     }

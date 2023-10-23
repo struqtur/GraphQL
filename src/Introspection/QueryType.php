@@ -8,6 +8,7 @@
 namespace Youshido\GraphQL\Introspection;
 
 use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
+use Youshido\GraphQL\Exception\ConfigurationException;
 use Youshido\GraphQL\Execution\ResolveInfo;
 use Youshido\GraphQL\Field\Field;
 use Youshido\GraphQL\Introspection\Traits\TypeCollectorTrait;
@@ -46,7 +47,7 @@ class QueryType extends AbstractObjectType
         return null;
     }
 
-    public function resolveInputFields($value)
+    public function resolveInputFields($value): ?array
     {
         if ($value instanceof AbstractInputObjectType) {
             /** @var AbstractObjectType $value */
@@ -103,7 +104,7 @@ class QueryType extends AbstractObjectType
         });
     }
 
-    public function resolveInterfaces($value)
+    public function resolveInterfaces($value): array
     {
         /** @var $value AbstractType */
         if ($value->getKind() == TypeMap::KIND_OBJECT) {
@@ -111,10 +112,10 @@ class QueryType extends AbstractObjectType
             return $value->getConfig()->getInterfaces() ?: [];
         }
 
-        return null;
+        return [];
     }
 
-    public function resolvePossibleTypes($value, $args, ResolveInfo $info)
+    public function resolvePossibleTypes($value, $args, ResolveInfo $info): ?array
     {
         /** @var $value AbstractObjectType */
         if ($value->getKind() == TypeMap::KIND_INTERFACE) {
@@ -155,6 +156,9 @@ class QueryType extends AbstractObjectType
         return null;
     }
 
+    /**
+     * @throws ConfigurationException
+     */
     public function build(ObjectTypeConfig $config): void
     {
         $config
@@ -214,5 +218,4 @@ class QueryType extends AbstractObjectType
                 }
             ]);
     }
-
 }

@@ -13,7 +13,7 @@ trait AstArgumentsTrait
 {
 
     /** @var Argument[] */
-    protected $arguments;
+    protected array $arguments;
 
     private $argumentsCache;
 
@@ -31,17 +31,17 @@ trait AstArgumentsTrait
     /**
      * @return Argument[]
      */
-    public function getArguments()
+    public function getArguments(): array
     {
         return $this->arguments;
     }
 
     /**
-     * @param $name
+     * @param string $name
      *
      * @return null|Argument
      */
-    public function getArgument($name)
+    public function getArgument(string $name): ?Argument
     {
         $argument = null;
         if (isset($this->arguments[$name])) {
@@ -55,7 +55,7 @@ trait AstArgumentsTrait
     {
         $argument = $this->getArgument($name);
 
-        return $argument ? $argument->getValue()->getValue() : null;
+        return $argument?->getValue()->getValue();
     }
 
     /**
@@ -76,7 +76,7 @@ trait AstArgumentsTrait
         $this->arguments[$argument->getName()] = $argument;
     }
 
-    public function getKeyValueArguments()
+    public function getKeyValueArguments(): array
     {
         if ($this->argumentsCache !== null) {
             return $this->argumentsCache;

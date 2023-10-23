@@ -13,7 +13,7 @@ use Youshido\GraphQL\Field\InputField;
 
 trait ArgumentsAwareConfigTrait
 {
-    protected $arguments = [];
+    protected array $arguments = [];
 
     protected $_isArgumentsBuilt;
 
@@ -30,12 +30,11 @@ trait ArgumentsAwareConfigTrait
         $this->_isArgumentsBuilt = true;
     }
 
-    public function addArguments($argsList)
+    public function addArguments($argsList): static
     {
         foreach ($argsList as $argumentName => $argumentInfo) {
             if ($argumentInfo instanceof InputField) {
                 $this->arguments[$argumentInfo->getName()] = $argumentInfo;
-                continue;
             } else {
                 $this->addArgument($argumentName, $this->buildConfig($argumentName, $argumentInfo));
             }
@@ -44,7 +43,7 @@ trait ArgumentsAwareConfigTrait
         return $this;
     }
 
-    public function addArgument($argument, $argumentInfo = null)
+    public function addArgument($argument, $argumentInfo = null): static
     {
         if (!($argument instanceof InputField)) {
             $argument = new InputField($this->buildConfig($argument, $argumentInfo));
@@ -74,15 +73,16 @@ trait ArgumentsAwareConfigTrait
     /**
      * @param $name
      *
-     * @return InputField
+     * @return InputField|null
      */
-    public function getArgument($name)
+    public function getArgument($name): ?InputField
     {
         return $this->hasArgument($name) ? $this->arguments[$name] : null;
     }
 
     /**
      * @param $name
+     * @return bool
      */
     public function hasArgument($name): bool
     {
@@ -97,12 +97,12 @@ trait ArgumentsAwareConfigTrait
     /**
      * @return InputField[]
      */
-    public function getArguments()
+    public function getArguments(): array
     {
         return $this->arguments;
     }
 
-    public function removeArgument($name)
+    public function removeArgument($name): static
     {
         if ($this->hasArgument($name)) {
             unset($this->arguments[$name]);

@@ -10,7 +10,7 @@ use Youshido\GraphQL\Type\Enum\AbstractEnumType;
 
 class PostStatus extends AbstractEnumType
 {
-    public function getValues()
+    public function getValues(): array
     {
         return [
             [

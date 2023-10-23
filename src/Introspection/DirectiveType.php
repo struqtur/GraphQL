@@ -9,8 +9,8 @@ namespace Youshido\GraphQL\Introspection;
 
 use Youshido\GraphQL\Config\Directive\DirectiveConfig;
 use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
-use Youshido\GraphQL\Directive\Directive;
 use Youshido\GraphQL\Directive\DirectiveInterface;
+use Youshido\GraphQL\Exception\ConfigurationException;
 use Youshido\GraphQL\Type\ListType\ListType;
 use Youshido\GraphQL\Type\NonNullType;
 use Youshido\GraphQL\Type\Object\AbstractObjectType;
@@ -18,7 +18,6 @@ use Youshido\GraphQL\Type\TypeMap;
 
 class DirectiveType extends AbstractObjectType
 {
-
     /**
      * @return String type name
      */
@@ -27,7 +26,7 @@ class DirectiveType extends AbstractObjectType
         return '__Directive';
     }
 
-    public function resolveArgs(DirectiveInterface $value)
+    public function resolveArgs(DirectiveInterface $value): array
     {
         if ($value->hasArguments()) {
             return $value->getArguments();
@@ -37,11 +36,11 @@ class DirectiveType extends AbstractObjectType
     }
 
     /**
-     * @param DirectiveInterface|Directive $value
+     * @param DirectiveInterface $value
      *
      * @return mixed
      */
-    public function resolveLocations(DirectiveInterface $value)
+    public function resolveLocations(DirectiveInterface $value): mixed
     {
         /** @var DirectiveConfig $directiveConfig */
         $directiveConfig = $value->getConfig();
@@ -49,6 +48,9 @@ class DirectiveType extends AbstractObjectType
         return $directiveConfig->getLocations();
     }
 
+    /**
+     * @throws ConfigurationException
+     */
     public function build(ObjectTypeConfig $config): void
     {
         $config

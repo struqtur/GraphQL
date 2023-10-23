@@ -8,7 +8,9 @@
 namespace Youshido\GraphQL\Introspection;
 
 use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
+use Youshido\GraphQL\Exception\ConfigurationException;
 use Youshido\GraphQL\Field\FieldInterface;
+use Youshido\GraphQL\Type\AbstractType;
 use Youshido\GraphQL\Type\ListType\ListType;
 use Youshido\GraphQL\Type\NonNullType;
 use Youshido\GraphQL\Type\Object\AbstractObjectType;
@@ -17,12 +19,12 @@ use Youshido\GraphQL\Type\TypeMap;
 class FieldType extends AbstractObjectType
 {
 
-    public function resolveType(FieldInterface $value)
+    public function resolveType(FieldInterface $value): AbstractType
     {
         return $value->getType();
     }
 
-    public function resolveArgs(FieldInterface $value)
+    public function resolveArgs(FieldInterface $value): array
     {
         if ($value->hasArguments()) {
             return $value->getArguments();
@@ -31,6 +33,9 @@ class FieldType extends AbstractObjectType
         return [];
     }
 
+    /**
+     * @throws ConfigurationException
+     */
     public function build(ObjectTypeConfig $config): void
     {
         $config

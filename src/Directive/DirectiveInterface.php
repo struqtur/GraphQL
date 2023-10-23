@@ -24,25 +24,25 @@ interface DirectiveInterface
     /**
      * @return AbstractType[]
      */
-    public function getArguments();
+    public function getArguments(): array;
 
     /**
      * @param string $argumentName
      *
      * @return AbstractType
      */
-    public function getArgument($argumentName);
+    public function getArgument(string $argumentName): AbstractType;
 
     /**
      * @param string $argumentName
      *
      * @return bool
      */
-    public function hasArgument($argumentName);
+    public function hasArgument(string $argumentName): bool;
 
     /**
      * @return boolean
      */
-    public function hasArguments();
+    public function hasArguments(): bool;
 
 }

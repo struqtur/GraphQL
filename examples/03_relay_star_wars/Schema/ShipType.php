@@ -31,7 +31,7 @@ class ShipType extends AbstractObjectType
         return TestDataProvider::getShip($id);
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'A ship in the Star Wars saga';
     }

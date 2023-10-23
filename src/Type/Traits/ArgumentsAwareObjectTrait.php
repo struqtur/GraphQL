@@ -9,7 +9,12 @@
 namespace Youshido\GraphQL\Type\Traits;
 
 
+use Youshido\GraphQL\Config\AbstractConfig;
+use Youshido\GraphQL\Config\Field\FieldConfig;
+use Youshido\GraphQL\Config\Field\InputFieldConfig;
+use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
 use Youshido\GraphQL\Config\Traits\ConfigAwareTrait;
+use Youshido\GraphQL\Field\InputField;
 
 /**
  * Class ArgumentsAwareObjectTrait
@@ -22,32 +27,32 @@ trait ArgumentsAwareObjectTrait
 {
     use ConfigAwareTrait;
 
-    public function addArgument($argument, $argumentInfo = null)
+    public function addArgument($argument, $argumentInfo = null): AbstractConfig|ObjectTypeConfig|FieldConfig|InputFieldConfig
     {
         return $this->getConfig()->addArgument($argument, $argumentInfo);
     }
 
-    public function removeArgument($argumentName)
+    public function removeArgument($argumentName): AbstractConfig|ObjectTypeConfig|FieldConfig|InputFieldConfig
     {
         return $this->getConfig()->removeArgument($argumentName);
     }
 
-    public function getArguments()
+    public function getArguments(): array
     {
         return $this->getConfig()->getArguments();
     }
 
-    public function getArgument($argumentName)
+    public function getArgument(string $argumentName): ?InputField
     {
         return $this->getConfig()->getArgument($argumentName);
     }
 
-    public function hasArgument($argumentName)
+    public function hasArgument(string $argumentName): bool
     {
         return $this->getConfig()->hasArgument($argumentName);
     }
 
-    public function hasArguments()
+    public function hasArguments(): bool
     {
         return $this->getConfig()->hasArguments();
     }
