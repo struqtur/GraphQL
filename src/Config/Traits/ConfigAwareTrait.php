@@ -33,13 +33,12 @@ trait ConfigAwareTrait
             return $this->configCache[$key];
         }
 
-        $this->configCache[$key] = empty($this->config) ? $defaultValue : $this->config->get($key, $defaultValue);
+        $this->configCache[$key] = !empty($this->config) ? $this->config->get($key, $defaultValue) : $defaultValue;
         return $this->configCache[$key];
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->getConfigValue('description');
     }
-
 }

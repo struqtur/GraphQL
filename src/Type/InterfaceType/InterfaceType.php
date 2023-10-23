@@ -15,7 +15,7 @@ final class InterfaceType extends AbstractInterfaceType
 
     public function __construct($config = [])
     {
-        parent::__construct();
+        parent::__construct($config);
         $this->config = new InterfaceTypeConfig($config, $this, true);
     }
 

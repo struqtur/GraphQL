@@ -17,7 +17,7 @@ use Youshido\GraphQL\Field\FieldInterface;
 trait AutoNameTrait
 {
 
-    public function getName()
+    public function getName(): string
     {
         if (!empty($this->config)) {
             return $this->config->getName();

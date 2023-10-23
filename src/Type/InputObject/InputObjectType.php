@@ -15,7 +15,7 @@ final class InputObjectType extends AbstractInputObjectType
 
     public function __construct($config)
     {
-        parent::__construct();
+        parent::__construct($config);
         $this->config = new InputObjectTypeConfig($config, $this, true);
     }
 
