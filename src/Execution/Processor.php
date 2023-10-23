@@ -54,7 +54,7 @@ class Processor
 
     protected array $data = [];
 
-    protected int $maxComplexity;
+    protected ?int $maxComplexity = null;
 
     protected array $deferredResultsLeaf = [];
 
@@ -428,10 +428,10 @@ class Processor
      * @param FieldInterface $field
      * @param AstFieldInterface $ast
      * @param $parentValue
-     * @return DeferredResult
+     * @return DeferredResult|string|null
      * @throws ResolveException
      */
-    protected function resolveScalar(FieldInterface $field, AstFieldInterface $ast, $parentValue): DeferredResult
+    protected function resolveScalar(FieldInterface $field, AstFieldInterface $ast, $parentValue): DeferredResult|string|null
     {
         $resolvedValue = $this->doResolve($field, $ast, $parentValue);
         return $this->deferredResolve($resolvedValue, $field, function ($resolvedValue) use ($field) {
@@ -448,10 +448,10 @@ class Processor
      * @param FieldInterface $field
      * @param AstFieldInterface $ast
      * @param $parentValue
-     * @return DeferredResult
+     * @return DeferredResult|array|null
      * @throws ResolveException
      */
-    protected function resolveList(FieldInterface $field, AstFieldInterface $ast, $parentValue): DeferredResult
+    protected function resolveList(FieldInterface $field, AstFieldInterface $ast, $parentValue): DeferredResult|array|null
     {
         /** @var AstQuery $ast */
         $resolvedValue = $this->doResolve($field, $ast, $parentValue);
@@ -527,10 +527,10 @@ class Processor
      * @param AstFieldInterface $ast
      * @param $parentValue
      * @param bool $fromUnion
-     * @return DeferredResult
+     * @return DeferredResult|array|null
      * @throws ResolveException
      */
-    protected function resolveObject(FieldInterface $field, AstFieldInterface $ast, $parentValue, bool $fromUnion = false): DeferredResult
+    protected function resolveObject(FieldInterface $field, AstFieldInterface $ast, $parentValue, bool $fromUnion = false): DeferredResult|array|null
     {
         $resolvedValue = $parentValue;
         if (!$fromUnion) {
@@ -559,10 +559,10 @@ class Processor
      * @param FieldInterface $field
      * @param AstFieldInterface $ast
      * @param $parentValue
-     * @return DeferredResult
+     * @return DeferredResult|array|null
      * @throws ResolveException
      */
-    protected function resolveComposite(FieldInterface $field, AstFieldInterface $ast, $parentValue): DeferredResult
+    protected function resolveComposite(FieldInterface $field, AstFieldInterface $ast, $parentValue): DeferredResult|array|null
     {
         /** @var AstQuery $ast */
         $resolvedValue = $this->doResolve($field, $ast, $parentValue);
@@ -705,17 +705,17 @@ class Processor
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getMaxComplexity(): int
+    public function getMaxComplexity(): ?int
     {
         return $this->maxComplexity;
     }
 
     /**
-     * @param int $maxComplexity
+     * @param int|null $maxComplexity
      */
-    public function setMaxComplexity(int $maxComplexity): void
+    public function setMaxComplexity(?int $maxComplexity): void
     {
         $this->maxComplexity = $maxComplexity;
     }
