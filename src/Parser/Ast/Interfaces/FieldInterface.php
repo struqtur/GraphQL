@@ -12,16 +12,9 @@ use Youshido\GraphQL\Parser\Ast\Argument;
 
 interface FieldInterface extends LocatableInterface
 {
-
-    /**
-     * @return string
-     */
     public function getName(): string;
 
-    /**
-     * @return string
-     */
-    public function getAlias(): string;
+    public function getAlias(): ?string;
 
     /**
      * @return Argument[]

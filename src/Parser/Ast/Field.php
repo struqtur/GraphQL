@@ -16,11 +16,9 @@ class Field extends AbstractAst implements FieldInterface
     use AstArgumentsTrait;
     use AstDirectivesTrait;
 
-    /** @var string */
-    private $name;
+    private ?string $name;
 
-    /** @var string */
-    private $alias;
+    private ?string $alias;
 
     /**
      * @param string $name
@@ -53,17 +51,17 @@ class Field extends AbstractAst implements FieldInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getAlias(): string
+    public function getAlias(): ?string
     {
         return $this->alias;
     }
 
     /**
-     * @param null|string $alias
+     * @param string|null $alias
      */
-    public function setAlias($alias): void
+    public function setAlias(?string $alias): void
     {
         $this->alias = $alias;
     }

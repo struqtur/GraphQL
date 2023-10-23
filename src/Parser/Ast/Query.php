@@ -75,7 +75,7 @@ class Query extends AbstractAst implements FieldInterface
         $this->fields = $fields;
     }
 
-    public function getAlias(): string
+    public function getAlias(): ?string
     {
         return $this->alias;
     }
