@@ -28,7 +28,6 @@ abstract class AbstractListType extends AbstractObjectType implements CompositeT
     protected $config;
 
     /**
-     * @throws ValidationException
      * @throws ConfigurationException
      */
     public function __construct()
@@ -37,7 +36,7 @@ abstract class AbstractListType extends AbstractObjectType implements CompositeT
         $this->config = new ListTypeConfig(['itemType' => $this->getItemType()], $this);
     }
 
-    abstract public function getItemType(): AbstractObjectType|AbstractScalarType|InputObjectType|NonNullType|null;
+    abstract public function getItemType(): NonNullType|AbstractObjectType|AbstractScalarType|InputObjectType|null;
 
     /**
      * @param mixed $value
@@ -90,7 +89,7 @@ abstract class AbstractListType extends AbstractObjectType implements CompositeT
         return true;
     }
 
-    public function getNamedType(): AbstractObjectType|static
+    public function getNamedType(): NonNullType|AbstractObjectType|AbstractScalarType|InputObjectType|null|static
     {
         return $this->getItemType();
     }

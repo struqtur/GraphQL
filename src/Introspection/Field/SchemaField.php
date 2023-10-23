@@ -16,7 +16,7 @@ use Youshido\GraphQL\Type\Object\AbstractObjectType;
 class SchemaField extends AbstractField
 {
     /**
-     * @return AbstractObjectType
+     * @return SchemaType
      */
     public function getType(): SchemaType
     {

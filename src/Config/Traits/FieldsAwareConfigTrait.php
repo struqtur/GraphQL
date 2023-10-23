@@ -13,6 +13,8 @@ use Youshido\GraphQL\Exception\ConfigurationException;
 use Youshido\GraphQL\Field\Field;
 use Youshido\GraphQL\Field\FieldInterface;
 use Youshido\GraphQL\Field\InputFieldInterface;
+use Youshido\GraphQL\Introspection\Field\SchemaField;
+use Youshido\GraphQL\Introspection\Field\TypeDefinitionField;
 use Youshido\GraphQL\Introspection\Field\TypesField;
 use Youshido\GraphQL\Relay\Field\GlobalIdField;
 use Youshido\GraphQL\Type\InterfaceType\AbstractInterfaceType;
@@ -25,6 +27,9 @@ trait FieldsAwareConfigTrait
 {
     protected array $fields = [];
 
+    /**
+     * @throws ConfigurationException
+     */
     public function buildFields(): void
     {
         if (!empty($this->data['fields'])) {
@@ -35,6 +40,8 @@ trait FieldsAwareConfigTrait
     /**
      * Add fields from passed interface
      * @return $this
+     * @throws ConfigurationException
+     * @throws ConfigurationException
      */
     public function applyInterface(AbstractInterfaceType $interfaceType): static
     {
@@ -46,17 +53,16 @@ trait FieldsAwareConfigTrait
     /**
      * @param array $fieldsList
      * @return $this
+     * @throws ConfigurationException
      */
-    public function addFields($fieldsList): static
+    public function addFields(array $fieldsList): static
     {
         foreach ($fieldsList as $fieldName => $fieldConfig) {
 
             if ($fieldConfig instanceof FieldInterface) {
                 $this->fields[$fieldConfig->getName()] = $fieldConfig;
-                continue;
             } elseif ($fieldConfig instanceof InputFieldInterface) {
                 $this->fields[$fieldConfig->getName()] = $fieldConfig;
-                continue;
             } else {
                 $this->addField($fieldName, $this->buildFieldConfig($fieldName, $fieldConfig));
             }
@@ -66,14 +72,14 @@ trait FieldsAwareConfigTrait
     }
 
     /**
-     * @param Field|GlobalIdField|TypesField|string $field Field name or Field Object
+     * @param Field|GlobalIdField|TypesField|SchemaField|TypeDefinitionField|string $field Field name or Field Object
      * @param null $fieldInfo Field Type or Field Config array
      *
      * @return $this
      *
      * @throws ConfigurationException
      */
-    public function addField(Field|GlobalIdField|TypesField|string $field, $fieldInfo = null): static
+    public function addField(Field|GlobalIdField|TypesField|SchemaField|TypeDefinitionField|string $field, $fieldInfo = null): static
     {
         if (!($field instanceof FieldInterface)) {
             $field = new Field($this->buildFieldConfig($field, $fieldInfo));
@@ -105,15 +111,16 @@ trait FieldsAwareConfigTrait
     /**
      * @param $name
      *
-     * @return Field
+     * @return Field|GlobalIdField|TypesField|SchemaField|TypeDefinitionField|string|null
      */
-    public function getField($name): ?Field
+    public function getField($name): Field|GlobalIdField|TypesField|SchemaField|TypeDefinitionField|string|null
     {
         return $this->hasField($name) ? $this->fields[$name] : null;
     }
 
     /**
      * @param $name
+     * @return bool
      */
     public function hasField($name): bool
     {

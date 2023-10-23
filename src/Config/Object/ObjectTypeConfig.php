@@ -11,6 +11,7 @@ namespace Youshido\GraphQL\Config\Object;
 use Youshido\GraphQL\Config\AbstractConfig;
 use Youshido\GraphQL\Config\Traits\FieldsAwareConfigTrait;
 use Youshido\GraphQL\Config\TypeConfigInterface;
+use Youshido\GraphQL\Exception\ConfigurationException;
 use Youshido\GraphQL\Type\InterfaceType\AbstractInterfaceType;
 use Youshido\GraphQL\Type\TypeService;
 
@@ -35,6 +36,9 @@ class ObjectTypeConfig extends AbstractConfig implements TypeConfigInterface
         ];
     }
 
+    /**
+     * @throws ConfigurationException
+     */
     protected function build(): void
     {
         $this->buildFields();

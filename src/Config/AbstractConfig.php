@@ -26,7 +26,7 @@ abstract class AbstractConfig
 
     protected bool $finalClass = false;
 
-    protected bool $extraFieldsAllowed;
+    protected bool $extraFieldsAllowed = false;
 
     /**
      * TypeConfig constructor.

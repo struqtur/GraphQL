@@ -9,7 +9,9 @@
 namespace Youshido\GraphQL\Type;
 
 
+use Youshido\GraphQL\Type\InputObject\InputObjectType;
 use Youshido\GraphQL\Type\Object\AbstractObjectType;
+use Youshido\GraphQL\Type\Scalar\AbstractScalarType;
 
 abstract class AbstractType implements TypeInterface
 {
@@ -22,17 +24,17 @@ abstract class AbstractType implements TypeInterface
     }
 
     /**
-     * @return AbstractType
+     * @return AbstractType|InputObjectType|NonNullType|AbstractObjectType|AbstractScalarType|null
      */
-    public function getType()
+    public function getType(): NonNullType|AbstractObjectType|AbstractScalarType|InputObjectType|null|static
     {
         return $this;
     }
 
     /**
-     * @return AbstractType
+     * @return NonNullType|AbstractObjectType|AbstractScalarType|InputObjectType|AbstractType|null
      */
-    public function getNamedType()
+    public function getNamedType(): NonNullType|AbstractObjectType|AbstractScalarType|InputObjectType|null|static
     {
         return $this->getType();
     }
@@ -40,7 +42,7 @@ abstract class AbstractType implements TypeInterface
     /**
      * @return AbstractType|AbstractObjectType
      */
-    public function getNullableType()
+    public function getNullableType(): AbstractObjectType|static
     {
         return $this;
     }
