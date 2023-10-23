@@ -30,10 +30,8 @@ interface FieldInterface extends LocatableInterface
 
     /**
      * @param string $name
-     *
-     * @return Argument
      */
-    public function getArgument(string $name): Argument;
+    public function getArgument(string $name);
 
     /**
      * @return bool

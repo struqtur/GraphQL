@@ -14,9 +14,9 @@ use Youshido\GraphQL\Type\AbstractType;
 interface InputFieldInterface
 {
     /**
-     * @return AbstractType
+     * @return mixed
      */
-    public function getType(): AbstractType;
+    public function getType(): mixed;
 
     public function getName();
 
@@ -33,10 +33,8 @@ interface InputFieldInterface
 
     /**
      * @param string $argumentName
-     *
-     * @return AbstractType
      */
-    public function getArgument(string $argumentName): AbstractType;
+    public function getArgument(string $argumentName);
 
     /**
      * @param string $argumentName

@@ -43,7 +43,7 @@ class Query extends AbstractAst implements FieldInterface
         $this->setDirectives($directives);
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -51,7 +51,7 @@ class Query extends AbstractAst implements FieldInterface
     /**
      * @return Field[]|Query[]|FragmentInterface[]
      */
-    public function getFields()
+    public function getFields(): array
     {
         return array_values($this->fields);
     }
@@ -59,7 +59,7 @@ class Query extends AbstractAst implements FieldInterface
     /**
      * @return bool
      */
-    public function hasFields()
+    public function hasFields(): bool
     {
         return (bool)count($this->fields);
     }
@@ -75,7 +75,7 @@ class Query extends AbstractAst implements FieldInterface
         $this->fields = $fields;
     }
 
-    public function getAlias()
+    public function getAlias(): string
     {
         return $this->alias;
     }

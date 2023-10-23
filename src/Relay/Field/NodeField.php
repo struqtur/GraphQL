@@ -54,7 +54,7 @@ class NodeField extends AbstractField
         ]));
     }
 
-    public function getType()
+    public function getType(): mixed
     {
         return $this->type;
     }

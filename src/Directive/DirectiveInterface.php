@@ -28,10 +28,8 @@ interface DirectiveInterface
 
     /**
      * @param string $argumentName
-     *
-     * @return AbstractType
      */
-    public function getArgument(string $argumentName): AbstractType;
+    public function getArgument(string $argumentName);
 
     /**
      * @param string $argumentName

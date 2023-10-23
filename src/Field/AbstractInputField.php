@@ -7,9 +7,9 @@
 
 namespace Youshido\GraphQL\Field;
 
-
 use Youshido\GraphQL\Config\Field\InputFieldConfig;
-use Youshido\GraphQL\Type\InputTypeInterface;
+use Youshido\GraphQL\Exception\ConfigurationException;
+use Youshido\GraphQL\Type\AbstractType;
 use Youshido\GraphQL\Type\Traits\AutoNameTrait;
 use Youshido\GraphQL\Type\Traits\FieldsArgumentsAwareObjectTrait;
 use Youshido\GraphQL\Type\TypeFactory;
@@ -21,8 +21,11 @@ abstract class AbstractInputField implements InputFieldInterface
     use FieldsArgumentsAwareObjectTrait;
     use AutoNameTrait;
 
-    protected $isFinal = false;
+    protected bool $isFinal = false;
 
+    /**
+     * @throws ConfigurationException
+     */
     public function __construct(array $config = [])
     {
         if (empty($config['type'])) {
@@ -44,9 +47,9 @@ abstract class AbstractInputField implements InputFieldInterface
     }
 
     /**
-     * @return InputTypeInterface
+     * @return mixed
      */
-    abstract public function getType();
+    abstract public function getType(): mixed;
 
     public function getDefaultValue()
     {

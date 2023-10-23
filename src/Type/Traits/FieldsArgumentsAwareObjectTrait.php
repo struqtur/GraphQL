@@ -14,6 +14,7 @@ use Youshido\GraphQL\Config\Field\FieldConfig;
 use Youshido\GraphQL\Config\Field\InputFieldConfig;
 use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
 use Youshido\GraphQL\Field\InputField;
+use Youshido\GraphQL\Parser\Ast\Argument;
 
 trait FieldsArgumentsAwareObjectTrait
 {
@@ -41,7 +42,7 @@ trait FieldsArgumentsAwareObjectTrait
         return $this->getConfig()->getArguments();
     }
 
-    public function getArgument(string $argumentName): ?InputField
+    public function getArgument(string $argumentName): InputField
     {
         return $this->getConfig()->getArgument($argumentName);
     }

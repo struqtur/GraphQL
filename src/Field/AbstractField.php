@@ -50,9 +50,9 @@ abstract class AbstractField implements FieldInterface
     }
 
     /**
-     * @return AbstractObjectType|AbstractType
+     * @return mixed
      */
-    abstract public function getType();
+    abstract public function getType(): mixed;
 
     public function build(FieldConfig $config): void
     {
