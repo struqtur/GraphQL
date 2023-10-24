@@ -9,6 +9,7 @@
 namespace Youshido\GraphQL\Validator\ConfigValidator\Rules;
 
 
+use Youshido\GraphQL\Exception\ConfigurationException;
 use Youshido\GraphQL\Field\FieldInterface;
 use Youshido\GraphQL\Field\InputFieldInterface;
 use Youshido\GraphQL\Type\AbstractType;
@@ -26,7 +27,10 @@ class TypeValidationRule implements ValidationRuleInterface
         $this->configValidator = $validator;
     }
 
-    public function validate($data, $ruleInfo)
+    /**
+     * @throws ConfigurationException
+     */
+    public function validate($data, $ruleInfo): bool
     {
         if (!is_string($ruleInfo)) return false;
 
@@ -83,7 +87,7 @@ class TypeValidationRule implements ValidationRuleInterface
 
     private function isArrayOfObjectTypes($data): bool
     {
-        if (!is_array($data) || $data === []) {
+        if (!is_array($data) || !count($data)) {
             return false;
         }
 
@@ -98,7 +102,9 @@ class TypeValidationRule implements ValidationRuleInterface
 
     private function isEnumValues($data): bool
     {
-        if (!is_array($data) || $data === []) return false;
+        if (!is_array($data) || empty($data)) {
+            return false;
+        }
 
         foreach ($data as $item) {
             if (!is_array($item) || !array_key_exists('name', $item) || !is_string($item['name']) || !preg_match('/^[_a-zA-Z][_a-zA-Z0-9]*$/', $item['name'])) {
@@ -128,7 +134,9 @@ class TypeValidationRule implements ValidationRuleInterface
 
     private function isArrayOfFields($data): bool
     {
-        if (!is_array($data) || $data === []) return false;
+        if (!is_array($data) || empty($data)) {
+            return false;
+        }
 
         foreach ($data as $name => $item) {
             if (!$this->isField($item, $name)) return false;
@@ -137,7 +145,7 @@ class TypeValidationRule implements ValidationRuleInterface
         return true;
     }
 
-    private function isField($data, $name = null)
+    private function isField($data, $name = null): bool
     {
         if (is_object($data)) {
             if (($data instanceof FieldInterface) || ($data instanceof AbstractType)) {
@@ -172,7 +180,7 @@ class TypeValidationRule implements ValidationRuleInterface
         return true;
     }
 
-    private function isInputField(array $data)
+    private function isInputField($data): bool
     {
         if (is_object($data)) {
             if ($data instanceof InputFieldInterface) {

@@ -39,7 +39,7 @@ abstract class AbstractConfig
      */
     public function __construct(array $configData, mixed $contextObject = null, bool $finalClass = false)
     {
-        if ($configData === []) {
+        if (empty($configData)) {
             throw new ConfigurationException('Config for Type should be an array');
         }
 

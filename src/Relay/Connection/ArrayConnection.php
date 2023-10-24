@@ -7,18 +7,18 @@
 
 namespace Youshido\GraphQL\Relay\Connection;
 
-
 class ArrayConnection
 {
-
     final const PREFIX = 'arrayconnection:';
 
     public static function cursorForObjectInConnection($data, $object): ?string
     {
-        if (!is_array($data)) return null;
+        if (!is_array($data)) {
+            return null;
+        }
 
-        $index = array_search($object, $data, true);
-        return $index === false ? null : (string)self::keyToCursor($index);
+        $index = array_search($object, $data);
+        return $index === false ? null : self::keyToCursor($index);
     }
 
     /**
@@ -27,7 +27,7 @@ class ArrayConnection
      * @deprecated
      *   Use keyToCursor instead.
      */
-    public static function offsetToCursor($offset)
+    public static function offsetToCursor(int $offset): string
     {
         return self::keyToCursor($offset);
     }
@@ -40,10 +40,10 @@ class ArrayConnection
     /**
      * @param $cursor string
      *
-     * @return int|null
+     * @return int|string|null
      * @deprecated Use cursorToKey instead.
      */
-    public static function cursorToOffset($cursor)
+    public static function cursorToOffset(string $cursor): int|string|null
     {
         return self::cursorToKey($cursor);
     }
@@ -51,11 +51,12 @@ class ArrayConnection
     /**
      * Converts a cursor to its array key.
      *
-     * @param $cursor
+     * @param string $cursor
+     * @return string|null
      */
-    public static function cursorToKey($cursor): ?string
+    public static function cursorToKey(string $cursor): ?string
     {
-        if (($decoded = base64_decode((string)$cursor)) !== '' && ($decoded = base64_decode((string)$cursor)) !== '0') {
+        if ($decoded = base64_decode($cursor)) {
             return substr($decoded, strlen(self::PREFIX));
         }
 
@@ -73,29 +74,29 @@ class ArrayConnection
      *   The array to use in counting the offset. If empty, assumed to be an indexed array.
      * @return int|null
      */
-    public static function cursorToOffsetWithDefault($cursor, $default, $array = [])
+    public static function cursorToOffsetWithDefault($cursor, $default, array $array = []): ?int
     {
         if (!is_string($cursor)) {
             return $default;
         }
 
         $key = self::cursorToKey($cursor);
-        $offset = empty($array) ? $key : array_search($key, array_keys($array), true);
+        $offset = empty($array) ? $key : array_search($key, array_keys($array));
 
         return is_null($offset) ? $default : (int)$offset;
     }
 
-    public static function connectionFromArray(array $data, array $args = [])
+    public static function connectionFromArray(array $data, array $args = []): array
     {
         return self::connectionFromArraySlice($data, $args, 0, count($data));
     }
 
     public static function connectionFromArraySlice(array $data, array $args, $sliceStart, $arrayLength): array
     {
-        $after = isset($args['after']) ? $args['after'] : null;
-        $before = isset($args['before']) ? $args['before'] : null;
-        $first = isset($args['first']) ? $args['first'] : null;
-        $last = isset($args['last']) ? $args['last'] : null;
+        $after = $args['after'] ?? null;
+        $before = $args['before'] ?? null;
+        $first = $args['first'] ?? null;
+        $last = $args['last'] ?? null;
 
         $sliceEnd = $sliceStart + count($data);
 
@@ -119,8 +120,8 @@ class ArrayConnection
         $slice = array_slice($data, $arraySliceStart, $arraySliceEnd, true);
         $edges = array_map(['self', 'edgeForObjectWithIndex'], $slice, array_keys($slice));
 
-        $firstEdge = $edges[0] ?? null;
-        $lastEdge = $edges !== [] ? $edges[count($edges) - 1] : null;
+        $firstEdge = array_key_exists(0, $edges) ? $edges[0] : null;
+        $lastEdge = count($edges) > 0 ? $edges[count($edges) - 1] : null;
         $lowerBound = $after ? $afterOffset + 1 : 0;
         $upperBound = $before ? $beforeOffset : $arrayLength;
 

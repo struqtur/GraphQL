@@ -35,6 +35,9 @@ class ResolveValidator implements ResolveValidatorInterface
         $this->executionContext = $executionContext;
     }
 
+    /**
+     * @throws ResolveException
+     */
     public function assetTypeHasField(AbstractType $objectType, AstFieldInterface $ast): void
     {
         /** @var AbstractObjectType $objectType */
@@ -50,6 +53,9 @@ class ResolveValidator implements ResolveValidatorInterface
         }
     }
 
+    /**
+     * @throws ResolveException
+     */
     public function assertValidArguments(FieldInterface $field, AstFieldInterface $query, Request $request): void
     {
         $requiredArguments = array_filter($field->getArguments(), static function (InputField $argument): bool {
@@ -85,11 +91,14 @@ class ResolveValidator implements ResolveValidatorInterface
             }
         }
 
-        if ($requiredArguments !== []) {
+        if (!empty($requiredArguments)) {
             throw new ResolveException(sprintf('Require "%s" arguments to query "%s"', implode(', ', array_keys($requiredArguments)), $query->getName()));
         }
     }
 
+    /**
+     * @throws ResolveException
+     */
     public function assertValidResolvedValueForField(FieldInterface $field, $resolvedValue): void
     {
         if (null === $resolvedValue && $field->getType()->getKind() === TypeMap::KIND_NON_NULL) {
@@ -104,6 +113,9 @@ class ResolveValidator implements ResolveValidatorInterface
         }
     }
 
+    /**
+     * @throws ResolveException
+     */
     public function assertTypeImplementsInterface(AbstractType $type, AbstractInterfaceType $interface): void
     {
         if ($type instanceof AbstractObjectType) {
@@ -117,6 +129,9 @@ class ResolveValidator implements ResolveValidatorInterface
         throw new ResolveException(sprintf('Type "%s" does not implement "%s"', $type->getName(), $interface->getName()));
     }
 
+    /**
+     * @throws ResolveException
+     */
     public function assertTypeInUnionTypes(AbstractType $type, AbstractUnionType $unionType): void
     {
         foreach ($unionType->getTypes() as $unionTypeItem) {

@@ -21,11 +21,11 @@ final class NonNullType extends AbstractType implements CompositeTypeInterface
     /**
      * NonNullType constructor.
      *
-     * @param string|AbstractType|null $fieldType
+     * @param string|AbstractType $fieldType
      *
      * @throws ConfigurationException
      */
-    public function __construct(string|AbstractType|null $fieldType)
+    public function __construct(string|AbstractType $fieldType)
     {
         if (!TypeService::isGraphQLType($fieldType)) {
             throw new ConfigurationException('NonNullType accepts only GraphpQL Types as argument');

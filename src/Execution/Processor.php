@@ -77,11 +77,11 @@ class Processor
         try {
             $this->parseAndCreateRequest($payload, $variables);
 
-            if ($this->maxComplexity !== 0) {
+            if (!empty($this->maxComplexity)) {
                 $reducers[] = new MaxComplexityQueryVisitor($this->maxComplexity);
             }
 
-            if ($reducers !== []) {
+            if (!empty($reducers)) {
                 $reducer = new Reducer();
                 $reducer->reduceQuery($this->executionContext, $reducers);
             }
@@ -98,7 +98,7 @@ class Processor
             $this->data = $this->combineResults($operationResults);
 
             // If the processor found any deferred results, resolve them now.
-            if (!empty($this->data) && ($this->deferredResultsLeaf !== [] || $this->deferredResultsComplex !== [])) {
+            if (!empty($this->data) && (!empty($this->deferredResultsLeaf) || !empty($this->deferredResultsComplex))) {
                 try {
                     while ($deferredResolver = array_shift($this->deferredResultsComplex)) {
                         $deferredResolver->resolve();
@@ -472,7 +472,9 @@ class Processor
             }
 
             $fakeAst = clone $ast;
-            $fakeAst->setArguments([]);
+            if ($fakeAst instanceof AstQuery) {
+                $fakeAst->setArguments([]);
+            }
 
             $fakeField = new Field([
                 'name' => $field->getName(),
@@ -667,13 +669,11 @@ class Processor
 
     /**
      * Combines the specified results using array_replace_recursive, including graceful handling for empty arrays
-     *
-     *
      */
     protected function combineResults(array $results): array
     {
-        if ($results !== []) {
-            return array_replace_recursive(...$results);
+        if (count($results) > 0) {
+            return call_user_func_array('array_replace_recursive', $results);
         }
 
         return [];
