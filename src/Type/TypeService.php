@@ -53,6 +53,9 @@ class TypeService
 
     final const TYPE_ANY_INPUT = 'any_input';
 
+    /**
+     * @throws Exception
+     */
     public static function resolveNamedType($object)
     {
         if (is_object($object)) {
@@ -71,7 +74,7 @@ class TypeService
     /**
      * @param AbstractType|mixed $type
      */
-    public static function isInterface($type): bool
+    public static function isInterface(mixed $type): bool
     {
         if (!is_object($type)) {
             return false;
@@ -83,7 +86,7 @@ class TypeService
     /**
      * @param AbstractType|mixed $type
      */
-    public static function isAbstractType($type): bool
+    public static function isAbstractType(mixed $type): bool
     {
         if (!is_object($type)) {
             return false;
@@ -95,7 +98,7 @@ class TypeService
     public static function isScalarType($type): bool
     {
         if (is_object($type)) {
-            return $type instanceof AbstractScalarType || $type instanceof AbstractEnumType;
+            return $type instanceof AbstractScalarType;
         }
 
         return in_array(strtolower((string)$type), TypeFactory::getScalarTypesNames());
@@ -120,7 +123,7 @@ class TypeService
      * @param mixed|AbstractType $type
      * @return bool
      */
-    public static function isInputType($type)
+    public static function isInputType(mixed $type): bool
     {
         if (is_object($type)) {
             $namedType = $type->getNullableType()->getNamedType();
@@ -146,7 +149,7 @@ class TypeService
      *
      * @return mixed|null
      */
-    public static function getPropertyValue($data, $path, $enableMagicCall = false)
+    public static function getPropertyValue(object|array $data, string $path, bool $enableMagicCall = false): mixed
     {
         // Normalize the path
         if (is_array($data)) {
