@@ -13,10 +13,6 @@ use Youshido\GraphQL\Exception\ConfigurationException;
 use Youshido\GraphQL\Field\Field;
 use Youshido\GraphQL\Field\FieldInterface;
 use Youshido\GraphQL\Field\InputFieldInterface;
-use Youshido\GraphQL\Introspection\Field\SchemaField;
-use Youshido\GraphQL\Introspection\Field\TypeDefinitionField;
-use Youshido\GraphQL\Introspection\Field\TypesField;
-use Youshido\GraphQL\Relay\Field\GlobalIdField;
 use Youshido\GraphQL\Type\InterfaceType\AbstractInterfaceType;
 
 /**
@@ -72,14 +68,14 @@ trait FieldsAwareConfigTrait
     }
 
     /**
-     * @param Field|GlobalIdField|TypesField|SchemaField|TypeDefinitionField|string $field Field name or Field Object
+     * @param mixed $field Field name or Field Object
      * @param null $fieldInfo Field Type or Field Config array
      *
      * @return $this
      *
      * @throws ConfigurationException
      */
-    public function addField(Field|GlobalIdField|TypesField|SchemaField|TypeDefinitionField|string $field, $fieldInfo = null): static
+    public function addField(mixed $field, $fieldInfo = null): static
     {
         if (!($field instanceof FieldInterface)) {
             $field = new Field($this->buildFieldConfig($field, $fieldInfo));
@@ -111,9 +107,9 @@ trait FieldsAwareConfigTrait
     /**
      * @param $name
      *
-     * @return Field|GlobalIdField|TypesField|SchemaField|TypeDefinitionField|string|null
+     * @return mixed
      */
-    public function getField($name): Field|GlobalIdField|TypesField|SchemaField|TypeDefinitionField|string|null
+    public function getField($name): mixed
     {
         return $this->hasField($name) ? $this->fields[$name] : null;
     }

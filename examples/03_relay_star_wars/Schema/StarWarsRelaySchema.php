@@ -3,6 +3,7 @@
 namespace Examples\StarWars;
 
 use Youshido\GraphQL\Config\Schema\SchemaConfig;
+use Youshido\GraphQL\Exception\ConfigurationException;
 use Youshido\GraphQL\Field\InputField;
 use Youshido\GraphQl\Relay\Connection\ArrayConnection;
 use Youshido\GraphQL\Relay\Connection\Connection;
@@ -16,20 +17,19 @@ use Youshido\GraphQL\Type\Scalar\StringType;
 
 class StarWarsRelaySchema extends AbstractSchema
 {
-    public function build(SchemaConfig $config)
+    /**
+     * @throws ConfigurationException
+     */
+    public function build(SchemaConfig $config): void
     {
         $fetcher = new CallableFetcher(
             function ($type, $id) {
-                switch ($type) {
-                    case FactionType::TYPE_KEY:
-                        return TestDataProvider::getFaction($id);
+                return match ($type) {
+                    FactionType::TYPE_KEY => TestDataProvider::getFaction($id),
+                    ShipType::TYPE_KEY => TestDataProvider::getShip($id),
+                    default => null,
+                };
 
-                    case
-                    ShipType::TYPE_KEY:
-                        return TestDataProvider::getShip($id);
-                }
-
-                return null;
             },
             function ($object) {
                 return $object && array_key_exists('ships', $object) ? new FactionType() : new ShipType();
@@ -57,7 +57,7 @@ class StarWarsRelaySchema extends AbstractSchema
                            'type' => new ListType(new StringType())
                        ]
                    ],
-                   'resolve' => function ($value = null, $args, $info) {
+                   'resolve' => function ($args, $info, $value = null) {
                        return TestDataProvider::getByNames($args['names']);
                    }
                ]);

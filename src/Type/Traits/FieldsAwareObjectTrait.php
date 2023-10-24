@@ -10,26 +10,33 @@ namespace Youshido\GraphQL\Type\Traits;
 
 
 use Youshido\GraphQL\Config\Traits\ConfigAwareTrait;
+use Youshido\GraphQL\Exception\ConfigurationException;
 
 trait FieldsAwareObjectTrait
 {
     use ConfigAwareTrait;
 
-    public function addFields($fieldsList)
+    /**
+     * @throws ConfigurationException
+     */
+    public function addFields($fieldsList): static
     {
         $this->getConfig()->addFields($fieldsList);
 
         return $this;
     }
 
-    public function addField($field, $fieldInfo = null)
+    /**
+     * @throws ConfigurationException
+     */
+    public function addField($field, $fieldInfo = null): static
     {
         $this->getConfig()->addField($field, $fieldInfo);
 
         return $this;
     }
 
-    public function getFields()
+    public function getFields(): array
     {
         return $this->getConfig()->getFields();
     }
@@ -39,14 +46,13 @@ trait FieldsAwareObjectTrait
         return $this->getConfig()->getField($fieldName);
     }
 
-    public function hasField($fieldName)
+    public function hasField($fieldName): bool
     {
         return $this->getConfig()->hasField($fieldName);
     }
 
-    public function hasFields()
+    public function hasFields(): bool
     {
         return $this->getConfig()->hasFields();
     }
-
 }

@@ -8,7 +8,6 @@
 
 namespace Youshido\GraphQL\Execution\Context;
 
-
 use Exception;
 use Youshido\GraphQL\Execution\Container\ContainerInterface;
 use Youshido\GraphQL\Execution\Request;
@@ -22,7 +21,6 @@ use Youshido\GraphQL\Validator\SchemaValidator\SchemaValidator;
 
 class ExecutionContext implements ExecutionContextInterface
 {
-
     use ErrorContainerTrait;
 
     private AbstractSchema $schema;
@@ -45,10 +43,11 @@ class ExecutionContext implements ExecutionContextInterface
     }
 
     /**
+     * @param AbstractObjectType $type
      * @param string $fieldName
      * @return Field
      */
-    public function getField(AbstractObjectType $type, $fieldName)
+    public function getField(AbstractObjectType $type, string $fieldName): Field
     {
         $typeName = $type->getName();
 
@@ -63,7 +62,7 @@ class ExecutionContext implements ExecutionContextInterface
         return $this->typeFieldLookupTable[$typeName][$fieldName];
     }
 
-    protected function validateSchema()
+    protected function validateSchema(): void
     {
         try {
             (new SchemaValidator())->validate($this->schema);
@@ -72,7 +71,7 @@ class ExecutionContext implements ExecutionContextInterface
         }
     }
 
-    protected function introduceIntrospectionFields()
+    protected function introduceIntrospectionFields(): void
     {
         $schemaField = new SchemaField();
         $this->schema->addQueryField($schemaField);
@@ -82,7 +81,7 @@ class ExecutionContext implements ExecutionContextInterface
     /**
      * @return AbstractSchema
      */
-    public function getSchema()
+    public function getSchema(): AbstractSchema
     {
         return $this->schema;
     }
@@ -98,9 +97,9 @@ class ExecutionContext implements ExecutionContextInterface
     }
 
     /**
-     * @return Request
+     * @return Request|null
      */
-    public function getRequest()
+    public function getRequest(): ?Request
     {
         return $this->request;
     }
@@ -121,9 +120,9 @@ class ExecutionContext implements ExecutionContextInterface
     }
 
     /**
-     * @return ContainerInterface
+     * @return ContainerInterface|null
      */
-    public function getContainer()
+    public function getContainer(): ?ContainerInterface
     {
         return $this->container;
     }
