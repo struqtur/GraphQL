@@ -45,9 +45,9 @@ class ExecutionContext implements ExecutionContextInterface
     /**
      * @param AbstractObjectType $type
      * @param string $fieldName
-     * @return Field
+     * @return mixed - Field
      */
-    public function getField(AbstractObjectType $type, string $fieldName): Field
+    public function getField(AbstractObjectType $type, string $fieldName): mixed
     {
         $typeName = $type->getName();
 

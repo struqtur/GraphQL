@@ -23,11 +23,6 @@ class TypeFactory
      */
     public static function getScalarType(string $type): ?AbstractScalarType
     {
-        // TODO how this gets here and how to resolve? - hotfix
-        if ($type == '__DirectiveLocation') {
-            return null;
-        }
-
         if (TypeService::isScalarType($type)) {
             if (empty(self::$objectsHash[$type])) {
                 $name = ucfirst($type);
