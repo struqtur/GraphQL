@@ -459,17 +459,13 @@ class Processor
         return $this->deferredResolve($resolvedValue, $field, function ($resolvedValue) use ($field, $ast): ?array {
             $this->resolveValidator->assertValidResolvedValueForField($field, $resolvedValue);
 
-            if (empty($resolvedValue)) {
+            if (null === $resolvedValue) {
                 return null;
             }
 
             /** @var AbstractListType $type */
             $type = $field->getType()->getNullableType();
             $itemType = $type->getNamedType();
-
-            if (empty($itemType)) {
-                return null;
-            }
 
             $fakeAst = clone $ast;
             if ($fakeAst instanceof AstQuery) {
