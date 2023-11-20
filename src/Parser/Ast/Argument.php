@@ -10,11 +10,18 @@ namespace Youshido\GraphQL\Parser\Ast;
 use Youshido\GraphQL\Parser\Ast\Interfaces\ValueInterface;
 use Youshido\GraphQL\Parser\Location;
 
-class Argument extends AbstractAst
+class Argument extends AbstractAst implements ValueInterface
 {
+    /**
+     * @var string
+     */
     private string $name;
 
-    private ValueInterface|bool $value;
+    /**
+     * TODO - Was ValueInterface - is there any reason for that?
+     * @var mixed
+     */
+    private mixed $value;
 
     /**
      * @param string $name
@@ -44,9 +51,9 @@ class Argument extends AbstractAst
     }
 
     /**
-     * @return ValueInterface|bool
+     * @return mixed
      */
-    public function getValue(): ValueInterface|bool
+    public function getValue(): mixed
     {
         return $this->value;
     }
@@ -58,6 +65,4 @@ class Argument extends AbstractAst
     {
         $this->value = $value;
     }
-
-
 }
