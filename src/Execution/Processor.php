@@ -400,7 +400,7 @@ class Processor
     /**
      * Apply post-process callbacks to all deferred resolvers.
      */
-    protected function deferredResolve($resolvedValue, FieldInterface $field, callable $callback)
+    protected function deferredResolve($resolvedValue, FieldInterface $field, callable $callback): mixed
     {
         if ($resolvedValue instanceof DeferredResolverInterface) {
             $deferredResult = new DeferredResult($resolvedValue, function ($resolvedValue) use ($field, $callback) {
@@ -428,10 +428,10 @@ class Processor
      * @param FieldInterface $field
      * @param AstFieldInterface $ast
      * @param $parentValue
-     * @return DeferredResult|string|null
+     * @return mixed
      * @throws ResolveException
      */
-    protected function resolveScalar(FieldInterface $field, AstFieldInterface $ast, $parentValue): DeferredResult|string|null
+    protected function resolveScalar(FieldInterface $field, AstFieldInterface $ast, $parentValue): mixed
     {
         $resolvedValue = $this->doResolve($field, $ast, $parentValue);
         return $this->deferredResolve($resolvedValue, $field, function ($resolvedValue) use ($field) {
@@ -448,10 +448,10 @@ class Processor
      * @param FieldInterface $field
      * @param AstFieldInterface $ast
      * @param $parentValue
-     * @return DeferredResult|array|null
+     * @return mixed
      * @throws ResolveException
      */
-    protected function resolveList(FieldInterface $field, AstFieldInterface $ast, $parentValue): DeferredResult|array|null
+    protected function resolveList(FieldInterface $field, AstFieldInterface $ast, $parentValue): mixed
     {
         /** @var AstQuery $ast */
         $resolvedValue = $this->doResolve($field, $ast, $parentValue);
@@ -525,10 +525,10 @@ class Processor
      * @param AstFieldInterface $ast
      * @param $parentValue
      * @param bool $fromUnion
-     * @return DeferredResult|array|null
+     * @return mixed
      * @throws ResolveException
      */
-    protected function resolveObject(FieldInterface $field, AstFieldInterface $ast, $parentValue, bool $fromUnion = false): DeferredResult|array|null
+    protected function resolveObject(FieldInterface $field, AstFieldInterface $ast, $parentValue, bool $fromUnion = false): mixed
     {
         $resolvedValue = $parentValue;
         if (!$fromUnion) {
@@ -557,10 +557,10 @@ class Processor
      * @param FieldInterface $field
      * @param AstFieldInterface $ast
      * @param $parentValue
-     * @return DeferredResult|array|null
+     * @return mixed
      * @throws ResolveException
      */
-    protected function resolveComposite(FieldInterface $field, AstFieldInterface $ast, $parentValue): DeferredResult|array|null
+    protected function resolveComposite(FieldInterface $field, AstFieldInterface $ast, $parentValue): mixed
     {
         /** @var AstQuery $ast */
         $resolvedValue = $this->doResolve($field, $ast, $parentValue);
