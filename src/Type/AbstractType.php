@@ -42,7 +42,7 @@ abstract class AbstractType implements TypeInterface
         return $this;
     }
 
-    public function getValidationError($value = null)
+    public function getValidationError($value = null): ?string
     {
         return $this->lastValidationError;
     }

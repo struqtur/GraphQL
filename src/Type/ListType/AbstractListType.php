@@ -56,9 +56,9 @@ abstract class AbstractListType extends AbstractObjectType implements CompositeT
      * @param $value
      * @param bool $returnValue
      *
-     * @return bool
+     * @return bool|array|string
      */
-    protected function validList($value, bool $returnValue = false): bool
+    protected function validList($value, bool $returnValue = false): bool|array|string
     {
         $itemType = $this->config->get('itemType');
 
@@ -116,7 +116,7 @@ abstract class AbstractListType extends AbstractObjectType implements CompositeT
         return $value;
     }
 
-    public function getValidationError($value = null)
+    public function getValidationError($value = null): ?string
     {
         if (!$this->isIterable($value)) {
             return 'The value is not an iterable.';

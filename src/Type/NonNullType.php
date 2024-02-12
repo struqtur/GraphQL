@@ -92,7 +92,7 @@ final class NonNullType extends AbstractType implements CompositeTypeInterface
         return $this->getNullableType()->parseValue($value);
     }
 
-    public function getValidationError($value = null): string
+    public function getValidationError($value = null): ?string
     {
         if ($value === null) {
             return 'Field must not be NULL';

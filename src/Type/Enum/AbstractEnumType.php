@@ -60,7 +60,7 @@ abstract class AbstractEnumType extends AbstractType
         return false;
     }
 
-    public function getValidationError($value = null): string
+    public function getValidationError($value = null): ?string
     {
         $allowedValues = array_map(static function (array $value): string {
             return sprintf('%s (%s)', $value['name'], $value['value']);
