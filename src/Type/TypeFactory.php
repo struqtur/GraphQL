@@ -31,16 +31,6 @@ class TypeFactory
                 $name = $name == 'Datetimetz' ? 'DateTimeTz' : $name;
 
                 $className = 'Youshido\GraphQL\Type\Scalar\\' . $name . 'Type';
-
-                // Hotfix for our custom app - TODO - add via configuration
-                if ($name == 'DateTimeAsString' || $name == 'StringOrArray' || $name == 'Boolean' || $name == 'Float' || $name == 'Int') {
-                    $className = 'App\GraphQL\Schema\Type\Scalar\\' . $name . 'Type';
-                    // Fallback to base scalar types if custom doesn't exist
-                    if (!file_exists(dirname($className . '.php'))) {
-                        $className = 'Youshido\GraphQL\Type\Scalar\\' . $name . 'Type';
-                    }
-                }
-
                 self::$objectsHash[$type] = new $className();
             }
 
